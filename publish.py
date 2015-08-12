@@ -42,17 +42,17 @@ def get_build_opts(option_list, args):
 
 
 # String formats
-TAG_FMT = '{registry}{image}:{suite}{variant}'
-BUILD_FMT = 'docker build {options} -f {path} -t {tag} .'
-TAGLATEST_FMT = 'docker tag -f {tag} {registry}{image}:latest'
-PUSH_FMT = 'docker push {tag}'
+TAG = '{registry}{image}:{suite}{variant}'
+BUILD = 'docker build {options} -f {path} -t {tag} .'
+TAG_LATEST = 'docker tag -f {tag} {registry}{image}:latest'
+PUSH = 'docker push {tag}'
 
 
 def main():
     """Reads suite Dockerfile files
     """
     cli = PublishCLI()
-    opts = cli.process_options()
+    opts = cli.process_options(abort_on_missing_template=False)
     args = cli.arguments
     suite = Suite(workdir=opts['image_dir'], suites=opts['suites'])
 
@@ -60,28 +60,25 @@ def main():
     build_opts = get_build_opts(build_opts, args)
 
     for ctx in suite.process():
-        variant = ''
-        if ctx['variant']:
-            variant = '-{}'.format(ctx['variant'])
+        fmt = ctx.copy()
+        fmt['path'] = dockerfile_path(suite=fmt['suite'], variant=fmt['variant'])
 
-        _ctx = {'variant': variant}
-        _ctx.update(ctx)
-        tag = TAG_FMT.format(**_ctx)
+        fmt['variant'] = '-{}'.format(fmt['variant']) if fmt['variant'] else ''
+        fmt['tag'] = TAG.format(**fmt)
+        fmt['options'] = build_opts
 
         # Run docker build
-        shell_out(BUILD_FMT.format(path=dockerfile_path(ctx),
-                                   options=build_opts,
-                                   tag=tag))
+        shell_out(BUILD.format(**fmt))
 
         # Tag latestest if suite.yml contains latest option
-        if ctx['suite'] + ctx['variant'] == suite.latest:
-            shell_out(TAGLATEST_FMT.format(registry=ctx['registry'],
-                                           image=ctx['image'],
-                                           tag=tag))
+        if fmt['suite'] + fmt['variant'] == suite.latest:
+            shell_out(TAG_LATEST.format(**fmt))
+            if not args['no_push']:
+                shell_out(PUSH.format(tag='{registry}{image}:latest'.format(**fmt)))
 
         # Push image
         if not args['no_push']:
-            shell_out(PUSH_FMT.format(tag=tag))
+            shell_out(PUSH.format(**fmt))
 
 
 if __name__ == '__main__':

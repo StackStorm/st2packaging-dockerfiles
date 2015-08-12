@@ -9,8 +9,8 @@ import jinja2
 import difflib
 
 
-def dockerfile_template_name(ctx):
-    tpl_list = filter(None, ("Dockerfile.template", ctx['variant']))
+def dockerfile_template_name(variant):
+    tpl_list = filter(None, ("Dockerfile.template", variant))
     filepath = '-'.join(tpl_list)
     # Abort if template not found, this is misconfiguration.
     if not os.path.isfile(filepath):
@@ -19,8 +19,8 @@ def dockerfile_template_name(ctx):
     return filepath
 
 
-def dockerfile_path(ctx):
-    tgt_list = filter(None, (ctx['suite'], ctx['variant'], 'Dockerfile'))
+def dockerfile_path(suite=None, variant=None, **_):
+    tgt_list = filter(None, (suite, variant, 'Dockerfile'))
     return '/'.join(tgt_list)
 
 
@@ -67,7 +67,7 @@ def render_template(ctx):
         - template_name is name or a relative path.
     """
     jenv = jinja2.Environment(loader=jinja2.FileSystemLoader('.'))
-    template_name = dockerfile_template_name(ctx)
+    template_name = dockerfile_template_name(variant=ctx['variant'])
     template = jenv.get_template(template_name)
     return template.render(ctx)
 
@@ -89,7 +89,7 @@ class UpdateCLI(object):
         self.arguments = vars(self.parser.parse_args())
         return self.arguments
 
-    def process_options(self):
+    def process_options(self, abort_on_missing_template=True):
         """Process options, parse command line arguments and construct an
         options hash.
         """
@@ -97,21 +97,20 @@ class UpdateCLI(object):
 
         image = self.arguments['image']
         suites = self.arguments['suites']
+        image_dir = os.path.abspath(os.getcwd())
 
         if image:
-            if template_exists(basepath=image):
-                image_dir = os.path.abspath(image)
-
-            # first argument is a suite
-            elif template_exists():
-                image_dir = os.getcwd()
+            if template_exists():
+                # template exists in ./ ,so the first argument is a suite
                 suites.insert(0, os.path.basename(image_dir))
             else:
-                template_exists(basepath=image, abort=True)
+                image_dir = os.path.abspath(image)
+                # check and abort if required
+                template_exists(basepath=image, abort=abort_on_missing_template)
 
         # no arguments given, so we must be inside a directory with a suite template.
         else:
-            template_exists(abort=True)
+            template_exists(abort=abort_on_missing_template)
 
         self.options = {
             'image_dir': image_dir,
@@ -161,10 +160,10 @@ class Suite(object):
             sys.exit(1)
 
         fd = open(found, 'r')
-        data = yaml.load(fd)
+        data = (yaml.load(fd) or {})
         fd.close()
         self.distmap_cache[found] = data
-        return data
+        return (data or {})
 
     def process(self):
         curd = os.getcwd()
@@ -210,6 +209,7 @@ class Suite(object):
                     return (dist, ematch.group(1) or suite)
         print("Warn: suite to dist mapping not found! Check dist.yml for `{}' mapping."
               .format(suite))
+        return ('', suite)
 
 
 def main():
@@ -221,7 +221,7 @@ def main():
 
     for ctx in sp.process():
         rendered = render_template(ctx)
-        target_filepath = dockerfile_path(ctx)
+        target_filepath = dockerfile_path(suite=ctx['suite'], variant=ctx['variant'])
         target_abspath = os.path.abspath(target_filepath)
         target_filepath_parent = os.path.dirname(target_abspath)
 
