@@ -10,7 +10,7 @@ RUN yum -y install python-devel rpmdevtools
 
 # Install fresh pip and co
 RUN curl https://bootstrap.pypa.io/get-pip.py | python; pip install --upgrade virtualenv \
-      requests[security] && rm -rf /root/.cache
+      requests[security] venvctrl && rm -rf /root/.cache
 
 
 ENV BUILD_ARTIFACT=/home/busybee/build

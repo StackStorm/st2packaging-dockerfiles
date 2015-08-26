@@ -24,7 +24,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
         rm -rf /tmp/dh-virtualenv*
 
 # Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python; pip install --upgrade virtualenv && rm -rf /root/.cache
+RUN curl https://bootstrap.pypa.io/get-pip.py | python; pip install --upgrade virtualenv \
+      requests[security] && rm -rf /root/.cache
 
 ENV BUILD_ARTIFACT=/home/busybee/build
 
