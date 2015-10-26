@@ -1,0 +1,9 @@
+FROM quay.io/dennybaa/droneruby:trusty
+
+# Additional software (needed for RSpec, serverspec)
+RUN DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
+    apt-get -y install netcat && apt-get -y clean
+
+ADD Gemfile /root/Gemfile
+
+RUN bash -lc "bundle --gemfile=/root/Gemfile"
