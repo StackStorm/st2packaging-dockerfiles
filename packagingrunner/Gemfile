@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'sshkit'
 gem 'serverspec'
+gem 'sshkit', git: 'https://github.com/capistrano/sshkit.git', ref: 'fec497ae489b925af3a2469c51244076ad7edda2'
 gem 'hashie'
+gem 'rye'

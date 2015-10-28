@@ -1,4 +1,4 @@
-FROM quay.io/dennybaa/droneruby:{{ suite }}
+FROM quay.io/dennybaa/droneruby:{{ suite }}-rbenv
 
 # Additional software (needed for RSpec, serverspec)
 RUN DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
@@ -6,4 +6,6 @@ RUN DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
 
 ADD Gemfile /root/Gemfile
 
-RUN bash -lc "bundle --gemfile=/root/Gemfile"
+RUN ~/.rbenv/bin/rbenv exec bundle --gemfile=/root/Gemfile
+
+CMD /bin/bash
