@@ -1,4 +1,4 @@
-FROM quay.io/dennybaa/drone-busybee:centos7
+FROM quay.io/dennybaa/droneunit:centos7
 #
 # Buildenv is special environment for generating debian packages. It provides:
 #   - All needed pre-installed development packages

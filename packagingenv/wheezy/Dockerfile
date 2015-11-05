@@ -1,4 +1,4 @@
-FROM quay.io/dennybaa/drone-busybee:wheezy
+FROM quay.io/dennybaa/droneunit:wheezy
 #
 # Buildenv is special environment for generating debian packages. It provides:
 #   - All needed pre-installed development packages
