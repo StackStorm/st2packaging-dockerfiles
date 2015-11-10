@@ -1,0 +1,59 @@
+mongo:
+  image: mongo
+
+rabbitmq:
+  image: rabbitmq
+
+api:
+  image: quay.io/stackstorm/st2api
+  links:
+    - mongo
+    - rabbitmq
+
+auth:
+  image: quay.io/stackstorm/st2auth
+  links:
+    - api
+    - mongo
+
+notifier:
+  image: quay.io/stackstorm/st2notifier
+  links:
+    - api
+    - mongo
+    - rabbitmq
+
+resultstracker:
+  image: quay.io/stackstorm/st2resultstracker
+  links:
+    - api
+    - mongo
+    - rabbitmq
+
+rulesengine:
+  image: quay.io/stackstorm/st2rulesengine
+  links:
+    - api
+    - mongo
+    - rabbitmq
+
+sensorcontainer:
+  image: quay.io/stackstorm/st2sensorcontainer
+  links:
+    - api
+    - mongo
+    - rabbitmq
+
+exporter:
+  image: quay.io/stackstorm/st2exporter
+  links:
+    - api
+    - mongo
+    - rabbitmq
+
+actionrunner:
+  image: quay.io/stackstorm/st2actionrunner
+  links:
+    - api
+    - mongo
+    - rabbitmq
