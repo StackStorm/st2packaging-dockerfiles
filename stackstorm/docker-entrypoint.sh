@@ -10,7 +10,7 @@ linked_service() { [[ "$1" != tcp://* ]] && return 1; return 0; }
 
 # Generate config file
 generate_config_file() {
-  # We passing configration via volume, so skip generation
+  # Configuration has been already altered, so skip generation!
   (md5sum --quiet -c /st2.conf.orig.md5) || return 0
 
   cat /st2.conf.template | \
