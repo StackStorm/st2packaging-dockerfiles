@@ -53,3 +53,49 @@ docker-compose scale actionrunner=4
 ### Passing */etc/st2/st2.conf* as volume
 
 In production use case you can direct configuration passing.
+
+
+### Building/Deploying StackStorm Components to Docker Hub
+Here is an example to build all StackStorm components and deploy them to Docker Hub.
+
+
+Build `st2bundle` first (base image):
+```
+# copy st2bundle deb package to directory with base Dockerfile
+cp /tmp/st2-packages/st2bundle*.deb stackstorm/
+
+# note that version argument is required. Make sure you have Docker 1.9+ installed for this feature
+docker build --build-arg ST2_VERSION="1.1.2-5" -t st2bundle stackstorm/
+```
+
+Once we have `st2bundle` base Docker image, we can create child containers from it. Do it for all StackStorm components:
+```
+docker build -t stackstorm/st2actionrunner:1.1.2 st2actionrunner
+docker build -t stackstorm/st2api:1.1.2 st2api
+docker build -t stackstorm/st2auth:1.1.2 st2auth
+docker build -t stackstorm/st2exporter:1.1.2 st2exporter
+docker build -t stackstorm/st2notifier:1.1.2 st2notifier
+docker build -t stackstorm/st2resultstracker:1.1.2 st2resultstracker
+docker build -t stackstorm/st2rulesengine:1.1.2 st2rulesengine
+docker build -t stackstorm/st2sensorcontainer:1.1.2 st2sensorcontainer
+```
+> Make sure you tag Docker containers `X.Y.Z` for `vX.Y.Z` branch in `st2` and `latest` for `master` branch. This is how CI is configured now.
+
+Basic Check if things installed:
+```
+docker run --name st2api -d stackstorm/st2api:1.1.2
+docker exec st2docker st2 --version
+```
+
+Push created containers to Docker Hub:
+```
+docker login -e ${DOCKER_EMAIL} -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+docker push stackstorm/st2actionrunner:1.1.2
+docker push stackstorm/st2api:1.1.2
+docker push stackstorm/st2auth:1.1.2
+docker push stackstorm/st2exporter:1.1.2
+docker push stackstorm/st2notifier:1.1.2
+docker push stackstorm/st2resultstracker:1.1.2
+docker push stackstorm/st2rulesengine:1.1.2
+docker push stackstorm/st2sensorcontainer:1.1.2
+```
