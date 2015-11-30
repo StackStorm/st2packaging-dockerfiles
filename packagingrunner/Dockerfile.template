@@ -8,4 +8,5 @@ ADD Gemfile /root/Gemfile
 
 RUN ~/.rbenv/bin/rbenv exec bundle --gemfile=/root/Gemfile
 
-CMD /bin/bash
+COPY docker-entrypoint.sh /entrypoint.sh
+ENTRYPOINT [ "/entrypoint.sh" ]
