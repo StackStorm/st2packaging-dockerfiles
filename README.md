@@ -1,5 +1,7 @@
-# ![](https://stackstorm.com/wp/wp-content/uploads/2014/10/stackstorm-logo-header.png)  StackStorm Docker containers
-This repository contains Dockerfiles for StackStorm. For a specific Dockerfile you can browse directly to a container sub directory. Built docker images are currently available at https://quay.io/stackstorm.
+# StackStorm Docker Containers
+[![Go to Docker Hub](https://img.shields.io/badge/Docker%20Hub-%E2%86%92-blue.svg)](https://hub.docker.com/r/stackstorm/)
+
+This repository contains Dockerfiles for StackStorm. For a specific Dockerfile you can browse directly to a container sub directory.
 
 ## About StackStorm
 
@@ -55,41 +57,48 @@ docker-compose scale actionrunner=4
 In production use case you can direct configuration passing.
 
 
-### Building/Deploying StackStorm Components to Docker Hub
+### Build and Deploy StackStorm Components to Docker Hub
 Here is an example to build all StackStorm components and deploy them to Docker Hub.
+It shows current automated CI & Deployment logic.
 
+##### 1. Build `st2bundle`
+This is base image, which will be used as parent for StackStorm components.
 
-Build `st2bundle` first (base image):
 ```
-# copy st2bundle deb package to directory with base Dockerfile
+# copy st2bundle deb package to directory where base Dockerfile is located
 cp /tmp/st2-packages/st2bundle*.deb stackstorm/
 
-# note that version argument is required. Make sure you have Docker 1.9+ installed for this feature
+# note that version argument is required (make sure you have Docker 1.9+ installed for [this feature](https://docs.docker.com/engine/reference/commandline/build/#set-build-time-variables-build-arg))
 docker build --build-arg ST2_VERSION="1.1.2-5" -t st2bundle stackstorm/
 ```
+where `1.1.2` is version and `5` is revision numbers (more metadata like this will be added later to Docker images).
 
-Once we have `st2bundle` base Docker image, we can create child containers from it. Do it for all StackStorm components:
+##### 2. Build StackStorm components from the Base image
+Once we have `st2bundle` base Docker image, we can build child containers from it. Do for all StackStorm components:
 ```
-docker build -t stackstorm/st2actionrunner:1.1.2 st2actionrunner
-docker build -t stackstorm/st2api:1.1.2 st2api
-docker build -t stackstorm/st2auth:1.1.2 st2auth
-docker build -t stackstorm/st2exporter:1.1.2 st2exporter
-docker build -t stackstorm/st2notifier:1.1.2 st2notifier
-docker build -t stackstorm/st2resultstracker:1.1.2 st2resultstracker
-docker build -t stackstorm/st2rulesengine:1.1.2 st2rulesengine
-docker build -t stackstorm/st2sensorcontainer:1.1.2 st2sensorcontainer
+docker build -t stackstorm/st2actionrunner:1.1.2 st2actionrunner/
+docker build -t stackstorm/st2api:1.1.2 st2api/
+docker build -t stackstorm/st2auth:1.1.2 st2auth/
+docker build -t stackstorm/st2exporter:1.1.2 st2exporter/
+docker build -t stackstorm/st2notifier:1.1.2 st2notifier/
+docker build -t stackstorm/st2resultstracker:1.1.2 st2resultstracker/
+docker build -t stackstorm/st2rulesengine:1.1.2 st2rulesengine/
+docker build -t stackstorm/st2sensorcontainer:1.1.2 st2sensorcontainer/
 ```
-> Make sure you tag Docker containers `X.Y.Z` for `vX.Y.Z` branch in `st2` and `latest` for `master` branch. This is how CI is configured now.
+> Make sure you tag Docker containers `X.Y.Z` for versioned `vX.Y.Z` branch in `st2`.
+> `latest` Docker tag for `master` branch.
 
-Basic Check if things installed:
+##### 3. Check if things installed
+Very basic check:
 ```
 docker run --name st2api -d stackstorm/st2api:1.1.2
 docker exec st2docker st2 --version
 ```
 
-Push created containers to Docker Hub:
+##### 4. Deploy to Docker Hub
 ```
 docker login -e ${DOCKER_EMAIL} -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+
 docker push stackstorm/st2actionrunner:1.1.2
 docker push stackstorm/st2api:1.1.2
 docker push stackstorm/st2auth:1.1.2
