@@ -8,12 +8,9 @@ operation="${1:-complete}"
 
 case "$operation" in
 build)
-  bundle exec rake
+  bundle exec rake build:all
   ;;
 test)
-  bundle exec rspec
-  ;;
-setup_test)
   bundle exec rake setup:all && bundle exec rspec
   ;;
 complete)
