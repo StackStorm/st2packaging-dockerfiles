@@ -1,4 +1,4 @@
-FROM quay.io/stackstorm/stackstorm
+FROM st2bundle
 LABEL com.stackstorm.service.provides="auth"
 
 ENV ST2_SERVICE st2auth
