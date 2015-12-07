@@ -14,15 +14,14 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
         devscripts debhelper dh-make && apt-get clean
 
-# We use must fresh version >= 0.8 of dh-virtualenv, but jessie offers 0.7.
-# So we build it from source.
+# We use our version, since it fixes shebangd lines rewrites
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
         python-setuptools python-sphinx python-mock python-virtualenv && \
         apt-get clean && \
         git clone https://github.com/dennybaa/dh-virtualenv.git /tmp/dh-virtualenv && \
         cd /tmp/dh-virtualenv && \
         dpkg-buildpackage -b -uc -us && dpkg -i ../dh-virtualenv_*.deb && \
-        rm -rf /tmp/dh-virtualenv*
+          rm -rf /tmp/dh-virtualenv*
 
 # Install fresh pip and co
 RUN curl https://bootstrap.pypa.io/get-pip.py | python; pip install --upgrade wheel virtualenv \
