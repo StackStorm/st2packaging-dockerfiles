@@ -19,13 +19,13 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
         python-setuptools python-sphinx python-mock python-virtualenv && \
         apt-get clean && \
-        git clone https://github.com/spotify/dh-virtualenv.git /tmp/dh-virtualenv && \
+        git clone https://github.com/dennybaa/dh-virtualenv.git /tmp/dh-virtualenv && \
         cd /tmp/dh-virtualenv && \
         dpkg-buildpackage -b -uc -us && dpkg -i ../dh-virtualenv_*.deb && \
         rm -rf /tmp/dh-virtualenv*
 
 # Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python; pip install --upgrade virtualenv \
+RUN curl https://bootstrap.pypa.io/get-pip.py | python; pip install --upgrade wheel virtualenv \
       requests[security] && rm -rf /root/.cache
 
 VOLUME ['/home/busybee/build']
