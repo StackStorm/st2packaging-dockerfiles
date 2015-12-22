@@ -108,4 +108,5 @@ docker push stackstorm/st2notifier:1.1.2
 docker push stackstorm/st2resultstracker:1.1.2
 docker push stackstorm/st2rulesengine:1.1.2
 docker push stackstorm/st2sensorcontainer:1.1.2
+docker push stackstorm/st2garbagecollector:1.1.2
 ```
