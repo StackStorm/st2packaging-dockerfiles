@@ -84,6 +84,7 @@ docker build -t stackstorm/st2notifier:1.1.2 st2notifier/
 docker build -t stackstorm/st2resultstracker:1.1.2 st2resultstracker/
 docker build -t stackstorm/st2rulesengine:1.1.2 st2rulesengine/
 docker build -t stackstorm/st2sensorcontainer:1.1.2 st2sensorcontainer/
+docker build -t stackstorm/st2garbagecollector:1.1.2 st2garbagecollector/
 ```
 > Make sure you tag Docker containers `X.Y.Z` for versioned `vX.Y.Z` branch in `st2`.
 > `latest` Docker tag for `master` branch.

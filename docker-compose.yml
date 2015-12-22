@@ -38,6 +38,13 @@ sensorcontainer:
     - mongo
     - rabbitmq
 
+garbagecollector:
+  image: stackstorm/st2garbagecollector
+  links:
+    - api
+    - mongo
+    - rabbitmq
+
 exporter:
   image: stackstorm/st2exporter
   links:
