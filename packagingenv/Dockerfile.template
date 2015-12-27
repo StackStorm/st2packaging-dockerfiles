@@ -9,14 +9,16 @@ FROM quay.io/dennybaa/droneunit:{{ suite }}
 
 RUN yum -y install tar xz rpmdevtools
 
-# Old old uhf :( we need a fresh python in /usr/local/bin
-RUN curl -L http://www.python.org/ftp/python/2.7.10/Python-2.7.10.tar.xz -o /tmp/py27.tar.xz && \
-        cd /tmp/ && tar -xJf /tmp/py27.tar.xz && cd Python-2.7.10 && \
-        ./configure && make && make install && cd && rm -rf /tmp/*
+# Install st2python from our repository
+RUN wget https://bintray.com/stackstorm/el6/rpm -O /etc/yum.repos.d/stackstorm-el6.repo && \
+      sed -ir 's~stackstorm/el6~stackstorm/el6/stable~' /etc/yum.repos.d/stackstorm-el6.repo && \
+      yum -y install st2python && rm -rf /tmp/*
 
 # Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python; pip install --upgrade virtualenv \
-      requests[security] venvctrl && rm -rf /root/.cache
+RUN PATH=/usr/share/python/st2python/bin:$PATH bash -c \
+      "curl https://bootstrap.pypa.io/get-pip.py | python; pip install --upgrade virtualenv \
+        requests[security] venvctrl" \
+    && rm -rf /root/.cache
 
 {%- elif dist in ('centos', 'fedora') -%}
 
