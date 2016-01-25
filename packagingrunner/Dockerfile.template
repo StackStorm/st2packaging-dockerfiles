@@ -2,7 +2,7 @@ FROM quay.io/dennybaa/droneruby:{{ suite }}-rbenv
 
 # Additional software (needed for RSpec, serverspec)
 RUN DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
-    apt-get -y install netcat && apt-get -y clean
+    apt-get -y install netcat net-tools && apt-get -y clean
 
 ADD Gemfile /root/Gemfile
 
