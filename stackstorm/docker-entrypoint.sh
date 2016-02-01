@@ -31,5 +31,5 @@ if [ -z $ST2_SERVICE ]; then
   [ $# -gt 0 ] && exec "$@" || exec /bin/bash
 else
   CMDARGS="${@:---config-file /etc/st2/st2.conf}"
-  /usr/share/python/st2/bin/$ST2_SERVICE $CMDARGS
+  /opt/stackstorm/st2/bin/$ST2_SERVICE $CMDARGS
 fi
