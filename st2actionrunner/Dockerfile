@@ -1,4 +1,4 @@
-FROM st2bundle
+FROM st2
 LABEL com.stackstorm.service.provides="actionrunner"
 
 ENV ST2_SERVICE st2actionrunner
