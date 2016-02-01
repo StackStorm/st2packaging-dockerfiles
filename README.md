@@ -61,20 +61,20 @@ In production use case you can direct configuration passing.
 Here is an example to build all StackStorm components and deploy them to Docker Hub.
 It shows current automated CI & Deployment logic.
 
-##### 1. Build `st2bundle`
+##### 1. Build `st2`
 This is base image, which will be used as parent for StackStorm components.
 
 ```
-# copy st2bundle deb package to directory where base Dockerfile is located
-cp /tmp/st2-packages/st2bundle*.deb stackstorm/
+# copy st2 deb package to directory where base Dockerfile is located
+cp /tmp/st2-packages/st2*.deb stackstorm/
 
 # note that version argument is required (make sure you have Docker 1.9+ installed for [this feature](https://docs.docker.com/engine/reference/commandline/build/#set-build-time-variables-build-arg))
-docker build --build-arg ST2_VERSION="1.1.2-5" -t st2bundle stackstorm/
+docker build --build-arg ST2_VERSION="1.1.2-5" -t st2 stackstorm/
 ```
 where `1.1.2` is version and `5` is revision numbers (more metadata like this will be added later to Docker images).
 
 ##### 2. Build StackStorm components from the Base image
-Once we have `st2bundle` base Docker image, we can build child containers from it. Do for all StackStorm components:
+Once we have `st2` base Docker image, we can build child containers from it. Do for all StackStorm components:
 ```
 docker build -t stackstorm/st2actionrunner:1.1.2 st2actionrunner/
 docker build -t stackstorm/st2api:1.1.2 st2api/
