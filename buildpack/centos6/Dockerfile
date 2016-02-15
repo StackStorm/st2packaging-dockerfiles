@@ -43,9 +43,14 @@ RUN yum -y install \
 
 
 # Python and tools
-RUN wget -qO - https://setup.ius.io/ | bash -s; \
-    yum -y install python27 python27-devel; \
-    wget -qO - https://bootstrap.pypa.io/get-pip.py | python2.7
+RUN wget https://bintray.com/stackstorm/el6/rpm -O /etc/yum.repos.d/stackstorm-el6.repo && \
+      sed -ir 's~stackstorm/el6~stackstorm/el6/stable~' /etc/yum.repos.d/stackstorm-el6.repo && \
+      yum -y install st2python && rm -rf /tmp/*
+
+ENV PATH=/usr/share/python/st2python/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+RUN wget -qO - https://bootstrap.pypa.io/get-pip.py | python && \
+        rm -rf /root/.cache
+
 
 # St2 package build debs
 RUN yum -y install \
