@@ -10,5 +10,5 @@ RUN apt-get update && \
 RUN apt-get -y install devscripts debhelper dh-make
 
 # St2 package build debs
-RUN apt-get -y install libldap-dev ; \
+RUN apt-get -y install libldap2-dev libsasl2-dev ; \
     apt-get clean
