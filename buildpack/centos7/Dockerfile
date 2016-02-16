@@ -43,8 +43,10 @@ RUN yum -y install \
 
 
 # Python and tools
-RUN yum -y install python-devel; \
-    wget -qO - https://bootstrap.pypa.io/get-pip.py | python
+RUN yum -y install python-devel && \
+    wget -qO - https://bootstrap.pypa.io/get-pip.py | python && \
+    pip install setuptools virtualenv && \
+    rm -rf /root/.cache
 
 # St2 package build debs
 RUN yum -y install \
