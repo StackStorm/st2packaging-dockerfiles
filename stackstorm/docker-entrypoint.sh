@@ -1,9 +1,28 @@
 #!/bin/bash
 
 # We expect docker links with default names: rabbitmq, mongo
-amqp_url="${AMQP_URL:-amqp://guest:guest@rabbitmq:5672/}"
+amqp_host="${AMQP_HOST:-rabbitmq}"
+amqp_port="${AMQP_PORT:-5672}"
+amqp_user="${AMQP_USER:-guest}"
+amqp_password="${AMQP_PASSWORD:-guest}"
+amqp_url="amqp://$amqp_user:$amqp_password@$amqp_host:$amqp_port/"
+
+if [ -n $ST2_REQUIRE_AMQP ]; then
+  until nc -z $amqp_host $amqp_port; do
+    echo "AMQP at $amqp_host:$amqp_port doesn't respond. Waiting..."
+    sleep 1
+  done
+fi
+
 db_host="${DB_HOST:-mongo}"
 db_port="${DB_PORT:-27017}"
+
+if [ -n $ST2_REQUIRE_DB ]; then
+  until nc -z $db_host $db_port; do
+    echo "DB at $db_host:$db_port doesn't respond. Waiting..."
+    sleep 1
+  done
+fi
 
 # Check *_PORT variable if container is linked
 linked_service() { [[ "$1" != tcp://* ]] && return 1; return 0; }

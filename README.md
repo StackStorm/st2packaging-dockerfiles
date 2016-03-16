@@ -21,17 +21,20 @@ There many ways to set this configuration, namely:
  - Using environment variables.
  - Using docker links.
  - Passing `/etc/st2/st2.conf` as volume.
- 
+
 These ways are sufficient for any use case, starting from a small docker compose development environment finishing with big discovery managed installations. Let's cover these.
 
 ### Using environment variables
 
 St2 components the following environment variables:
 
- - **AMQP_URL** - url of rabbitmq, **default** is: `amqp://guest:guest@rabbitmq:5672/`.
+ - **AMQP_HOST** - rabbitmq hostname, **default** is: `rabbitmq`.
+ - **AMQP_PORT** - rabbitmq port, **default** is: `5672`.
+ - **AMQP_USER** - rabbitmq user, **default** is: `guest`.
+ - **AMQP_PASSWORD** - rabbitmq password, **default** is: `guest`.
  - **DB_HOST** - mongo database hostname or ip address, **default** is: `mongo`.
  - **DB_PORT** - mongo database listen port, **default** is: `27017`.
- - **API_URL** - stackstorm api endpoint. 
+ - **API_URL** - stackstorm api endpoint.
 
 If you need any custom configuration, simple pass these environment variables to st2 docker containers and you are ready to go.
 
