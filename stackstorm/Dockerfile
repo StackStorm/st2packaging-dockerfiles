@@ -3,7 +3,7 @@ FROM debian:wheezy
 ARG ST2_VERSION
 LABEL com.stackstorm.version="${ST2_VERSION}"
 
-RUN apt-get -y update && apt-get -y install adduser procps python2.7 libffi5 libyaml-0-2 git libpcre3 libpython2.7 libxml2 python-dev libssl-dev libffi-dev
+RUN apt-get -y update && apt-get -y install adduser procps python2.7 libffi5 libyaml-0-2 git libpcre3 libpython2.7 libxml2 python-dev libssl-dev libffi-dev sudo
 
 ADD ./pkg/st2_${ST2_VERSION}_amd64.deb /tmp/
 RUN dpkg -i /tmp/st2_${ST2_VERSION}_amd64.deb && rm -r /tmp/st2_${ST2_VERSION}_amd64.deb && apt-get clean
