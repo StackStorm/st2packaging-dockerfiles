@@ -23,6 +23,9 @@ set -e
 # docker.sh test st2api 'st2 --version' - Exec command inside already started `st2api` Docker container
 # docker.sh deploy st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer - Push images to Docker Hub
 
+: ${PACKAGECLOUD_ORGANIZATION:=stackstorm}
+: ${PACKAGECLOUD_TOKEN:? ST2PKG_VERSION env is required}
+
 : ${BUILD_DOCKER:=1}
 : ${DEPLOY_DOCKER:=1}
 
@@ -35,11 +38,7 @@ if [ ${BUILD_DOCKER} -eq 0 ]; then
   exit
 fi
 
-# # Required ENV variables
-# : ${DISTRO:? DISTRO env is required}
-# # TODO: Parse these vars from `st2_1.2dev-1_amd64.deb`
 : ${ST2PKG_VERSION:? ST2PKG_VERSION env is required}
-# : ${ST2PKG_RELEASE:? ST2PKG_RELEASE env is required}
 
 # # Get Docker Tag from the current st2 branch name
 # if [ "${ST2_GITREV}" == 'master' ]; then
