@@ -40,6 +40,7 @@ fi
 
 : ${ST2PKG_VERSION:? ST2PKG_VERSION env is required}
 
+: ${DOCKER_TAG:=latest}
 # # Get Docker Tag from the current st2 branch name
 # if [ "${ST2_GITREV}" == 'master' ]; then
 #   DOCKER_TAG=latest
@@ -62,23 +63,20 @@ case "$1" in
         docker build --build-arg ST2_VERSION="${ST2PKG_VERSION}-${ST2PKG_RELEASE}" -t st2 stackstorm/
       ;;
       *)
-        echo BUILD ${@:2}
-        # for container in "${@:2}"; do
-        #   docker build -t stackstorm/${container}:${DOCKER_TAG} ${container}
-        # done
+        for container in "${@:2}"; do
+          docker build -t stackstorm/${container}:${DOCKER_TAG} ${container}
+        done
       ;;
     esac
   ;;
   run)
-    echo RUN ${@:2}
-    # docker run --name "$2" -d stackstorm/"$2":${DOCKER_TAG}
+    docker run --name "$2" -d stackstorm/"$2":${DOCKER_TAG}
   ;;
   test)
-    echo TEST ${@:2}
     # Verify Container by running `st2` command in it
     # Same as: docker exec st2docker st2 --version
     # See: https://circleci.com/docs/docker#docker-exec
-    # sudo lxc-attach -n "$(docker inspect --format '{{.Id}}' ${2})" -- bash -c "${3}"
+    sudo lxc-attach -n "$(docker inspect --format '{{.Id}}' ${2})" -- bash -c "${3}"
   ;;
   deploy)
     echo DEPLOY ${@:2}
