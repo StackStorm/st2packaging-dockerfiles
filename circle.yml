@@ -6,6 +6,7 @@ general:
 machine:
   # Overwrite these ENV variables in parametrized (manual/API) builds
   environment:
+    ST2PKG_VERSION: 1.4dev
     BUILD_DOCKER: 1
     DEPLOY_DOCKER: 1
   pre:
@@ -19,17 +20,10 @@ machine:
 
 dependencies:
   pre:
-#     - sudo .circle/configure-services.sh
-#     - sudo .circle/fix-cache-permissions.sh
-#     - sudo apt-get -y install parallel jq
-#     - gem install package_cloud
+    - sudo apt-get -y install parallel jq
     - sudo pip install docker-compose
     - docker-compose version
     - docker version
-#   override:
-#     - .circle/docker-compose.sh pull ${DISTRO}
-#   post:
-#     - .circle/docker-compose.sh build ${DISTRO}
 
 test:
   pre:

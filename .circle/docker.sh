@@ -13,6 +13,9 @@ set -e
 # ST2PKG_VERSION - st2 version, will be reused in Docker image metadata (ex: 1.2dev)
 # ST2PKG_RELEASE - Release number aka revision number for `st2` package, will be reused in Docker metadata (ex: 4)
 
+# PACKAGECLOUD_ORGANIZATION (default: stackstorm)
+# PACKAGECLOUD_TOKEN
+
 ### Usage:
 # docker.sh build st2 - Build base Docker image with `st2` installed. This will be reused by child containers
 # docker.sh build st2actionrunner st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer - Build child Docker images based on `st2`, - previously created Docker image
@@ -23,6 +26,10 @@ set -e
 : ${BUILD_DOCKER:=1}
 : ${DEPLOY_DOCKER:=1}
 
+: ${pkgtype:=deb}
+: ${pkgdistro:=debian}
+: ${pkgflavor:=wheezy}
+
 if [ ${BUILD_DOCKER} -eq 0 ]; then
   echo 'Skipping the Docker stage because BUILD_DOCKER=0'
   exit
@@ -31,7 +38,7 @@ fi
 # # Required ENV variables
 # : ${DISTRO:? DISTRO env is required}
 # # TODO: Parse these vars from `st2_1.2dev-1_amd64.deb`
-# : ${ST2PKG_VERSION:? ST2PKG_VERSION env is required}
+: ${ST2PKG_VERSION:? ST2PKG_VERSION env is required}
 # : ${ST2PKG_RELEASE:? ST2PKG_RELEASE env is required}
 
 # # Get Docker Tag from the current st2 branch name
@@ -45,18 +52,23 @@ fi
 
 case "$1" in
   build)
-    echo BUILD ${@:2}
-    # case "$2" in
-    #   st2)
-    #     cp /tmp/st2-packages/st2*.deb stackstorm/
-    #     docker build --build-arg ST2_VERSION="${ST2PKG_VERSION}-${ST2PKG_RELEASE}" -t st2 stackstorm/
-    #   ;;
-    #   *)
-    #     for container in "${@:2}"; do
-    #       docker build -t stackstorm/${container}:${DOCKER_TAG} ${container}
-    #     done
-    #   ;;
-    # esac
+    case "$2" in
+      st2)
+        : ${ST2PKG_RELEASE=$( \
+          curl -sS -q https://$PACKAGECLOUD_TOKEN:@packagecloud.io/api/v1/repos/$PACKAGECLOUD_ORGANIZATION/staging-unstable/package/$pkgtype/$pkgdistro/$pkgflavor/st2/amd64/versions.json \
+          | jq -r "[.[] | select(.version == \"$ST2PKG_VERSION\")] | last | .release" \
+        )}
+        mkdir -p stackstorm/pkg/
+        curl -o stackstorm/pkg/st2_$ST2PKG_VERSION-$ST2PKG_RELEASE\_amd64.deb  https://packagecloud.io/stackstorm/staging-unstable/packages/debian/wheezy/st2_$ST2PKG_VERSION-$ST2PKG_RELEASE\_amd64.deb/download
+        docker build --build-arg ST2_VERSION="${ST2PKG_VERSION}-${ST2PKG_RELEASE}" -t st2 stackstorm/
+      ;;
+      *)
+        echo BUILD ${@:2}
+        # for container in "${@:2}"; do
+        #   docker build -t stackstorm/${container}:${DOCKER_TAG} ${container}
+        # done
+      ;;
+    esac
   ;;
   run)
     echo RUN ${@:2}
