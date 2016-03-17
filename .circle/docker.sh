@@ -53,12 +53,12 @@ case "$1" in
   build)
     case "$2" in
       st2)
-        : ${ST2PKG_RELEASE=$( \
+        : ${ST2PKG_RELEASE:=$( \
           curl -sS -q https://$PACKAGECLOUD_TOKEN:@packagecloud.io/api/v1/repos/$PACKAGECLOUD_ORGANIZATION/staging-unstable/package/$pkgtype/$pkgdistro/$pkgflavor/st2/amd64/versions.json \
           | jq -r "[.[] | select(.version == \"$ST2PKG_VERSION\")] | last | .release" \
         )}
         mkdir -p stackstorm/pkg/
-        curl -o stackstorm/pkg/st2_$ST2PKG_VERSION-$ST2PKG_RELEASE\_amd64.deb  https://packagecloud.io/stackstorm/staging-unstable/packages/debian/wheezy/st2_$ST2PKG_VERSION-$ST2PKG_RELEASE\_amd64.deb/download
+        curl -L -o stackstorm/pkg/st2_$ST2PKG_VERSION-${ST2PKG_RELEASE}_amd64.deb https://packagecloud.io/stackstorm/staging-unstable/packages/debian/wheezy/st2_${ST2PKG_VERSION}-${ST2PKG_RELEASE}_amd64.deb/download
         docker build --build-arg ST2_VERSION="${ST2PKG_VERSION}-${ST2PKG_RELEASE}" -t st2 stackstorm/
       ;;
       *)
