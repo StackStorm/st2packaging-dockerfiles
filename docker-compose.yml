@@ -3,12 +3,16 @@ api:
   links:
     - mongo
     - rabbitmq
+  volumes_from:
+    - data
 
 auth:
   image: stackstorm/st2auth
   links:
     - api
     - mongo
+  volumes_from:
+    - data
 
 notifier:
   image: stackstorm/st2notifier
@@ -16,6 +20,8 @@ notifier:
     - api
     - mongo
     - rabbitmq
+  volumes_from:
+    - data
 
 resultstracker:
   image: stackstorm/st2resultstracker
@@ -23,6 +29,8 @@ resultstracker:
     - api
     - mongo
     - rabbitmq
+  volumes_from:
+    - data
 
 rulesengine:
   image: stackstorm/st2rulesengine
@@ -30,6 +38,8 @@ rulesengine:
     - api
     - mongo
     - rabbitmq
+  volumes_from:
+    - data
 
 sensorcontainer:
   image: stackstorm/st2sensorcontainer
@@ -37,24 +47,39 @@ sensorcontainer:
     - api
     - mongo
     - rabbitmq
-
-exporter:
-  image: stackstorm/st2exporter
-  links:
-    - api
-    - mongo
-    - rabbitmq
+  volumes_from:
+    - data
 
 actionrunner:
   image: stackstorm/st2actionrunner
   links:
     - api
+    - auth
     - mongo
     - rabbitmq
+  volumes_from:
+    - data
 
-### External Services
+## External Services
 mongo:
   image: mongo
 
 rabbitmq:
   image: rabbitmq
+
+## Data container
+data:
+  build: ./data
+  volumes:
+    - /etc/st2
+    - /opt/stackstorm
+  links:
+    - rabbitmq
+    - mongo
+
+## Client container
+client:
+  build: ./client
+  links:
+    - api
+    - auth

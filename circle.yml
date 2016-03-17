@@ -30,9 +30,9 @@ test:
   pre:
     - .circle/docker.sh build st2
     - .circle/docker.sh build st2actionrunner st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer
-    - .circle/docker.sh run st2api
+    - docker-compose up -d
   override:
-    - .circle/docker.sh test st2api 'st2 --version'
+    - docker-compose run client st2 run core.noop
 
 deployment:
   publish:
