@@ -50,6 +50,24 @@ sensorcontainer:
   volumes_from:
     - data
 
+garbagecollector:
+  image: stackstorm/st2garbagecollector
+  links:
+    - api
+    - mongo
+    - rabbitmq
+  volumes_from:
+    - data
+
+exporter:
+  image: stackstorm/st2exporter
+  links:
+    - api
+    - mongo
+    - rabbitmq
+  volumes_from:
+    - data
+
 actionrunner:
   image: stackstorm/st2actionrunner
   links:
