@@ -32,7 +32,9 @@ test:
     - .circle/docker.sh build st2actionrunner st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer
     - docker-compose up -d
   override:
+    - docker-compose run client st2 action list --pack=core
     - docker-compose run client st2 run core.noop
+    - docker-compose run client st2 run core.local -- date -R
 
 deployment:
   publish:
