@@ -24,7 +24,7 @@ set -e
 # docker.sh deploy st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer - Push images to Docker Hub
 
 : ${PACKAGECLOUD_ORGANIZATION:=stackstorm}
-: ${PACKAGECLOUD_TOKEN:? ST2PKG_VERSION env is required}
+: ${PACKAGECLOUD_TOKEN:? PACKAGECLOUD_TOKEN env is required}
 
 : ${BUILD_DOCKER:=1}
 : ${DEPLOY_DOCKER:=1}
