@@ -7,6 +7,7 @@ machine:
   # Overwrite these ENV variables in parametrized (manual/API) builds
   environment:
     ST2PKG_VERSION: 1.4dev
+    ST2_COMPONENTS: st2actionrunner st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer st2garbagecollector
     BUILD_DOCKER: 1
     DEPLOY_DOCKER: 1
   pre:
@@ -29,7 +30,7 @@ dependencies:
 test:
   pre:
     - .circle/docker.sh build st2
-    - .circle/docker.sh build st2actionrunner st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer st2garbagecollector
+    - .circle/docker.sh build $ST2_COMPONENTS
     - docker-compose up -d
   override:
     - docker-compose run client st2 action list --pack=core
@@ -44,4 +45,4 @@ deployment:
       - feature/circleci
     owner: StackStorm
     commands:
-      - .circle/docker.sh deploy st2actionrunner st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer st2garbagecollector
+      - .circle/docker.sh deploy $ST2_COMPONENTS
