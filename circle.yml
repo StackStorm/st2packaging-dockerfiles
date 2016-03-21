@@ -29,7 +29,7 @@ dependencies:
 test:
   pre:
     - .circle/docker.sh build st2
-    - .circle/docker.sh build st2actionrunner st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer
+    - .circle/docker.sh build st2actionrunner st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer st2garbagecollector
     - docker-compose up -d
   override:
     - docker-compose run client st2 action list --pack=core
@@ -44,4 +44,4 @@ deployment:
       - feature/circleci
     owner: StackStorm
     commands:
-      - .circle/docker.sh deploy st2actionrunner st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer
+      - .circle/docker.sh deploy st2actionrunner st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer st2garbagecollector
