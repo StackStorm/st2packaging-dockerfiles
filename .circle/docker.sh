@@ -4,12 +4,12 @@ set -e
 ### Pass these ENV Variables for this script to consume:
 # BUILD_DOCKER - Should this script build Docker images or exit? (0/1)
 # DEPLOY_DOCKER - Should this script push created images to Docker Hub? (0/1)
+# DEPLOY_LATEST - Should this script push created images to Docker Hub marked with latest tag? (0/1)
 
 # DOCKER_USER - Docker Hub Username to login
 # DOCKER_EMAIL - Docker Hub Email to login
 # DOCKER_PASSWORD - Docker Hub Password to Login
 
-# ST2_GITREV - st2 branch name (ex: master, v1.2.1). This will be used to determine correct Docker Tag: `latest`, `1.2.1`
 # ST2PKG_VERSION - st2 version, will be reused in Docker image metadata (ex: 1.2dev)
 # ST2PKG_RELEASE - Release number aka revision number for `st2` package, will be reused in Docker metadata (ex: 4)
 
@@ -23,11 +23,9 @@ set -e
 # docker.sh test st2api 'st2 --version' - Exec command inside already started `st2api` Docker container
 # docker.sh deploy st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer - Push images to Docker Hub
 
-: ${PACKAGECLOUD_ORGANIZATION:=stackstorm}
-: ${PACKAGECLOUD_TOKEN:? PACKAGECLOUD_TOKEN env is required}
-
 : ${BUILD_DOCKER:=1}
 : ${DEPLOY_DOCKER:=1}
+: ${DEPLOY_LATEST:=0}
 
 : ${pkgtype:=deb}
 : ${pkgdistro:=debian}
@@ -40,20 +38,13 @@ fi
 
 : ${ST2PKG_VERSION:? ST2PKG_VERSION env is required}
 
-: ${DOCKER_TAG:=latest}
-# # Get Docker Tag from the current st2 branch name
-# if [ "${ST2_GITREV}" == 'master' ]; then
-#   DOCKER_TAG=latest
-# elif echo "${ST2_GITREV}" | grep -q '^v[0-9]\+\.[0-9]\+$'; then
-#   DOCKER_TAG=${ST2PKG_VERSION}
-# else
-#   DEPLOY_DOCKER=0
-# fi
-
 case "$1" in
   build)
     case "$2" in
       st2)
+        : ${PACKAGECLOUD_ORGANIZATION:=stackstorm}
+        : ${PACKAGECLOUD_TOKEN:? PACKAGECLOUD_TOKEN env is required}
+
         : ${ST2PKG_RELEASE:=$( \
           curl -sS -q https://$PACKAGECLOUD_TOKEN:@packagecloud.io/api/v1/repos/$PACKAGECLOUD_ORGANIZATION/staging-unstable/package/$pkgtype/$pkgdistro/$pkgflavor/st2/amd64/versions.json \
           | jq -r "[.[] | select(.version == \"$ST2PKG_VERSION\")] | last | .release" \
@@ -64,13 +55,13 @@ case "$1" in
       ;;
       *)
         for container in "${@:2}"; do
-          docker build -t stackstorm/${container}:${DOCKER_TAG} ${container}
+          docker build -t stackstorm/${container}:latest ${container}
         done
       ;;
     esac
   ;;
   run)
-    docker run --name "$2" -d stackstorm/"$2":${DOCKER_TAG}
+    docker run --name "$2" -d stackstorm/"$2":latest
   ;;
   test)
     # Verify Container by running `st2` command in it
@@ -79,15 +70,26 @@ case "$1" in
     sudo lxc-attach -n "$(docker inspect --format '{{.Id}}' ${2})" -- bash -c "${3}"
   ;;
   deploy)
-    echo DEPLOY ${@:2}
-    # if [ ${DEPLOY_DOCKER} -eq 0 ]; then
-    #   echo 'Skipping Docker push because DEPLOY_DOCKER=0'
+    if [ ${DEPLOY_DOCKER} -eq 0 ]; then
+      echo 'Skipping Docker push because DEPLOY_DOCKER=0'
+      exit
+    fi
+
+    for container in "${@:2}"; do
+      docker tag stackstorm/${container}:latest stackstorm/${container}:${ST2PKG_VERSION}
+    done
+
+    docker login -e ${DOCKER_EMAIL} -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+
+    echo "Pushing StackStorm ${ST2PKG_VERSION} images to Docker Hub in parallel ..."
+    parallel -v -j0 --line-buffer docker push stackstorm/{}:${ST2PKG_VERSION} ::: ${@:2}
+
+    # if [ ${DEPLOY_LATEST} -eq 0 ]; then
+    #   echo 'Skipping Docker push for latest tag because DEPLOY_LATEST=0'
     #   exit
     # fi
     #
-    # docker login -e ${DOCKER_EMAIL} -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
-    #
-    # echo 'Pushing StackStorm images to Docker Hub in parallel ...'
-    # parallel -v -j0 --line-buffer docker push stackstorm/{}:${DOCKER_TAG} ::: ${@:2}
+    # echo "Pushing latest StackStorm images to Docker Hub in parallel ..."
+    # parallel -v -j0 --line-buffer docker push stackstorm/{}:latest ::: ${@:2}
   ;;
 esac
