@@ -27,10 +27,6 @@ set -e
 : ${DEPLOY_DOCKER:=1}
 : ${DEPLOY_LATEST:=0}
 
-: ${pkgtype:=deb}
-: ${pkgdistro:=debian}
-: ${pkgflavor:=wheezy}
-
 if [ ${BUILD_DOCKER} -eq 0 ]; then
   echo 'Skipping the Docker stage because BUILD_DOCKER=0'
   exit
@@ -45,10 +41,18 @@ case "$1" in
         : ${PACKAGECLOUD_ORGANIZATION:=stackstorm}
         : ${PACKAGECLOUD_TOKEN:? PACKAGECLOUD_TOKEN env is required}
 
+        : ${pkgtype:=deb}
+        : ${pkgdistro:=debian}
+        : ${pkgflavor:=wheezy}
+        : ${pkgrepo:=$(echo ${ST2PKG_VERSION} | grep -q 'dev' && echo 'staging-unstable' || echo 'staging-stable')}
+
         : ${ST2PKG_RELEASE:=$( \
-          curl -sS -q https://$PACKAGECLOUD_TOKEN:@packagecloud.io/api/v1/repos/$PACKAGECLOUD_ORGANIZATION/staging-unstable/package/$pkgtype/$pkgdistro/$pkgflavor/st2/amd64/versions.json \
+          curl -sS -q https://$PACKAGECLOUD_TOKEN:@packagecloud.io/api/v1/repos/$PACKAGECLOUD_ORGANIZATION/$pkgrepo/package/$pkgtype/$pkgdistro/$pkgflavor/st2/amd64/versions.json \
           | jq -r "[.[] | select(.version == \"$ST2PKG_VERSION\")] | last | .release" \
         )}
+
+        pkg_repo=$(echo ${PKG_VERSION} | grep -qv 'dev'; echo $?)
+
         mkdir -p stackstorm/pkg/
         curl -L -o stackstorm/pkg/st2_$ST2PKG_VERSION-${ST2PKG_RELEASE}_amd64.deb https://packagecloud.io/stackstorm/staging-unstable/packages/debian/wheezy/st2_${ST2PKG_VERSION}-${ST2PKG_RELEASE}_amd64.deb/download
         docker build --build-arg ST2_VERSION="${ST2PKG_VERSION}-${ST2PKG_RELEASE}" -t st2 stackstorm/
