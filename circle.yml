@@ -7,7 +7,7 @@ machine:
   # Overwrite these ENV variables in parametrized (manual/API) builds
   environment:
     ST2PKG_VERSION: 1.6dev
-    ST2_COMPONENTS: st2actionrunner st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer st2garbagecollector
+    ST2_COMPONENTS: st2actionrunner st2api st2auth st2stream st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer st2garbagecollector
     DEPLOY_DOCKER: 0
   pre:
     - mkdir -p ~/logs

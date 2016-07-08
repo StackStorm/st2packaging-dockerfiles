@@ -47,6 +47,14 @@ backend_kwargs = {"file_path": "/etc/st2/htpasswd"}
 # API endpoint (e.g. http://myhost.net:9101/)
 api_url = $$api_url
 
+[stream]
+host = 0.0.0.0
+port = 9102
+debug = False
+logging = /etc/st2/logging.stream.conf
+
+heartbeat = 25
+
 [system]
 base_path = /opt/stackstorm
 
