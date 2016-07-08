@@ -2,7 +2,6 @@
 set -e
 
 ### Pass these ENV Variables for this script to consume:
-# BUILD_DOCKER - Should this script build Docker images or exit? (0/1)
 # DEPLOY_DOCKER - Should this script push created images to Docker Hub? (0/1)
 # DEPLOY_LATEST - Should this script push created images to Docker Hub marked with latest tag? (0/1)
 
@@ -23,16 +22,11 @@ set -e
 # docker.sh test st2api 'st2 --version' - Exec command inside already started `st2api` Docker container
 # docker.sh deploy st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer - Push images to Docker Hub
 
-: ${BUILD_DOCKER:=1}
-: ${DEPLOY_DOCKER:=1}
+: ${DEPLOY_DOCKER:=0}
 : ${DEPLOY_LATEST:=0}
 
-if [ ${BUILD_DOCKER} -eq 0 ]; then
-  echo 'Skipping the Docker stage because BUILD_DOCKER=0'
-  exit
-fi
-
 : ${ST2PKG_VERSION:? ST2PKG_VERSION env is required}
+: ${ST2PKG_STAGING:=1}
 
 case "$1" in
   build)
@@ -44,18 +38,15 @@ case "$1" in
         : ${pkgtype:=deb}
         : ${pkgdistro:=debian}
         : ${pkgflavor:=wheezy}
-        : ${pkgrepo:=$(echo ${ST2PKG_VERSION} | grep -q 'dev' && echo 'staging-unstable' || echo 'staging-stable')}
+        : ${pkgstaging:=$([ $ST2PKG_STAGING -gt 0 ] && echo 'staging-')}
+        : ${pkgrepo:=$(echo ${ST2PKG_VERSION} | grep -q 'dev' && echo 'unstable' || echo 'stable')}
 
         : ${ST2PKG_RELEASE:=$( \
-          curl -sS -q https://$PACKAGECLOUD_TOKEN:@packagecloud.io/api/v1/repos/$PACKAGECLOUD_ORGANIZATION/$pkgrepo/package/$pkgtype/$pkgdistro/$pkgflavor/st2/amd64/versions.json \
+          curl -sS -q https://$PACKAGECLOUD_TOKEN:@packagecloud.io/api/v1/repos/$PACKAGECLOUD_ORGANIZATION/${pkgstaging}${pkgrepo}/package/$pkgtype/$pkgdistro/$pkgflavor/st2/amd64/versions.json \
           | jq -r "[.[] | select(.version == \"$ST2PKG_VERSION\")] | last | .release" \
         )}
 
-        pkg_repo=$(echo ${PKG_VERSION} | grep -qv 'dev'; echo $?)
-
-        mkdir -p stackstorm/pkg/
-        curl -L -o stackstorm/pkg/st2_$ST2PKG_VERSION-${ST2PKG_RELEASE}_amd64.deb https://packagecloud.io/stackstorm/staging-unstable/packages/debian/wheezy/st2_${ST2PKG_VERSION}-${ST2PKG_RELEASE}_amd64.deb/download
-        docker build --build-arg ST2_VERSION="${ST2PKG_VERSION}-${ST2PKG_RELEASE}" -t st2 stackstorm/
+        docker build --build-arg ST2_VERSION="${ST2PKG_VERSION}-${ST2PKG_RELEASE}" --build-arg ST2_REPO="${pkgstaging}${pkgrepo}" -t st2 stackstorm/
       ;;
       *)
         for container in "${@:2}"; do
@@ -88,12 +79,12 @@ case "$1" in
     echo "Pushing StackStorm ${ST2PKG_VERSION} images to Docker Hub in parallel ..."
     parallel -v -j0 --line-buffer docker push stackstorm/{}:${ST2PKG_VERSION} ::: ${@:2}
 
-    # if [ ${DEPLOY_LATEST} -eq 0 ]; then
-    #   echo 'Skipping Docker push for latest tag because DEPLOY_LATEST=0'
-    #   exit
-    # fi
-    #
-    # echo "Pushing latest StackStorm images to Docker Hub in parallel ..."
-    # parallel -v -j0 --line-buffer docker push stackstorm/{}:latest ::: ${@:2}
+    if [ ${DEPLOY_LATEST} -eq 0 ]; then
+      echo 'Skipping Docker push for latest tag because DEPLOY_LATEST=0'
+      exit
+    fi
+
+    echo "Pushing latest StackStorm images to Docker Hub in parallel ..."
+    parallel -v -j0 --line-buffer docker push stackstorm/{}:latest ::: ${@:2}
   ;;
 esac

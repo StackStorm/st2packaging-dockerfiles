@@ -6,10 +6,9 @@ general:
 machine:
   # Overwrite these ENV variables in parametrized (manual/API) builds
   environment:
-    ST2PKG_VERSION: 1.4dev
+    ST2PKG_VERSION: 1.6dev
     ST2_COMPONENTS: st2actionrunner st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer st2garbagecollector
-    BUILD_DOCKER: 1
-    DEPLOY_DOCKER: 1
+    DEPLOY_DOCKER: 0
   pre:
     - mkdir -p ~/logs
     # Need latest Docker version for features like `--build-arg` to work (CircleCI by default works with outdated version)
@@ -33,6 +32,7 @@ test:
     - .circle/docker.sh build $ST2_COMPONENTS
     - docker-compose up -d
   override:
+    - docker-compose run client st2 --version
     - docker-compose run client st2 action list --pack=core
     - docker-compose run client st2 run core.noop
     - docker-compose run client st2 run core.local -- date -R
