@@ -6,6 +6,8 @@ ARG ST2_PACKAGE=https://packagecloud.io/StackStorm/${ST2_REPO}/packages/debian/w
 
 LABEL com.stackstorm.version="${ST2_VERSION}"
 
+ADD ./sources.list /etc/apt/ 
+
 RUN apt-get -y update && apt-get -y install adduser procps python2.7 libffi5 libyaml-0-2 git libpcre3 libpython2.7 libxml2 python-dev libssl-dev libffi-dev sudo
 
 ADD ${ST2_PACKAGE} /tmp/st2_${ST2_VERSION}_amd64.deb
