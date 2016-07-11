@@ -1,1 +1,6 @@
 *.pyc
+
+stackstorm/pkg/*
+
+.vagrant
+.bundle
