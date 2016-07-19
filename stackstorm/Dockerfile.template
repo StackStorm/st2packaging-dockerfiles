@@ -1,7 +1,10 @@
 FROM $BASE_DISTRO
-RUN apt-get -y update && apt-get -y upgrade
-RUN apt-get -y install python2.7 libyaml-0-2 libpython-dev python-dev libssl-dev libffi-dev git
-# adduser procps libffi6 libpcre3 sudo
+
+$ADD_SOURCE_LIST
+
+RUN $APT -y update && $APT -y upgrade
+RUN $APT -y install adduser python2.7 libyaml-0-2 libpython-dev python-dev libssl-dev libffi-dev git sudo procps
+# libffi6 libpcre3 
 
 ENV ST2_VERSION=$ST2_VERSION \
     ST2_REPO=$ST2_REPO
@@ -10,10 +13,8 @@ ENV ST2_PACKAGE=$ST2_PACKAGE
 
 LABEL com.stackstorm.version="${ST2_VERSION}"
 
-# ADD ./sources.list /etc/apt/ 
-
 ADD ${ST2_PACKAGE} /tmp/st2_${ST2_VERSION}_amd64.deb
-RUN dpkg -i /tmp/st2_${ST2_VERSION}_amd64.deb && rm -r /tmp/st2_${ST2_VERSION}_amd64.deb && apt-get clean
+RUN dpkg -i /tmp/st2_${ST2_VERSION}_amd64.deb && rm -r /tmp/st2_${ST2_VERSION}_amd64.deb && $APT clean
 
 ADD ./conf/st2.conf.template /st2.conf.template
 RUN md5sum /etc/st2/st2.conf > /st2.conf.orig.md5
