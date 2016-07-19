@@ -1,6 +1,8 @@
 *.pyc
 
-stackstorm/pkg/*
+stackstorm/*.deb
+
+*/Dockerfile
 
 .vagrant
 .bundle

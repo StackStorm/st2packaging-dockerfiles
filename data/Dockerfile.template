@@ -1,4 +1,4 @@
-FROM st2
+FROM $INTERMEDIATE_CONTAINER 
 LABEL com.stackstorm.service.provides="data"
 
 ADD ./st2.conf /etc/st2/st2.conf
