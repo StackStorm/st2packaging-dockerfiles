@@ -78,15 +78,18 @@ else
   verify_vars_exist "$NEEDED_VARS"
 fi
 
-echo "Running confd templating"
-verify_installed confd
-echo "Adding confd files from datastore to system files"
-mkdir -p $CONFD_HOST_DIR/{conf.d,templates}
-cp -r $CONFD_DIR/conf.d/* $CONFD_HOST_DIR/conf.d/ || :
-cp -r $CONFD_DIR/templates/* $CONFD_HOST_DIR/templates/ || :
+run_confd() {
+  echo "Running confd templating"
+  verify_installed confd
+  echo "Adding confd files from datastore to system files"
+  mkdir -p $CONFD_HOST_DIR/{conf.d,templates}
+  cp -r $CONFD_DIR/conf.d/* $CONFD_HOST_DIR/conf.d/ || :
+  cp -r $CONFD_DIR/templates/* $CONFD_HOST_DIR/templates/ || :
 
-echo "Running condf -onetime -backend env -confdir $CONFD_HOST_DIR"
-confd -onetime -backend env -confdir $CONFD_HOST_DIR
+  echo "Running condf -onetime -backend env -confdir $CONFD_HOST_DIR"
+  confd -onetime -backend env -confdir $CONFD_HOST_DIR
+}
+export -f run_confd
 
 if [ -s "$DATASTORE_DIR/file_copy.sh" ]; then
   echo "Running file_copy.sh in from datastore"

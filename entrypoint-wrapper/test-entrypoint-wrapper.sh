@@ -7,6 +7,7 @@ echo -e "\nSTEP 1: set env vars\n"
 DATASTORE_EXAMPLE_DIR=`pwd`/datastore_example
 DATASTORE_TARGET=`pwd`/datastore_target
 
+#export ST2_API_URL=
 export DATASTORE_DIR="$DATASTORE_TARGET"
 
 # options are: single-host, distributed, and rancher
@@ -31,6 +32,7 @@ export INSIDE_DUMB_INIT="true"
 
 echo -e "\nSTEP 2: testing with regular volume \n"
 rm -rf $DATASTORE_TARGET/* || :
+cp -r $DATASTORE_EXAMPLE_DIR/* $DATASTORE_TARGET
 
 export DATASTORE_TYPE="volume"
 

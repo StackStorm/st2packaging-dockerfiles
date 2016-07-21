@@ -7,7 +7,7 @@ mode = "0644"
 keys = [
   "/st2/api/url",
   "/rabbitmq/url",
-  "/mongo/address",
+  "/mongo/host",
   "/mongo/port",
 ]
 #check_cmd = "/usr/sbin/nginx -t -c {{.src}}"

@@ -68,12 +68,12 @@ user = stanley
 ssh_key_file = /home/stanley/.ssh/id_rsa
 
 [messaging]
-url = {{getv "/rabbitmq/url"}}
+url = {{getv "/rabbitmq/url" }}
 
 [ssh_runner]
 remote_dir = /tmp
 use_paramiko_ssh_runner = True
 
 [database]
-host = {{getv "/mongo/address"}}
+host = {{getv "/mongo/host"}}
 port = {{getv "/mongo/port"}}
