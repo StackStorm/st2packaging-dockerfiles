@@ -1,6 +1,6 @@
 *.pyc
 
-stackstorm/*.deb
+*.deb
 
 */Dockerfile
 

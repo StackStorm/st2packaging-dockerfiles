@@ -1,4 +1,4 @@
-FROM $INTERMEDIATE_CONTAINER 
+FROM $INTERMEDIATE_CONTAINER
 LABEL com.stackstorm.service.provides="api"
 
 ENV ST2_SERVICE st2api

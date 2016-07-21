@@ -11,8 +11,8 @@ export CONTAINER_OWNER="stackstorm"
 export BUILD_TAG="${ST2WEB_VERSION}_$(echo $BASE_DISTRO | tr ':' '_')"
 export CACHE_DOWNLOAD=true
 
-export CONTAINERS="st2web"
 export STAGE1="st2web"
 export STAGE2=""
+export CONTAINERS="$STAGE1 $STAGE2"
 
 check_cache "st2web" "st2web_${ST2WEB_VERSION}_amd64.deb" ST2WEB_PACKAGE

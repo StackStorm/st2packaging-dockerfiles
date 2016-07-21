@@ -1,0 +1,148 @@
+version: '2'
+
+#volumes:
+#  data_st2conf:
+#    external:
+#      name: $DATA_ST2CONF_VOLUME
+#  data_st2packs:
+#    external:
+#      name: $DATA_ST2PACKS_VOLUME
+#  data_mistralconf:
+#    external:
+#      name: $DATA_MISTRAL_VOLUME
+#  data_st2web:
+#    external:
+#      name: $DATA_ST2WEB_VOLUME
+
+services:
+  api:
+    image: stackstorm/st2api:$BUILD_TAG
+    links:
+      - mongo
+      - rabbitmq
+    volumes:
+      - data_st2conf:/etc/st2:ro
+
+  auth:
+    image: stackstorm/st2auth:$BUILD_TAG
+    links:
+      - api
+      - mongo
+    volumes:
+      - data_st2conf:/etc/st2:ro
+
+  stream:
+    image: stackstorm/st2stream:$BUILD_TAG
+    links:
+      - mongo
+      - rabbitmq
+    volumes:
+      - data_st2conf:/etc/st2:ro
+
+  notifier:
+    image: stackstorm/st2notifier:$BUILD_TAG
+    links:
+      - api
+      - mongo
+      - rabbitmq
+    volumes:
+      - data_st2conf:/etc/st2:ro
+
+  resultstracker:
+    image: stackstorm/st2resultstracker:$BUILD_TAG
+    links:
+      - api
+      - mongo
+      - rabbitmq
+    volumes:
+      - data_st2conf:/etc/st2:ro
+
+  rulesengine:
+    image: stackstorm/st2rulesengine:$BUILD_TAG
+    links:
+      - api
+      - mongo
+      - rabbitmq
+    volumes:
+      - data_st2conf:/etc/st2:ro
+
+  sensorcontainer:
+    image: stackstorm/st2sensorcontainer:$BUILD_TAG
+    links:
+      - api
+      - mongo
+      - rabbitmq
+    volumes:
+      - data_st2conf:/etc/st2:ro
+
+  garbagecollector:
+    image: stackstorm/st2garbagecollector:$BUILD_TAG
+    links:
+      - api
+      - mongo
+      - rabbitmq
+    volumes:
+      - data_st2conf:/etc/st2:ro
+
+  exporter:
+    image: stackstorm/st2exporter:$BUILD_TAG
+    links:
+      - api
+      - mongo
+      - rabbitmq
+    volumes:
+      - data_st2conf:/etc/st2:ro
+
+  actionrunner:
+    image: stackstorm/st2actionrunner:$BUILD_TAG
+    links:
+      - api
+      - auth
+      - mongo
+      - rabbitmq
+    volumes:
+      - data_st2conf:/etc/st2:ro
+  
+  web:
+    image: stackstorm/st2web:$BUILD_TAG
+    links:
+      - api
+      - auth 
+      - stream 
+    volumes:
+      - data_st2conf:/etc/st2:ro
+      - data_st2web:/etc/nginx/
+
+  mistral:
+    image: stackstorm/st2mistral:$BUILD_TAG
+    links:
+      - api
+      - postgres 
+    volumes:
+      - data_mistralconf:/etc/st2:ro
+
+  ## Client container
+  client:
+    build: ./client
+    links:
+      - api
+      - auth
+  
+  ## External Services
+  mongo:
+    image: mongo
+  postgres:
+    image: postgres 
+  rabbitmq:
+    image: rabbitmq
+
+  ## Data container
+  # data:
+  #  build: ./data
+  #  volumes:
+  #    - /etc/st2
+  #    - /opt/stackstorm
+  #  links:
+  #    - rabbitmq
+  #    - mongo
+

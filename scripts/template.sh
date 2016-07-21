@@ -21,6 +21,17 @@ fi
 FILE=$CONTAINERS
 
 for entry in $FILE; do
-  echo "Evaluating template: $entry/Dockerfile.template"
-  envsubst < $entry/Dockerfile.template > $entry/Dockerfile
+  DOCKERFILE="$entry/Dockerfile"
+  DOCKER_COMPOSE="$entry/docker-compose.yml"
+  
+  if [ -e $DOCKERFILE ]; then 
+    echo "Evaluating template: ${DOCKERFILE}.template"
+    envsubst < ${DOCKERFILE}.template > $DOCKERFILE
+  fi
+
+  if [ -e $DOCKER_COMPOSE ]; then 
+    echo "Evaluating template: ${DOCKER_COMPOSE}.template"
+    envsubst < ${DOCKER_COMPOSE}.template > $DOCKER_COMPOSE
+  fi
+
 done

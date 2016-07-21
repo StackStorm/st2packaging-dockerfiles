@@ -8,8 +8,10 @@ export CONTAINER_OWNER="stackstorm"
 export BUILD_TAG="${ST2MISTRAL_VERSION}_$(echo $BASE_DISTRO | tr ':' '_')"
 export CACHE_DOWNLOAD=true
 
-export CONTAINERS="st2mistral"
-export STAGE1="st2mistral"
-export STAGE2=""
+export STAGE1="mistral_base"
+export STAGE2="mistral_api mistral_server"
+export CONTAINERS="$STAGE1 $STAGE2"
 
-check_cache "st2mistral" "st2mistral_${ST2MISTRAL_VERSION}_amd64.deb" ST2MISTRAL_PACKAGE
+export INTERMEDIATE_CONTAINER="${CONTAINER_OWNER}/${STAGE1}_build:${BUILD_TAG}"
+
+check_cache "mistral_base" "st2mistral_${ST2MISTRAL_VERSION}_amd64.deb" ST2MISTRAL_PACKAGE

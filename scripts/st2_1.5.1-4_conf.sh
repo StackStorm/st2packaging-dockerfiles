@@ -8,12 +8,12 @@ export CONTAINER_OWNER="stackstorm"
 export BUILD_TAG="${ST2_VERSION}_$(echo $BASE_DISTRO | tr ':' '_')"
 export CACHE_DOWNLOAD=true
 
-export CONTAINERS="stackstorm client st2actionrunner st2api st2auth \
-st2exporter st2garbagecollector st2notifier st2resultstracker \
-st2rulesengine st2sensorcontainer st2stream"
 export STAGE1="stackstorm"
 export STAGE2="client st2actionrunner st2api st2auth st2exporter st2garbagecollector \
 st2notifier st2resultstracker st2rulesengine st2sensorcontainer st2stream"
+export CONTAINERS="$STAGE1 $STAGE2"
+
+export INTERMEDIATE_CONTAINER="${CONTAINER_OWNER}/${STAGE1}_build:${BUILD_TAG}"
 
 check_cache "stackstorm" "st2_${ST2_VERSION}_amd64.deb" ST2_PACKAGE
 

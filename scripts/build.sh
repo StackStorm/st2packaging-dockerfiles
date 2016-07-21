@@ -17,8 +17,8 @@ fi
 
 docker_build() {
   echo "########## $1"
-  if [ "$container" == "stackstorm" ]; then
-    EXTRA_TAG="-t $CONTAINER_OWNER/$1:build"
+  if [ "$container" == "$STAGE1" ] && [ ! -z "$STAGE2" ]; then
+    EXTRA_TAG="-t $INTERMEDIATE_CONTAINER"
   fi
   echo -e "\nStarting build for: $1\n"
   sudo docker build -t $CONTAINER_OWNER/$1:$BUILD_TAG $EXTRA_TAG $1
