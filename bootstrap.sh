@@ -4,7 +4,6 @@ wget -q -O - https://get.docker.io/gpg | apt-key add -
 echo deb https://apt.dockerproject.org/repo ubuntu-trusty main > /etc/apt/sources.list.d/docker.list
 apt-get update -qq; apt-get purge lxc-docker
 apt-get install linux-image-extra-$(uname -r)
-apt-get install -q -y --force-yes parallel #for doing parallel builds with scripts  
 apt-get install -q -y --force-yes docker-engine
 usermod -a -G docker vagrant
 
