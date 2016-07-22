@@ -45,7 +45,15 @@ backend = flat_file
 backend_kwargs = {"file_path": "/etc/st2/htpasswd"}
 
 # API endpoint (e.g. http://myhost.net:9101/)
-api_url = http://api:9101/
+api_url = {{getv "/st2/api/url"}}
+
+[stream]
+host = 0.0.0.0
+port = 9102
+debug = False
+logging = /etc/st2/logging.stream.conf
+
+heartbeat = 25
 
 [system]
 base_path = /opt/stackstorm
@@ -60,12 +68,12 @@ user = stanley
 ssh_key_file = /home/stanley/.ssh/id_rsa
 
 [messaging]
-url = amqp://guest:guest@rabbitmq:5672/
+url = {{getv "/rabbitmq/url" }}
 
 [ssh_runner]
 remote_dir = /tmp
 use_paramiko_ssh_runner = True
 
 [database]
-host = mongo
-port = 27017
+host = {{getv "/mongo/host"}}
+port = {{getv "/mongo/port"}}

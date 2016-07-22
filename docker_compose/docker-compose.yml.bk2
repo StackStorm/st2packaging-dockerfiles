@@ -1,0 +1,237 @@
+version: '2'
+
+#volumes:
+#  data_st2conf:
+#    external:
+#      name: $DATA_ST2CONF_VOLUME
+#  data_st2packs:
+#    external:
+#      name: $DATA_ST2PACKS_VOLUME
+#  data_mistralconf:
+#    external:
+#      name: $DATA_MISTRAL_VOLUME
+#  data_st2web:
+#    external:
+#      name: $DATA_ST2WEB_VOLUME
+
+services:
+  st2api:
+    image: rancher-m.lan/stackstorm/st2api:1.5.1-4_ubuntu_trusty
+    links:
+      - mongo
+      - rabbitmq
+    environment:
+      # options are: single-host, distributed, and rancher
+      - HOST_IP="192.168.50.10"
+      - CONTAINER_ENV="single-host"
+      # options are: volume, http-tar, and git
+      # export DATASTORE_TYPE="volume"
+      - DATASTORE_TYPE="http-tar"
+      - DATASTORE_HTTP_ADDRESS="http://$$HOST_IP:8000/st2.tar.gz"
+    #volumes:
+    #  - data_st2conf:/etc/st2:ro
+
+  st2auth:
+    image: rancher-m.lan/stackstorm/st2auth:1.5.1-4_ubuntu_trusty
+    links:
+      - st2api
+      - mongo
+    environment:
+      # options are: single-host, distributed, and rancher
+      - HOST_IP="192.168.50.10"
+      - CONTAINER_ENV="single-host"
+      # options are: volume, http-tar, and git
+      # export DATASTORE_TYPE="volume"
+      - DATASTORE_TYPE="http-tar"
+      - DATASTORE_HTTP_ADDRESS="http://localhost:8000/st2.tar.gz"
+    #volumes:
+    #  - data_st2conf:/etc/st2:ro
+
+  st2stream:
+    image: rancher-m.lan/stackstorm/st2stream:1.5.1-4_ubuntu_trusty
+    links:
+      - mongo
+      - rabbitmq
+    environment:
+      # options are: single-host, distributed, and rancher
+      - HOST_IP="192.168.50.10"
+      - CONTAINER_ENV="single-host"
+      # options are: volume, http-tar, and git
+      # export DATASTORE_TYPE="volume"
+      - DATASTORE_TYPE="http-tar"
+      - DATASTORE_HTTP_ADDRESS="http://localhost:8000/st2.tar.gz"
+    #volumes:
+    #  - data_st2conf:/etc/st2:ro
+
+  st2notifier:
+    image: rancher-m.lan/stackstorm/st2notifier:1.5.1-4_ubuntu_trusty
+    links:
+      - st2api
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP="192.168.50.10"
+      # options are: single-host, distributed, and rancher
+      - CONTAINER_ENV="single-host"
+      # options are: volume, http-tar, and git
+      # export DATASTORE_TYPE="volume"
+      - DATASTORE_TYPE="http-tar"
+      - DATASTORE_HTTP_ADDRESS="http://localhost:8000/st2.tar.gz"
+    #volumes:
+    #  - data_st2conf:/etc/st2:ro
+
+  st2resultstracker:
+    image: rancher-m.lan/stackstorm/st2resultstracker:1.5.1-4_ubuntu_trusty
+    links:
+      - st2api
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP="192.168.50.10"
+      # options are: single-host, distributed, and rancher
+      - CONTAINER_ENV="single-host"
+      # options are: volume, http-tar, and git
+      # export DATASTORE_TYPE="volume"
+      - DATASTORE_TYPE="http-tar"
+      - DATASTORE_HTTP_ADDRESS="http://localhost:8000/st2.tar.gz"
+    #volumes:
+    #  - data_st2conf:/etc/st2:ro
+
+  st2rulesengine:
+    image: rancher-m.lan/stackstorm/st2rulesengine:1.5.1-4_ubuntu_trusty
+    links:
+      - st2api
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP="192.168.50.10"
+      # options are: single-host, distributed, and rancher
+      - CONTAINER_ENV="single-host"
+      # options are: volume, http-tar, and git
+      # export DATASTORE_TYPE="volume"
+      - DATASTORE_TYPE="http-tar"
+      - DATASTORE_HTTP_ADDRESS="http://localhost:8000/st2.tar.gz"
+    #volumes:
+    #  - data_st2conf:/etc/st2:ro
+
+  st2sensorcontainer:
+    image: rancher-m.lan/stackstorm/st2sensorcontainer:1.5.1-4_ubuntu_trusty
+    links:
+      - st2api
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP="192.168.50.10"
+      # options are: single-host, distributed, and rancher
+      - CONTAINER_ENV="single-host"
+      # options are: volume, http-tar, and git
+      # export DATASTORE_TYPE="volume"
+      - DATASTORE_TYPE="http-tar"
+      - DATASTORE_HTTP_ADDRESS="http://localhost:8000/st2.tar.gz"
+    #volumes:
+    #  - data_st2conf:/etc/st2:ro
+
+  st2garbagecollector:
+    image: rancher-m.lan/stackstorm/st2garbagecollector:1.5.1-4_ubuntu_trusty
+    links:
+      - st2api
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP="192.168.50.10"
+      # options are: single-host, distributed, and rancher
+      - CONTAINER_ENV="single-host"
+      # options are: volume, http-tar, and git
+      # export DATASTORE_TYPE="volume"
+      - DATASTORE_TYPE="http-tar"
+      - DATASTORE_HTTP_ADDRESS="http://localhost:8000/st2.tar.gz"
+    #volumes:
+    #  - data_st2conf:/etc/st2:ro
+
+  # st2exporter:
+    # image: rancher-m.lan/stackstorm/st2exporter:1.5.1-4_ubuntu_trusty
+    # links:
+    #   - st2api
+     #  - mongo
+      # - rabbitmq
+    # environment:
+     #  - HOST_IP="192.168.50.10"
+      # options are: single-host, distributed, and rancher
+      # - CONTAINER_ENV="single-host"
+      # options are: volume, http-tar, and git
+      # export DATASTORE_TYPE="volume"
+      # - DATASTORE_TYPE="http-tar"
+      # - DATASTORE_HTTP_ADDRESS="http://localhost:8000/st2.tar.gz"
+    #volumes:
+    #  - data_st2conf:/etc/st2:ro
+
+  st2actionrunner:
+    image: rancher-m.lan/stackstorm/st2actionrunner:1.5.1-4_ubuntu_trusty
+    links:
+      - st2api
+      - st2auth
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP="192.168.50.10"
+      # options are: single-host, distributed, and rancher
+      - CONTAINER_ENV="single-host"
+      # options are: volume, http-tar, and git
+      # export DATASTORE_TYPE="volume"
+      - DATASTORE_TYPE="http-tar"
+      - DATASTORE_HTTP_ADDRESS="http://localhost:8000/st2.tar.gz"
+    #volumes:
+    #  - data_st2conf:/etc/st2:ro
+  
+  st2web:
+    image: rancher-m.lan/stackstorm/st2web:1.5.1-1_ubuntu_trusty
+    ports:
+      - "8443:8080"
+    links:
+      - st2api
+      - st2auth 
+      - st2stream 
+    environment:
+      - HOST_IP="192.168.50.10"
+      # options are: single-host, distributed, and rancher
+      - CONTAINER_ENV="single-host"
+      # options are: volume, http-tar, and git
+      # export DATASTORE_TYPE="volume"
+      - DATASTORE_TYPE="http-tar"
+      - DATASTORE_HTTP_ADDRESS="http://localhost:8000/st2web.tar.gz"
+    #volumes:
+    #  - data_st2conf:/etc/st2:ro
+    #  - data_st2web:/etc/nginx/
+
+  #st2mistral:
+  #  image: stackstorm/st2mistral:$BUILD_TAG
+  #  links:
+  #    - st2api
+  #    - postgres 
+    #volumes:
+    #  - data_mistralconf:/etc/st2:ro
+
+  ## Client container
+  # st2client:
+  #   links:
+  #     - st2api
+  #     - st2auth
+  
+  ## External Services
+  mongo:
+    image: mongo
+  #postgres:
+  #  image: postgres 
+  rabbitmq:
+    image: rabbitmq
+
+  ## Data container
+  # data:
+  #  build: ./data
+  #  volumes:
+  #    - /etc/st2
+  #    - /opt/stackstorm
+  #  links:
+  #    - rabbitmq
+  #    - mongo
+

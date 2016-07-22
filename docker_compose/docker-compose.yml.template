@@ -15,134 +15,168 @@ version: '2'
 #      name: $DATA_ST2WEB_VOLUME
 
 services:
-  api:
-    image: stackstorm/st2api:$BUILD_TAG
+  st2api:
+    image: ${CONTAINER_OWNER}/st2api:${ST2_VERSION}_${BASE_DISTRO_TAG}
     links:
       - mongo
       - rabbitmq
-    volumes:
-      - data_st2conf:/etc/st2:ro
+    environment:
+      # options are: single-host, distributed, and rancher
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      # options are: volume, http-tar, and git
+      # export DATASTORE_TYPE=volume
+      - DATASTORE_TYPE=$DATASTORE_TYPE
+      - DATASTORE_HTTP_ADDRESS=$ST2_DATASTORE_HTTP_ADDRESS
 
-  auth:
-    image: stackstorm/st2auth:$BUILD_TAG
+  st2auth:
+    image: ${CONTAINER_OWNER}/st2auth:${ST2_VERSION}_${BASE_DISTRO_TAG}
     links:
-      - api
+      - st2api
       - mongo
-    volumes:
-      - data_st2conf:/etc/st2:ro
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATASTORE_TYPE=$DATASTORE_TYPE
+      - DATASTORE_HTTP_ADDRESS=$ST2_DATASTORE_HTTP_ADDRESS
 
-  stream:
-    image: stackstorm/st2stream:$BUILD_TAG
+  st2stream:
+    image: ${CONTAINER_OWNER}/st2stream:${ST2_VERSION}_${BASE_DISTRO_TAG}
     links:
-      - mongo
-      - rabbitmq
-    volumes:
-      - data_st2conf:/etc/st2:ro
-
-  notifier:
-    image: stackstorm/st2notifier:$BUILD_TAG
-    links:
-      - api
-      - mongo
-      - rabbitmq
-    volumes:
-      - data_st2conf:/etc/st2:ro
-
-  resultstracker:
-    image: stackstorm/st2resultstracker:$BUILD_TAG
-    links:
-      - api
       - mongo
       - rabbitmq
-    volumes:
-      - data_st2conf:/etc/st2:ro
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATASTORE_TYPE=$DATASTORE_TYPE
+      - DATASTORE_HTTP_ADDRESS=$ST2_DATASTORE_HTTP_ADDRESS
 
-  rulesengine:
-    image: stackstorm/st2rulesengine:$BUILD_TAG
+  st2notifier:
+    image: ${CONTAINER_OWNER}/st2notifier:${ST2_VERSION}_${BASE_DISTRO_TAG}
     links:
-      - api
+      - st2api
       - mongo
       - rabbitmq
-    volumes:
-      - data_st2conf:/etc/st2:ro
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATASTORE_TYPE=$DATASTORE_TYPE
+      - DATASTORE_HTTP_ADDRESS=$ST2_DATASTORE_HTTP_ADDRESS
 
-  sensorcontainer:
-    image: stackstorm/st2sensorcontainer:$BUILD_TAG
+  st2resultstracker:
+    image: ${CONTAINER_OWNER}/st2resultstracker:${ST2_VERSION}_${BASE_DISTRO_TAG}
     links:
-      - api
+      - st2api
       - mongo
       - rabbitmq
-    volumes:
-      - data_st2conf:/etc/st2:ro
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATASTORE_TYPE=$DATASTORE_TYPE
+      - DATASTORE_HTTP_ADDRESS=$ST2_DATASTORE_HTTP_ADDRESS
 
-  garbagecollector:
-    image: stackstorm/st2garbagecollector:$BUILD_TAG
+  st2rulesengine:
+    image: ${CONTAINER_OWNER}/st2rulesengine:${ST2_VERSION}_${BASE_DISTRO_TAG}
     links:
-      - api
+      - st2api
       - mongo
       - rabbitmq
-    volumes:
-      - data_st2conf:/etc/st2:ro
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATASTORE_TYPE=$DATASTORE_TYPE
+      - DATASTORE_HTTP_ADDRESS=$ST2_DATASTORE_HTTP_ADDRESS
 
-  exporter:
-    image: stackstorm/st2exporter:$BUILD_TAG
+  st2sensorcontainer:
+    image: ${CONTAINER_OWNER}/st2sensorcontainer:${ST2_VERSION}_${BASE_DISTRO_TAG}
     links:
-      - api
+      - st2api
       - mongo
       - rabbitmq
-    volumes:
-      - data_st2conf:/etc/st2:ro
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATASTORE_TYPE=$DATASTORE_TYPE
+      - DATASTORE_HTTP_ADDRESS=$ST2_DATASTORE_HTTP_ADDRESS
 
-  actionrunner:
-    image: stackstorm/st2actionrunner:$BUILD_TAG
+  st2garbagecollector:
+    image: ${CONTAINER_OWNER}/st2garbagecollector:${ST2_VERSION}_${BASE_DISTRO_TAG}
     links:
-      - api
-      - auth
+      - st2api
       - mongo
       - rabbitmq
-    volumes:
-      - data_st2conf:/etc/st2:ro
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATASTORE_TYPE=$DATASTORE_TYPE
+      - DATASTORE_HTTP_ADDRESS=$ST2_DATASTORE_HTTP_ADDRESS
+
+  st2actionrunner:
+    image: ${CONTAINER_OWNER}/st2actionrunner:${ST2_VERSION}_${BASE_DISTRO_TAG}
+    links:
+      - st2api
+      - st2auth
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATASTORE_TYPE=$DATASTORE_TYPE
+      - DATASTORE_HTTP_ADDRESS=$ST2_DATASTORE_HTTP_ADDRESS
   
-  web:
-    image: stackstorm/st2web:$BUILD_TAG
+  st2web:
+    image: ${CONTAINER_OWNER}/st2web:${ST2WEB_VERSION}_${BASE_DISTRO_TAG}
+    ports:
+      - "8443:443"
     links:
-      - api
-      - auth 
-      - stream 
-    volumes:
-      - data_st2conf:/etc/st2:ro
-      - data_st2web:/etc/nginx/
+      - st2api
+      - st2auth 
+      - st2stream 
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATASTORE_TYPE=$DATASTORE_TYPE
+      - DATASTORE_HTTP_ADDRESS=$ST2WEB_DATASTORE_HTTP_ADDRESS
 
-  mistral:
-    image: stackstorm/st2mistral:$BUILD_TAG
-    links:
-      - api
-      - postgres 
-    volumes:
-      - data_mistralconf:/etc/st2:ro
+  #st2mistral:
+  #  image: stackstorm/st2mistral:$BUILD_TAG
+  #  links:
+  #    - st2api
+  #    - postgres 
+    #volumes:
+    #  - data_mistralconf:/etc/st2:ro
 
   ## Client container
-  client:
-    build: ./client
-    links:
-      - api
-      - auth
+  # st2client:
+  #   links:
+  #     - st2api
+  #     - st2auth
   
   ## External Services
   mongo:
     image: mongo
-  postgres:
-    image: postgres 
+  #postgres:
+  #  image: postgres 
   rabbitmq:
     image: rabbitmq
-
-  ## Data container
-  # data:
-  #  build: ./data
-  #  volumes:
-  #    - /etc/st2
-  #    - /opt/stackstorm
-  #  links:
-  #    - rabbitmq
-  #    - mongo
 

@@ -13,6 +13,8 @@ export DATASTORE_DIR="$DATASTORE_TARGET"
 # options are: single-host, distributed, and rancher
 export CONTAINER_ENV="single-host"
 # options are: volume, http-tar, and git
+# export DATASTORE_TYPE="volume"
+
 export HOST_IP="192.168.50.10"
 
 export DATASTORE_DIR=$DATASTORE_TARGET

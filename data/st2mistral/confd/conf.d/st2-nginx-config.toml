@@ -1,0 +1,13 @@
+[template]
+#prefix = "/"
+src = "st2-nginx.conf.tmpl"
+dest = "/etc/nginx/conf.d/st2.conf"
+owner = "root"
+mode = "0644"
+keys = [
+  "/st2/api/host",
+  "/st2/auth/host",
+  "/st2/stream/host",
+]
+#check_cmd = "/usr/sbin/nginx -t -c {{.src}}"
+#reload_cmd = "/usr/sbin/service nginx reload"

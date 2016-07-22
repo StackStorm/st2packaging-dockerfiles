@@ -4,8 +4,12 @@
 
 */Dockerfile
 
+*/confd
+
 .vagrant
 .bundle
+
+
 
 entrypoint-wrapper/datastore_example.tar.gz
 entrypoint-wrapper/datastore_target/

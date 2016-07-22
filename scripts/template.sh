@@ -3,7 +3,7 @@
 set -e
 
 BUILD_FILE="$1"
-CONTAINER_FILE="$1"
+CONTAINER_FILE="$2"
 
 if [ "$IN_BUILD" != "true" ]; then
   if [ "$1" == "" ] || [ "$2" == "" ] || [ "$1" == "-h" ] || [ "$1" == "--help" ] ; then
@@ -13,7 +13,8 @@ if [ "$IN_BUILD" != "true" ]; then
     echo -e "\n$ scripts/template.sh scripts/ubuntu_trusty_build.sh scripts/st2_1.5.1-4_conf.sh\n"
     exit 0
   fi
-  source $CONF_FILE
+  source $BUILD_FILE
+  source $CONTAINER_FILE
 fi
 
 

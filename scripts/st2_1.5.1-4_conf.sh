@@ -4,7 +4,7 @@ export ST2_VERSION="1.5.1-4"
 export ST2_REPO="stable"
 export ST2_PACKAGE="${PACKAGECLOUD_URL}/${ST2_REPO}/packages/ubuntu/trusty/st2_${ST2_VERSION}_amd64.deb/download"
 
-export CONTAINER_OWNER="rancher-m.lan/stackstorm"
+export CONTAINER_OWNER="stackstorm"
 export BUILD_TAG="${ST2_VERSION}_$(echo $BASE_DISTRO | tr ':' '_')"
 export CACHE_DOWNLOAD=true
 
