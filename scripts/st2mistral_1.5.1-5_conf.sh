@@ -15,3 +15,12 @@ export CONTAINERS="$STAGE1 $STAGE2"
 export INTERMEDIATE_CONTAINER="${CONTAINER_OWNER}/${STAGE1}_build:${BUILD_TAG}"
 
 check_cache "mistral_base" "st2mistral_${ST2MISTRAL_VERSION}_amd64.deb" ST2MISTRAL_PACKAGE
+
+export DUMB_INIT_VERSION="1.0.3"
+export DUMB_INIT_PACKAGE="https://github.com/Yelp/dumb-init/releases/download/v${DUMB_INIT_VERSION}/dumb-init_${DUMB_INIT_VERSION}_amd64.deb"
+
+export CONFD_VERSION="0.11.0"
+export CONFD_BINARY="https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64"
+
+check_cache "mistral_base" "dumb-init.deb" DUMB_INIT_PACKAGE
+check_cache "mistral_base" "confd" CONFD_BINARY

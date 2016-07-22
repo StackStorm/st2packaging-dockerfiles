@@ -16,3 +16,12 @@ export STAGE2=""
 export CONTAINERS="$STAGE1 $STAGE2"
 
 check_cache "st2web" "st2web_${ST2WEB_VERSION}_amd64.deb" ST2WEB_PACKAGE
+
+export DUMB_INIT_VERSION="1.0.3"
+export DUMB_INIT_PACKAGE="https://github.com/Yelp/dumb-init/releases/download/v${DUMB_INIT_VERSION}/dumb-init_${DUMB_INIT_VERSION}_amd64.deb"
+
+export CONFD_VERSION="0.11.0"
+export CONFD_BINARY="https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64"
+
+check_cache "st2web" "dumb-init.deb" DUMB_INIT_PACKAGE
+check_cache "st2web" "confd" CONFD_BINARY

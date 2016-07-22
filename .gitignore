@@ -6,3 +6,7 @@
 
 .vagrant
 .bundle
+
+entrypoint-wrapper/datastore_example.tar.gz
+entrypoint-wrapper/datastore_target/
+entrypoint-wrapper/test_confd_host_dir/

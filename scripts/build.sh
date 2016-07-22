@@ -15,10 +15,21 @@ if [ "$1" == "" ] || [ "$2" == "" ] || [ "$1" == "-h" ] || [ "$1" == "--help" ] 
   exit 0
 fi
 
+copy_entrypoint_wrapper(){
+  echo -e "Copying entrypoint-wrapper/entrypoint-wrapper.sh to $1"
+  cp entrypoint-wrapper/entrypoint-wrapper.sh $1
+  chmod +x $1/entrypoint-wrapper.sh
+}
+export -f copy_entrypoint_wrapper
+
 docker_build() {
   echo "########## $1"
-  if [ "$container" == "$STAGE1" ] && [ ! -z "$STAGE2" ]; then
+  copy_entrypoint_wrapper $1 
+  if [ "$1" == "$STAGE1" ] && [ -n "$STAGE2" ]; then
+    echo -e "Tagging as intermediate container."
     EXTRA_TAG="-t $INTERMEDIATE_CONTAINER"
+  else
+    EXTRA_TAG=""
   fi
   echo -e "\nStarting build for: $1\n"
   sudo docker build -t $CONTAINER_OWNER/$1:$BUILD_TAG $EXTRA_TAG $1

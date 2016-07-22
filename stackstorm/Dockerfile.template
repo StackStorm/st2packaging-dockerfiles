@@ -1,8 +1,14 @@
 FROM $BASE_DISTRO
 
 $ADD_SOURCE_LIST
-
 RUN $UPDATE_AND_UPGRADE
+
+ADD ${DUMB_INIT_PACKAGE} /tmp/dumb-init.deb
+RUN dpkg -i /tmp/dumb-init.deb && rm -r /tmp/dumb-init.deb 
+
+ADD ${CONFD_BINARY} /usr/local/bin/confd
+RUN chmod +x /usr/local/bin/confd
+
 RUN $INSTALL_PACKAGE adduser python2.7 libyaml-0-2 libpython-dev python-dev libssl-dev libffi-dev git sudo procps
 # libffi6 libpcre3 
 
@@ -16,10 +22,11 @@ LABEL com.stackstorm.version="${ST2_VERSION}"
 ADD ${ST2_PACKAGE} /tmp/st2_${ST2_VERSION}_amd64.deb
 RUN dpkg -i /tmp/st2_${ST2_VERSION}_amd64.deb && rm -r /tmp/st2_${ST2_VERSION}_amd64.deb && $CLEAN_PACKAGES
 
-ADD ./conf/st2.conf.template /st2.conf.template
-RUN md5sum /etc/st2/st2.conf > /st2.conf.orig.md5
+#ADD ./conf/st2.conf.template /st2.conf.template
+#RUN md5sum /etc/st2/st2.conf > /st2.conf.orig.md5
 
-COPY docker-entrypoint.sh /entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
+COPY entrypoint-wrapper.sh /entrypoint-wrapper.sh
 
 VOLUME [ "/etc/st2", "/opt/stackstorm/packs" ]
-ENTRYPOINT [ "/entrypoint.sh" ]
+ENTRYPOINT [ "dumb-init", "/bin/bash", "/entrypoint-wrapper.sh" ]

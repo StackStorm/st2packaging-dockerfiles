@@ -1,4 +1,4 @@
-FROM $STAGE1
+FROM $INTERMEDIATE_CONTAINER
 LABEL com.stackstorm.service.provides="auth"
 
 ENV ST2_SERVICE st2auth

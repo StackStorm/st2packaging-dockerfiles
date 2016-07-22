@@ -18,18 +18,18 @@ fi
 
 
 
-FILE=$CONTAINERS
+DIRECTORIES="$CONTAINERS"
 
-for entry in $FILE; do
-  DOCKERFILE="$entry/Dockerfile"
-  DOCKER_COMPOSE="$entry/docker-compose.yml"
+for directory in $DIRECTORIES; do
+  DOCKERFILE="$directory/Dockerfile"
+  DOCKER_COMPOSE="$directory/docker-compose.yml"
   
-  if [ -e $DOCKERFILE ]; then 
+  if [ -e ${DOCKERFILE}.template ]; then 
     echo "Evaluating template: ${DOCKERFILE}.template"
     envsubst < ${DOCKERFILE}.template > $DOCKERFILE
   fi
 
-  if [ -e $DOCKER_COMPOSE ]; then 
+  if [ -e ${DOCKER_COMPOSE}.template ]; then 
     echo "Evaluating template: ${DOCKER_COMPOSE}.template"
     envsubst < ${DOCKER_COMPOSE}.template > $DOCKER_COMPOSE
   fi
