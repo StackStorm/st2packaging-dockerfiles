@@ -1,1 +1,13 @@
 registry: stackstorm/
+variants:
+  - null
+  - upstart:
+    - trusty
+    - precise
+  - systemd:
+    - centos7
+    - xenial
+  - sshd:
+    - wheezy
+    - jessie
+    - centos6

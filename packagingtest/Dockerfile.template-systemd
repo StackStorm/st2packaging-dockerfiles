@@ -1,0 +1,47 @@
+{% include "Dockerfile.common" -%}
+
+{%- if version in ('centos7') -%}
+ENV container docker
+
+RUN yum -y update; \
+    yum -y install systemd; yum clean all;
+
+RUN cd /lib/systemd/system/sysinit.target.wants/; ls -1 | grep -v systemd-tmpfiles-setup.service | xargs rm; \
+    rm -f /lib/systemd/system/multi-user.target.wants/*;\
+    rm -f /etc/systemd/system/*.wants/*;\
+    rm -f /lib/systemd/system/local-fs.target.wants/*; \
+    rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+    rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+    rm -f /lib/systemd/system/basic.target.wants/*;\
+    rm -f /lib/systemd/system/anaconda.target.wants/*;\
+    systemctl preset sshd;
+
+# we can have ssh
+EXPOSE 22
+
+VOLUME [ "/sys/fs/cgroup" ]
+CMD [ "/usr/sbin/init" ]
+{%- elif version in ('xenial') -%}
+ENV container docker
+
+RUN find /etc/systemd/system \
+         /lib/systemd/system \
+         -path '*.wants/*' \
+         -not -name '*journald*' \
+         -not -name '*systemd-tmpfiles*' \
+         -not -name '*systemd-user-sessions*' \
+         -exec rm \{} \;
+
+RUN systemctl set-default multi-user.target
+
+COPY setup /sbin/
+
+RUN systemctl preset ssh;
+
+# we can have ssh
+EXPOSE 22
+
+VOLUME [ "/sys/fs/cgroup" ]
+CMD [ "/sbin/init" ]
+{%- endif -%}
+

@@ -86,100 +86,11 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
 
 {% if dist in ('centos', 'fedora') -%}
 RUN yum -y install nc net-tools
-{%- else -%}
+{% else -%}
 # install core software for packaging and ssh communication
 RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
     DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
     apt-get -y install gdebi-core sshpass cron \
       netcat net-tools
-{%- endif %}
+{% endif %}
 
-{% if version in ('trusty') -%}
-COPY init-fake.conf /etc/init/fake-container-events.conf
-
-# undo some leet hax of the base image
-RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
-  rm /sbin/initctl; dpkg-divert --rename --remove /sbin/initctl
-
-# generate a nice UTF-8 locale for our use
-RUN locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8
-
-# remove some pointless services
-RUN /usr/sbin/update-rc.d -f ondemand remove; \
-  for f in \
-    /etc/init/u*.conf \
-    /etc/init/mounted-dev.conf \
-    /etc/init/mounted-proc.conf \
-    /etc/init/mounted-run.conf \
-    /etc/init/mounted-tmp.conf \
-    /etc/init/mounted-var.conf \
-    /etc/init/hostname.conf \
-    /etc/init/networking.conf \
-    /etc/init/tty*.conf \
-    /etc/init/plymouth*.conf \
-    /etc/init/hwclock*.conf \
-    /etc/init/module*.conf\
-  ; do \
-    dpkg-divert --local --rename --add "$f"; \
-  done; \
-  echo '# /lib/init/fstab: cleared out for bare-bones Docker' > /lib/init/fstab
-
-
-# let Upstart know it's in a container
-ENV container docker
-
-# we can have SSH
-EXPOSE 22
-
-# pepare for takeoff
-CMD ["/sbin/init"]
-{%- elif version in ('centos7') -%}
-ENV container docker
-
-RUN yum -y update; \
-    yum -y install systemd; yum clean all;
-
-RUN cd /lib/systemd/system/sysinit.target.wants/; ls -1 | grep -v systemd-tmpfiles-setup.service | xargs rm; \
-    rm -f /lib/systemd/system/multi-user.target.wants/*;\
-    rm -f /etc/systemd/system/*.wants/*;\
-    rm -f /lib/systemd/system/local-fs.target.wants/*; \
-    rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
-    rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
-    rm -f /lib/systemd/system/basic.target.wants/*;\
-    rm -f /lib/systemd/system/anaconda.target.wants/*;\
-    systemctl preset sshd;
-
-# we can have ssh
-EXPOSE 22
-
-VOLUME [ "/sys/fs/cgroup" ]
-CMD [ "/usr/sbin/init" ]
-{%- elif version in ('xenial') -%}
-ENV container docker
-
-RUN find /etc/systemd/system \
-         /lib/systemd/system \
-         -path '*.wants/*' \
-         -not -name '*journald*' \
-         -not -name '*systemd-tmpfiles*' \
-         -not -name '*systemd-user-sessions*' \
-         -exec rm \{} \;
-
-RUN systemctl set-default multi-user.target
-
-COPY setup /sbin/
-
-RUN systemctl preset ssh;
-
-# we can have ssh
-EXPOSE 22
-
-VOLUME [ "/sys/fs/cgroup" ]
-CMD [ "/sbin/init" ]
-{%- else -%}
-ENV container docker
-
-# we can have ssh
-EXPOSE 22
-CMD [ "/usr/sbin/sshd", "-D" ]
-{%- endif -%}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-import os.path
+import os
 import sys
 import subprocess
 import copy
@@ -62,7 +62,12 @@ def main():
     for ctx in suite.process():
         fmt = ctx.copy()
         fmt['path'] = dockerfile_path(suite=fmt['suite'], variant=fmt['variant'])
-
+        try:
+            os.stat(fmt['path'])
+        except os.error:
+            msg = "Dockerfile for {} {} is empty or missing. Skipping..."
+            print(msg.format(fmt['suite'], fmt['variant'] or "(default variant)"))
+            continue
         fmt['variant'] = '-{}'.format(fmt['variant']) if fmt['variant'] else ''
         fmt['tag'] = TAG.format(**fmt)
         fmt['options'] = build_opts
