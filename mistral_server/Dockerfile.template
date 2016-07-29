@@ -1,0 +1,5 @@
+FROM $INTERMEDIATE_CONTAINER
+
+LABEL com.mistral.service.provides="server"
+
+ENV MISTRAL_SERVICE mistral_server

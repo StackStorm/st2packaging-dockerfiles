@@ -1,0 +1,6 @@
+FROM $INTERMEDIATE_CONTAINER 
+LABEL com.stackstorm.service.provides="stream"
+
+ENV ST2_SERVICE st2stream
+ENV ST2_SERVICEPORT 9102
+EXPOSE 9102

@@ -1,0 +1,19 @@
+'use strict';
+angular.module('main')
+  .constant('st2Config', {
+
+    hosts: [{
+      name: 'ST2 on Docker',
+      url: 'https://{{getv "/st2/web/host"}}:{{getv "/st2/web/port"}}/api',
+      auth: 'https://{{getv "/st2/web/host"}}:{{getv "/st2/web/port"}}/auth',
+    }]
+    // hosts: [{
+    //   name: 'Dev Env',
+    //   url: '//172.168.50.50:9101'
+    // }, {
+    //   name: 'Express',
+    //   url: '//172.168.90.50:9101',
+    //   auth: true
+    // }]
+
+  });

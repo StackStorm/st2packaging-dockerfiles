@@ -1,0 +1,215 @@
+version: '2'
+
+#volumes:
+  #data_tooling: /home/ubuntu/st2-dockerfiles/data/tooling
+  #data_st2conf: /home/ubuntu/st2-dockerfiles/data/st2
+  #data_mistralconf: /home/ubuntu/st2-dockerfiles/data/st2mistral
+  #data_st2web: 
+
+
+services:
+  st2api:
+    image: stackstorm/st2api:1.5.1-4_ubuntu_trusty
+    entrypoint: /data_volumes/tooling/containerpilot -config file:///data_volumes/st2/containerpilot.json /docker-entrypoint.sh
+    links:
+      - mongo
+      - rabbitmq
+    volumes:
+      - /home/ubuntu/st2-dockerfiles/data/st2:/data_volumes/st2:ro
+      - /home/ubuntu/st2-dockerfiles/data/tooling:/data_volumes/tooling:ro
+    environment:
+      # options are: single-host, distributed, and rancher
+      - HOST_IP=192.168.50.10
+      - ST2_WEB_HOST=192.168.50.10
+      - ST2_WEB_PORT=8443
+      - CONTAINER_ENV=distributed
+      - DATA_VOLUMES_DIR=/data_volumes
+      # options are: volume, http-tar, and git
+      # export DATASTORE_TYPE=volume
+      - CONSUL_HOST=192.168.50.10
+
+  st2auth:
+    image: stackstorm/st2auth:1.5.1-4_ubuntu_trusty
+    entrypoint: /data_volumes/tooling/containerpilot -config file:///data_volumes/st2/containerpilot.json /docker-entrypoint.sh
+    volumes:
+      - /home/ubuntu/st2-dockerfiles/data/st2:/data_volumes/st2:ro
+      - /home/ubuntu/st2-dockerfiles/data/tooling:/data_volumes/tooling:ro
+    links:
+      - st2api
+      - mongo
+    environment:
+      - HOST_IP=192.168.50.10
+      - ST2_WEB_HOST=192.168.50.10
+      - ST2_WEB_PORT=8443
+      - CONTAINER_ENV=distributed
+      - DATA_VOLUMES_DIR=/data_volumes
+      - CONSUL_HOST=192.168.50.10
+
+  st2stream:
+    image: stackstorm/st2stream:1.5.1-4_ubuntu_trusty
+    entrypoint: /data_volumes/tooling/containerpilot -config file:///data_volumes/st2/containerpilot.json /docker-entrypoint.sh
+    volumes:
+      - /home/ubuntu/st2-dockerfiles/data/st2:/data_volumes/st2:ro
+      - /home/ubuntu/st2-dockerfiles/data/tooling:/data_volumes/tooling:ro
+    links:
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP=192.168.50.10
+      - ST2_WEB_HOST=192.168.50.10
+      - ST2_WEB_PORT=8443
+      - CONTAINER_ENV=distributed
+      - DATA_VOLUMES_DIR=/data_volumes
+      - CONSUL_HOST=192.168.50.10
+
+  st2notifier:
+    image: stackstorm/st2notifier:1.5.1-4_ubuntu_trusty
+    entrypoint: /data_volumes/tooling/containerpilot -config file:///data_volumes/st2/containerpilot.json /docker-entrypoint.sh
+    volumes:
+      - /home/ubuntu/st2-dockerfiles/data/st2:/data_volumes/st2:ro
+      - /home/ubuntu/st2-dockerfiles/data/tooling:/data_volumes/tooling:ro
+    links:
+      - st2api
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP=192.168.50.10
+      - ST2_WEB_HOST=192.168.50.10
+      - ST2_WEB_PORT=8443
+      - CONTAINER_ENV=distributed
+      - DATA_VOLUMES_DIR=/data_volumes
+      - CONSUL_HOST=192.168.50.10
+
+  st2resultstracker:
+    image: stackstorm/st2resultstracker:1.5.1-4_ubuntu_trusty
+    entrypoint: /data_volumes/tooling/containerpilot -config file:///data_volumes/st2/containerpilot.json /docker-entrypoint.sh
+    volumes:
+      - /home/ubuntu/st2-dockerfiles/data/st2:/data_volumes/st2:ro
+      - /home/ubuntu/st2-dockerfiles/data/tooling:/data_volumes/tooling:ro
+    links:
+      - st2api
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP=192.168.50.10
+      - ST2_WEB_HOST=192.168.50.10
+      - ST2_WEB_PORT=8443
+      - CONTAINER_ENV=distributed
+      - DATA_VOLUMES_DIR=/data_volumes
+      - CONSUL_HOST=192.168.50.10
+
+  st2rulesengine:
+    image: stackstorm/st2rulesengine:1.5.1-4_ubuntu_trusty
+    entrypoint: /data_volumes/tooling/containerpilot -config file:///data_volumes/st2/containerpilot.json /docker-entrypoint.sh
+    volumes:
+      - /home/ubuntu/st2-dockerfiles/data/st2:/data_volumes/st2:ro
+      - /home/ubuntu/st2-dockerfiles/data/tooling:/data_volumes/tooling:ro
+    links:
+      - st2api
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP=192.168.50.10
+      - ST2_WEB_HOST=192.168.50.10
+      - ST2_WEB_PORT=8443
+      - CONTAINER_ENV=distributed
+      - DATA_VOLUMES_DIR=/data_volumes
+      - CONSUL_HOST=192.168.50.10
+
+  st2sensorcontainer:
+    image: stackstorm/st2sensorcontainer:1.5.1-4_ubuntu_trusty
+    entrypoint: /data_volumes/tooling/containerpilot -config file:///data_volumes/st2/containerpilot.json /docker-entrypoint.sh
+    volumes:
+      - /home/ubuntu/st2-dockerfiles/data/st2:/data_volumes/st2:ro
+      - /home/ubuntu/st2-dockerfiles/data/tooling:/data_volumes/tooling:ro
+    links:
+      - st2api
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP=192.168.50.10
+      - ST2_WEB_HOST=192.168.50.10
+      - ST2_WEB_PORT=8443
+      - CONTAINER_ENV=distributed
+      - DATA_VOLUMES_DIR=/data_volumes
+      - CONSUL_HOST=192.168.50.10
+
+  st2garbagecollector:
+    image: stackstorm/st2garbagecollector:1.5.1-4_ubuntu_trusty
+    entrypoint: /data_volumes/tooling/containerpilot -config file:///data_volumes/st2/containerpilot.json /docker-entrypoint.sh
+    volumes:
+      - /home/ubuntu/st2-dockerfiles/data/st2:/data_volumes/st2:ro
+      - /home/ubuntu/st2-dockerfiles/data/tooling:/data_volumes/tooling:ro
+    links:
+      - st2api
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP=192.168.50.10
+      - ST2_WEB_HOST=192.168.50.10
+      - ST2_WEB_PORT=8443
+      - CONTAINER_ENV=distributed
+      - DATA_VOLUMES_DIR=/data_volumes
+      - CONSUL_HOST=192.168.50.10
+
+  st2actionrunner:
+    image: stackstorm/st2actionrunner:1.5.1-4_ubuntu_trusty
+    entrypoint: /data_volumes/tooling/containerpilot -config file:///data_volumes/st2/containerpilot.json /docker-entrypoint.sh
+    volumes:
+      - /home/ubuntu/st2-dockerfiles/data/st2:/data_volumes/st2:ro
+      - /home/ubuntu/st2-dockerfiles/data/tooling:/data_volumes/tooling:ro
+    links:
+      - st2api
+      - st2auth
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP=192.168.50.10
+      - ST2_WEB_HOST=192.168.50.10
+      - ST2_WEB_PORT=8443
+      - CONTAINER_ENV=distributed
+      - DATA_VOLUMES_DIR=/data_volumes
+      - CONSUL_HOST=192.168.50.10
+  
+  st2web:
+    image: stackstorm/st2web:1.5.1-1_ubuntu_trusty
+    entrypoint: /data_volumes/tooling/containerpilot -config file:///data_volumes/st2web/containerpilot.json /docker-entrypoint.sh
+    volumes:
+      - /home/ubuntu/st2-dockerfiles/data/st2web:/data_volumes/st2web:ro
+      - /home/ubuntu/st2-dockerfiles/data/tooling:/data_volumes/tooling:ro
+    ports:
+      - "8443:443"
+    links:
+      - st2api
+      - st2auth 
+      - st2stream 
+    environment:
+      - HOST_IP=192.168.50.10
+      - ST2_WEB_HOST=192.168.50.10
+      - ST2_WEB_PORT=8443
+      - CONTAINER_ENV=distributed
+      - DATA_VOLUMES_DIR=/data_volumes
+      - CONSUL_HOST=192.168.50.10
+
+  #st2mistral:
+  #  image: stackstorm/st2mistral:
+  #  links:
+  #    - st2api
+  #    - postgres 
+    #volumes:
+    #  - data_mistralconf:/etc/st2:ro
+
+  ## Client container
+  # st2client:
+  #   links:
+  #     - st2api
+  #     - st2auth
+  
+  ## External Services
+  mongo:
+    image: mongo
+  #postgres:
+  #  image: postgres 
+  rabbitmq:
+    image: rabbitmq
+

@@ -1,0 +1,33 @@
+FROM $BASE_DISTRO
+
+$ADD_SOURCE_LIST
+RUN $UPDATE_AND_UPGRADE
+
+ADD ${DUMB_INIT_PACKAGE} /tmp/dumb-init.deb
+RUN dpkg -i /tmp/dumb-init.deb && rm -r /tmp/dumb-init.deb
+
+ADD ${CONFD_BINARY} /usr/local/bin/confd
+RUN chmod +x /usr/local/bin/confd
+
+RUN $INSTALL_PACKAGE python2.7 adduser libc6 libffi6 libpq5 libssl-dev libyaml-0-2 zlib1g sysv-rc
+
+ENV ST2MISTRAL_VERSION=$ST2MISTRAL_VERSION \
+    ST2MISTRAL_REPO=$ST2MISTRAL_REPO
+
+ENV ST2MISTRAL_PACKAGE=$ST2MISTRAL_PACKAGE
+
+LABEL com.mistral.version="${ST2MISTRAL_VERSION}"
+
+ADD ${ST2MISTRAL_PACKAGE} /tmp/st2mistral_${ST2MISTRAL_VERSION}_amd64.deb
+RUN dpkg -i /tmp/st2mistral_${ST2MISTRAL_VERSION}_amd64.deb && rm -r /tmp/st2mistral_${ST2MISTRAL_VERSION}_amd64.deb && $CLEAN_PACKAGES
+
+EXPOSE 8989
+
+#ADD ./conf/st2.conf.template /st2.conf.template
+#RUN md5sum /etc/st2/st2.conf > /st2.conf.orig.md5
+
+COPY entrypoint.sh /entrypoint.sh
+COPY entrypoint-wrapper.sh /entrypoint-wrapper.sh
+
+VOLUME [ "/etc/mistral", "/opt/stackstorm/packs" ]
+ENTRYPOINT [ "dumb-init", "/bin/bash", "/entrypoint-wrapper.sh" ]

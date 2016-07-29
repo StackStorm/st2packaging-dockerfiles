@@ -1,0 +1,215 @@
+version: '2'
+
+#volumes:
+  #data_tooling: $DATA_TOOLING_VOLUME
+  #data_st2conf: $DATA_ST2CONF_VOLUME
+  #data_mistralconf: $DATA_MISTRAL_VOLUME
+  #data_st2web: $DATA_ST2WEB_VOLUME
+
+
+services:
+  st2api:
+    image: ${CONTAINER_OWNER}/st2api:${ST2_VERSION}_${BASE_DISTRO_TAG}
+    $ST2_ENTRYPOINT_YAML
+    links:
+      - mongo
+      - rabbitmq
+    volumes:
+      - $DATA_ST2CONF_VOLUME:$DATA_VOLUMES_DIR/st2:ro
+      - $DATA_TOOLING_VOLUME:$DATA_VOLUMES_DIR/tooling:ro
+    environment:
+      # options are: single-host, distributed, and rancher
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATA_VOLUMES_DIR=$DATA_VOLUMES_DIR
+      # options are: volume, http-tar, and git
+      # export DATASTORE_TYPE=volume
+      - CONSUL_HOST=$CONSUL_HOST
+
+  st2auth:
+    image: ${CONTAINER_OWNER}/st2auth:${ST2_VERSION}_${BASE_DISTRO_TAG}
+    $ST2_ENTRYPOINT_YAML
+    volumes:
+      - $DATA_ST2CONF_VOLUME:$DATA_VOLUMES_DIR/st2:ro
+      - $DATA_TOOLING_VOLUME:$DATA_VOLUMES_DIR/tooling:ro
+    links:
+      - st2api
+      - mongo
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATA_VOLUMES_DIR=$DATA_VOLUMES_DIR
+      - CONSUL_HOST=$CONSUL_HOST
+
+  st2stream:
+    image: ${CONTAINER_OWNER}/st2stream:${ST2_VERSION}_${BASE_DISTRO_TAG}
+    $ST2_ENTRYPOINT_YAML
+    volumes:
+      - $DATA_ST2CONF_VOLUME:$DATA_VOLUMES_DIR/st2:ro
+      - $DATA_TOOLING_VOLUME:$DATA_VOLUMES_DIR/tooling:ro
+    links:
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATA_VOLUMES_DIR=$DATA_VOLUMES_DIR
+      - CONSUL_HOST=$CONSUL_HOST
+
+  st2notifier:
+    image: ${CONTAINER_OWNER}/st2notifier:${ST2_VERSION}_${BASE_DISTRO_TAG}
+    $ST2_ENTRYPOINT_YAML
+    volumes:
+      - $DATA_ST2CONF_VOLUME:$DATA_VOLUMES_DIR/st2:ro
+      - $DATA_TOOLING_VOLUME:$DATA_VOLUMES_DIR/tooling:ro
+    links:
+      - st2api
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATA_VOLUMES_DIR=$DATA_VOLUMES_DIR
+      - CONSUL_HOST=$CONSUL_HOST
+
+  st2resultstracker:
+    image: ${CONTAINER_OWNER}/st2resultstracker:${ST2_VERSION}_${BASE_DISTRO_TAG}
+    $ST2_ENTRYPOINT_YAML
+    volumes:
+      - $DATA_ST2CONF_VOLUME:$DATA_VOLUMES_DIR/st2:ro
+      - $DATA_TOOLING_VOLUME:$DATA_VOLUMES_DIR/tooling:ro
+    links:
+      - st2api
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATA_VOLUMES_DIR=$DATA_VOLUMES_DIR
+      - CONSUL_HOST=$CONSUL_HOST
+
+  st2rulesengine:
+    image: ${CONTAINER_OWNER}/st2rulesengine:${ST2_VERSION}_${BASE_DISTRO_TAG}
+    $ST2_ENTRYPOINT_YAML
+    volumes:
+      - $DATA_ST2CONF_VOLUME:$DATA_VOLUMES_DIR/st2:ro
+      - $DATA_TOOLING_VOLUME:$DATA_VOLUMES_DIR/tooling:ro
+    links:
+      - st2api
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATA_VOLUMES_DIR=$DATA_VOLUMES_DIR
+      - CONSUL_HOST=$CONSUL_HOST
+
+  st2sensorcontainer:
+    image: ${CONTAINER_OWNER}/st2sensorcontainer:${ST2_VERSION}_${BASE_DISTRO_TAG}
+    $ST2_ENTRYPOINT_YAML
+    volumes:
+      - $DATA_ST2CONF_VOLUME:$DATA_VOLUMES_DIR/st2:ro
+      - $DATA_TOOLING_VOLUME:$DATA_VOLUMES_DIR/tooling:ro
+    links:
+      - st2api
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATA_VOLUMES_DIR=$DATA_VOLUMES_DIR
+      - CONSUL_HOST=$CONSUL_HOST
+
+  st2garbagecollector:
+    image: ${CONTAINER_OWNER}/st2garbagecollector:${ST2_VERSION}_${BASE_DISTRO_TAG}
+    $ST2_ENTRYPOINT_YAML
+    volumes:
+      - $DATA_ST2CONF_VOLUME:$DATA_VOLUMES_DIR/st2:ro
+      - $DATA_TOOLING_VOLUME:$DATA_VOLUMES_DIR/tooling:ro
+    links:
+      - st2api
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATA_VOLUMES_DIR=$DATA_VOLUMES_DIR
+      - CONSUL_HOST=$CONSUL_HOST
+
+  st2actionrunner:
+    image: ${CONTAINER_OWNER}/st2actionrunner:${ST2_VERSION}_${BASE_DISTRO_TAG}
+    $ST2_ENTRYPOINT_YAML
+    volumes:
+      - $DATA_ST2CONF_VOLUME:$DATA_VOLUMES_DIR/st2:ro
+      - $DATA_TOOLING_VOLUME:$DATA_VOLUMES_DIR/tooling:ro
+    links:
+      - st2api
+      - st2auth
+      - mongo
+      - rabbitmq
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATA_VOLUMES_DIR=$DATA_VOLUMES_DIR
+      - CONSUL_HOST=$CONSUL_HOST
+  
+  st2web:
+    image: ${CONTAINER_OWNER}/st2web:${ST2WEB_VERSION}_${BASE_DISTRO_TAG}
+    $ST2WEB_ENTRYPOINT_YAML
+    volumes:
+      - $DATA_ST2WEBCONF_VOLUME:$DATA_VOLUMES_DIR/st2web:ro
+      - $DATA_TOOLING_VOLUME:$DATA_VOLUMES_DIR/tooling:ro
+    ports:
+      - "8443:443"
+    links:
+      - st2api
+      - st2auth 
+      - st2stream 
+    environment:
+      - HOST_IP=$HOST_IP
+      - ST2_WEB_HOST=$ST2_WEB_HOST
+      - ST2_WEB_PORT=$ST2_WEB_PORT
+      - CONTAINER_ENV=$CONTAINER_ENV
+      - DATA_VOLUMES_DIR=$DATA_VOLUMES_DIR
+      - CONSUL_HOST=$CONSUL_HOST
+
+  #st2mistral:
+  #  image: stackstorm/st2mistral:$BUILD_TAG
+  #  links:
+  #    - st2api
+  #    - postgres 
+    #volumes:
+    #  - data_mistralconf:/etc/st2:ro
+
+  ## Client container
+  # st2client:
+  #   links:
+  #     - st2api
+  #     - st2auth
+  
+  ## External Services
+  mongo:
+    image: mongo
+  #postgres:
+  #  image: postgres 
+  rabbitmq:
+    image: rabbitmq
+

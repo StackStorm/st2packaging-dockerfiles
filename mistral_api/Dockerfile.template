@@ -1,0 +1,7 @@
+FROM $INTERMEDIATE_CONTAINER
+
+LABEL com.mistral.service.provides="api"
+
+ENV MISTRAL_SERVICE mistral_api
+
+EXPOSE 8989

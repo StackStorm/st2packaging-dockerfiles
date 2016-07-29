@@ -1,0 +1,4 @@
+FROM $INTERMEDIATE_CONTAINER 
+LABEL com.stackstorm.service.provides="rulesengine"
+
+ENV ST2_SERVICE st2rulesengine
