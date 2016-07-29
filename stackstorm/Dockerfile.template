@@ -6,11 +6,7 @@ RUN $UPDATE_AND_UPGRADE
 ADD ${DUMB_INIT_PACKAGE} /tmp/dumb-init.deb
 RUN dpkg -i /tmp/dumb-init.deb && rm -r /tmp/dumb-init.deb 
 
-ADD ${CONFD_BINARY} /usr/local/bin/confd
-RUN chmod +x /usr/local/bin/confd
-
 RUN $INSTALL_PACKAGE adduser python2.7 libyaml-0-2 libpython-dev python-dev libssl-dev libffi-dev git sudo procps curl
-# libffi6 libpcre3 
 
 ENV ST2_VERSION=$ST2_VERSION \
     ST2_REPO=$ST2_REPO
@@ -25,8 +21,7 @@ RUN dpkg -i /tmp/st2_${ST2_VERSION}_amd64.deb && rm -r /tmp/st2_${ST2_VERSION}_a
 #ADD ./conf/st2.conf.template /st2.conf.template
 #RUN md5sum /etc/st2/st2.conf > /st2.conf.orig.md5
 
-COPY entrypoint.sh /entrypoint.sh
-COPY entrypoint-wrapper.sh /entrypoint-wrapper.sh
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 
 #VOLUME [ "/etc/st2", "/opt/stackstorm/packs" ]
-ENTRYPOINT [ "dumb-init", "/bin/bash", "/entrypoint-wrapper.sh" ]
+ENTRYPOINT [ "dumb-init", "/bin/bash", "/docker-entrypoint.sh" ]

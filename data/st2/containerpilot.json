@@ -1,0 +1,39 @@
+{
+  "consul": "{{.CONSUL_HOST}}:8500",
+  "preStart": "/{{.DATA_VOLUMES_DIR}}/st2/prestart.sh",
+  "logging": {
+    "level": "INFO",
+    "format": "default",
+    "output": "stdout"
+  },
+  "stopTimeout": 5,
+  "preStop": "/{{.DATA_VOLUMES_DIR}}/st2/prestop.sh",
+  "postStop": "/{{.DATA_VOLUMES_DIR}}/st2/poststop.sh",
+  "services": [
+    {
+      "name": "{{.ST2_SERVICE}}",
+      "port":{{if .ST2_SERVICE_PORT}}{{.ST2_SERVICE_PORT}}{{else}}80{{end}},
+      "interfaces": [
+        "eth0",
+        "eth1[1]",
+        "192.168.0.0/16",
+        "2001:db8::/64",
+        "eth2:inet",
+        "eth2:inet6",
+        "inet",
+        "inet6"
+      ],
+      "poll": 10,
+      "ttl": 30,
+      "tags": ["{{.ST2_SERVICE}}"]
+    }
+  ]{{if .ST2_LOAD_PACKS}},
+  "tasks": [
+    {
+      "name": "reload_packs",
+      "command": ["{{.DATA_VOLUMES_DIR}}/st2/reload_packs.sh","/opt/stackstorm/packs"],
+      "frequency": "30s",
+      "timeout": "10s"
+    }
+  ]{{end}}
+}

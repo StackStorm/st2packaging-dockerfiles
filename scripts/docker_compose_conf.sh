@@ -16,9 +16,19 @@ export ST2_WEB_HOST="$HOST_IP"
 export ST2_WEB_PORT="8443"
 # options are: single-host, distributed, and rancher
 export CONTAINER_ENV="distributed"
-# options are: volume, http-tar, and git
-# export DATASTORE_TYPE="volume"
-export DATASTORE_TYPE="http-tar"
-export BASE_DATASTORE_HTTP_ADDRESS="http://${HOST_IP}:8000/"
-export ST2_DATASTORE_HTTP_ADDRESS="$BASE_DATASTORE_HTTP_ADDRESS/st2.tar.gz"
-export ST2WEB_DATASTORE_HTTP_ADDRESS="$BASE_DATASTORE_HTTP_ADDRESS/st2web.tar.gz"
+
+export DATA_VOLUMES_DIR="/data_volumes"
+
+export ST2_ENTRYPOINT="$DATA_VOLUMES_DIR/tooling/containerpilot -config file://$DATA_VOLUMES_DIR/st2/containerpilot.json /docker-entrypoint.sh"
+export ST2WEB_ENTRYPOINT="$DATA_VOLUMES_DIR/tooling/containerpilot -config file://$DATA_VOLUMES_DIR/st2web/containerpilot.json /docker-entrypoint.sh"
+export ST2_ENTRYPOINT_YAML="entrypoint: $ST2_ENTRYPOINT"
+export ST2WEB_ENTRYPOINT_YAML="entrypoint: $ST2WEB_ENTRYPOINT"
+
+export CONSUL_HOST="192.168.50.10"
+
+REPO_DIR="`pwd`"
+
+export DATA_TOOLING_VOLUME="$REPO_DIR/data/tooling"
+export DATA_ST2CONF_VOLUME="$REPO_DIR/data/st2"
+export DATA_MISTRAL_VOLUME="$REPO_DIR/data/st2mistral"
+export DATA_ST2WEBCONF_VOLUME="$REPO_DIR/data/st2web"

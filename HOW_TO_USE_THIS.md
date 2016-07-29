@@ -3,6 +3,7 @@
 **WARNING: because of the needs for rapid testing and the goal of running StackStorm in a distributed fashion (think Mesos) this repo contains a lot of things and machinery that are tangential to running Stackstorm on Docker. They have been implemented to address the issues of automating syncing state at launch and update when container are distributed. From my experience with this I've come to the conclusion to make all the containers as utterly state
 less as possible! However, I haven't had time to do this yet and rants about dynamically configured, hot reloading data companion containers (different from Companion Cubes) will have to wait for another day.**
 
+
 For a variety of reasons that I will write down in detail at a later time, this repo is structured in the following way:
 
 * All of the `mistral` and `st2` directories along with `stackstorm` contain `Dockerfile.template`s (and `docker_compose` container a `docker-compose.yml.template`).

@@ -1,0 +1,31 @@
+{
+  "consul": "{{.CONSUL_HOST}}:8500",
+  "preStart": "/{{.DATA_VOLUMES_DIR}}/st2web/prestart.sh",
+  "logging": {
+    "level": "INFO",
+    "format": "default",
+    "output": "stdout"
+  },
+  "stopTimeout": 5,
+  "preStop": "/{{.DATA_VOLUMES_DIR}}/st2web/prestop.sh",
+  "postStop": "/{{.DATA_VOLUMES_DIR}}/st2web/poststop.sh",
+  "services": [
+    {
+      "name": "st2web",
+      "port": 443,
+      "interfaces": [
+        "eth0",
+        "eth1[1]",
+        "192.168.0.0/16",
+        "2001:db8::/64",
+        "eth2:inet",
+        "eth2:inet6",
+        "inet",
+        "inet6"
+      ],
+      "poll": 10,
+      "ttl": 30,
+      "tags": ["st2web"]
+    }
+  ]
+}

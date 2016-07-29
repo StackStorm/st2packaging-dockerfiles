@@ -35,8 +35,7 @@ ADD ./st2.crt /etc/ssl/st2/
 ADD ./st2.key /etc/ssl/st2/
 
 
-ADD ./entrypoint.sh /entrypoint.sh
-ADD ./entrypoint-wrapper.sh /entrypoint-wrapper.sh
+ADD ./docker-entrypoint.sh /docker-entrypoint.sh
 
 # Remove default site, if present
 RUN rm /etc/nginx/conf.d/default.conf 
@@ -45,5 +44,4 @@ RUN rm /etc/nginx/conf.d/default.conf
 
 EXPOSE 80 443
 
-ENTRYPOINT [ "dumb-init", "/bin/bash", "/entrypoint-wrapper.sh"]
-CMD [ "run_st2web" ]
+ENTRYPOINT [ "dumb-init", "/docker-entrypoint.sh"]

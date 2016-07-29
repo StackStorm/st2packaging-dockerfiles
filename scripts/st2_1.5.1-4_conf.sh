@@ -20,9 +20,5 @@ check_cache "stackstorm" "st2_${ST2_VERSION}_amd64.deb" ST2_PACKAGE
 export DUMB_INIT_VERSION="1.0.3"
 export DUMB_INIT_PACKAGE="https://github.com/Yelp/dumb-init/releases/download/v${DUMB_INIT_VERSION}/dumb-init_${DUMB_INIT_VERSION}_amd64.deb"
 
-export CONFD_VERSION="0.11.0"
-export CONFD_BINARY="https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64"
-
 check_cache "stackstorm" "dumb-init.deb" DUMB_INIT_PACKAGE 
-check_cache "stackstorm" "confd" CONFD_BINARY 
 

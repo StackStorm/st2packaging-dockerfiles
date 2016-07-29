@@ -2,4 +2,5 @@ FROM $INTERMEDIATE_CONTAINER
 LABEL com.stackstorm.service.provides="auth"
 
 ENV ST2_SERVICE st2auth
+ENV ST2_SERVICE_PORT 9100
 EXPOSE 9100
