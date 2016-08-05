@@ -1,6 +1,6 @@
 FROM debian:wheezy
 
-ARG ST2_VERSION
+ARG ST2_VERSION=1.6.0-2
 ARG ST2_REPO=staging-stable
 ARG ST2_PACKAGE=https://packagecloud.io/StackStorm/${ST2_REPO}/packages/debian/wheezy/st2_${ST2_VERSION}_amd64.deb/download
 
