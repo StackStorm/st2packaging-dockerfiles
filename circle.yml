@@ -8,7 +8,7 @@ machine:
   environment:
     # Default values
     CURRENT_VERSION: 1.6dev
-    DEFAULT_COMPONENTS: st2actionrunner st2api st2auth st2stream st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer st2garbagecollector
+    DEFAULT_COMPONENTS: st2actionrunner st2api st2auth st2stream st2notifier st2resultstracker st2rulesengine st2sensorcontainer st2garbagecollector
     # Overridable substitutes
     ST2PKG_VERSION: ${ST2PKG_VERSION:=$CURRENT_VERSION}
     ST2_COMPONENTS: ${ST2_COMPONENTS:=$DEFAULT_COMPONENTS}

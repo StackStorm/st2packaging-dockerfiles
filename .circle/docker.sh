@@ -17,10 +17,10 @@ set -e
 
 ### Usage:
 # docker.sh build st2 - Build base Docker image with `st2` installed. This will be reused by child containers
-# docker.sh build st2actionrunner st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer - Build child Docker images based on `st2`, - previously created Docker image
+# docker.sh build st2actionrunner st2api st2auth st2notifier st2resultstracker st2rulesengine st2sensorcontainer - Build child Docker images based on `st2`, - previously created Docker image
 # docker.sh run st2api - Start detached `st2api` docker image
 # docker.sh test st2api 'st2 --version' - Exec command inside already started `st2api` Docker container
-# docker.sh deploy st2api st2auth st2exporter st2notifier st2resultstracker st2rulesengine st2sensorcontainer - Push images to Docker Hub
+# docker.sh deploy st2api st2auth st2notifier st2resultstracker st2rulesengine st2sensorcontainer - Push images to Docker Hub
 
 : ${DEPLOY_DOCKER:=0}
 : ${DEPLOY_LATEST:=0}
