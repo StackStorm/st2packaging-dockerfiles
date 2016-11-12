@@ -79,7 +79,6 @@ Once we have `st2` base Docker image, we can build child containers from it. Do 
 docker build -t stackstorm/st2actionrunner:1.1.2 st2actionrunner/
 docker build -t stackstorm/st2api:1.1.2 st2api/
 docker build -t stackstorm/st2auth:1.1.2 st2auth/
-docker build -t stackstorm/st2exporter:1.1.2 st2exporter/
 docker build -t stackstorm/st2notifier:1.1.2 st2notifier/
 docker build -t stackstorm/st2resultstracker:1.1.2 st2resultstracker/
 docker build -t stackstorm/st2rulesengine:1.1.2 st2rulesengine/
@@ -103,7 +102,6 @@ docker login -e ${DOCKER_EMAIL} -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
 docker push stackstorm/st2actionrunner:1.1.2
 docker push stackstorm/st2api:1.1.2
 docker push stackstorm/st2auth:1.1.2
-docker push stackstorm/st2exporter:1.1.2
 docker push stackstorm/st2notifier:1.1.2
 docker push stackstorm/st2resultstracker:1.1.2
 docker push stackstorm/st2rulesengine:1.1.2
