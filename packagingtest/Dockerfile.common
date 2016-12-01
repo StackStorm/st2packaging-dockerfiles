@@ -1,4 +1,62 @@
-FROM buildpack-deps:trusty
+{%- if dist in ('centos') -%}
+FROM centos:{{ version }}
+{%- else -%}
+FROM buildpack-deps:{{ suite }}
+{%- endif -%}
+
+{%- if dist in ('centos') %}
+
+# Download tools
+RUN yum -y install \
+    ca-certificates \
+    curl \
+    wget
+
+RUN yum -y install \
+    bzr \
+    git \
+    mercurial \
+    openssh \
+    subversion
+
+# Build tools
+RUN yum -y install \
+    autoconf \
+    automake \
+    bzip2 \
+    bzip2-devel \
+    file \
+    gcc \
+    gcc-c++ \
+    glib2-devel \
+    glibc-devel \
+    ImageMagick \
+    ImageMagick-devel \
+    libcurl-devel \
+    libevent-devel \
+    libffi-devel \
+    libjpeg-devel \
+    libtool \
+    libwebp-devel \
+    libxml2-devel \
+    libxslt-devel \
+    libyaml-devel \
+    make \
+    mysql-devel \
+    ncurses-devel \
+    openssl-devel \
+    patch \
+    postgresql-devel \
+    readline-devel \
+    sqlite-devel \
+    xz \
+    xz-devel \
+    zlib-devel
+
+# St2 package build debs
+RUN yum -y install \
+    openldap-devel
+{%- endif %}
 
 # Enable remote pubkey access
 RUN mkdir /root/.ssh && chmod 700 /root/.ssh && \
@@ -8,9 +66,14 @@ RUN mkdir /root/.ssh && chmod 700 /root/.ssh && \
 COPY busybee*  /root/.ssh/
 RUN chmod 600 /root/.ssh/busybee
 
+{% if dist in ('centos', 'fedora') -%}
+RUN yum -y install openssh-server sudo && \
+  ssh-keygen -t rsa -N '' -f /etc/ssh/ssh_host_rsa_key
+{%- else -%}
 RUN DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
     apt-get install -y openssh-server sudo && \
     mkdir /var/run/sshd
+{%- endif %}
 
 # 1. small fix for SSH in ubuntu 13.10 (that's harmless everywhere else)
 # 2. permit root logins and set simple password password and pubkey
@@ -21,43 +84,13 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
         sed -ri 's/requiretty/!requiretty/' /etc/sudoers && \
         echo 'root:docker.io' | chpasswd
 
+{% if dist in ('centos', 'fedora') -%}
+RUN yum -y install nc net-tools
+{% else -%}
 # install core software for packaging and ssh communication
 RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
     DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
     apt-get -y install gdebi-core sshpass cron \
       netcat net-tools
+{% endif %}
 
-#
-# Buildenv is special environment for generating debian packages. It provides:
-#   - All needed pre-installed development packages
-#   - SSH access for build executor.
-#
-
-
-# install python development
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    apt-get -y install build-essential python-dev python
-
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
-        devscripts debhelper dh-make && apt-get clean
-
-# We use our version, since it fixes shebangd lines rewrites
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
-        python-setuptools python-sphinx python-mock python-virtualenv && \
-        apt-get clean && \
-        git clone https://github.com/dennybaa/dh-virtualenv.git /tmp/dh-virtualenv && \
-        cd /tmp/dh-virtualenv && \
-        dpkg-buildpackage -b -uc -us && dpkg -i ../dh-virtualenv_*.deb && \
-          rm -rf /tmp/dh-virtualenv*
-
-# Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python - pip==7.1.2 wheel==0.26.0 setuptools==18.7.1; \
-      pip install --upgrade wheel virtualenv \
-      requests[security] && rm -rf /root/.cache
-
-VOLUME ['/home/busybee/build']
-EXPOSE 22
-
-# Run ssh daemon in foreground and wait for bees to connect.
-CMD ["/usr/sbin/sshd", "-D"]

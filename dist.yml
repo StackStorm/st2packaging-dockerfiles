@@ -2,9 +2,10 @@ fedora:
   - !regexp fedora([0-9.]+)
 centos:
   - !regexp centos([0-9.]+)
-ubuntu-debootstrap:
+ubuntu:
   - precise
   - trusty
+  - xenial
 debian:
   - wheezy
   - jessie

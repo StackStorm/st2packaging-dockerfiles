@@ -1,4 +1,4 @@
-FROM buildpack-deps:trusty
+FROM buildpack-deps:xenial
 
 # Enable remote pubkey access
 RUN mkdir /root/.ssh && chmod 700 /root/.ssh && \
@@ -27,37 +27,24 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
     apt-get -y install gdebi-core sshpass cron \
       netcat net-tools
 
-#
-# Buildenv is special environment for generating debian packages. It provides:
-#   - All needed pre-installed development packages
-#   - SSH access for build executor.
-#
+ENV container docker
 
+RUN find /etc/systemd/system \
+         /lib/systemd/system \
+         -path '*.wants/*' \
+         -not -name '*journald*' \
+         -not -name '*systemd-tmpfiles*' \
+         -not -name '*systemd-user-sessions*' \
+         -exec rm \{} \;
 
-# install python development
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    apt-get -y install build-essential python-dev python
+RUN systemctl set-default multi-user.target
 
+COPY setup /sbin/
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
-        devscripts debhelper dh-make && apt-get clean
+RUN systemctl preset ssh;
 
-# We use our version, since it fixes shebangd lines rewrites
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
-        python-setuptools python-sphinx python-mock python-virtualenv && \
-        apt-get clean && \
-        git clone https://github.com/dennybaa/dh-virtualenv.git /tmp/dh-virtualenv && \
-        cd /tmp/dh-virtualenv && \
-        dpkg-buildpackage -b -uc -us && dpkg -i ../dh-virtualenv_*.deb && \
-          rm -rf /tmp/dh-virtualenv*
-
-# Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python - pip==7.1.2 wheel==0.26.0 setuptools==18.7.1; \
-      pip install --upgrade wheel virtualenv \
-      requests[security] && rm -rf /root/.cache
-
-VOLUME ['/home/busybee/build']
+# we can have ssh
 EXPOSE 22
 
-# Run ssh daemon in foreground and wait for bees to connect.
-CMD ["/usr/sbin/sshd", "-D"]
+VOLUME [ "/sys/fs/cgroup" ]
+CMD [ "/sbin/init" ]

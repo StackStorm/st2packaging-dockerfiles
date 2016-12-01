@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import argparse
-import os.path
+import os
 import sys
 import yaml
 import re
@@ -13,9 +13,7 @@ def dockerfile_template_name(variant):
     tpl_list = filter(None, ("Dockerfile.template", variant))
     filepath = '-'.join(tpl_list)
     # Abort if template not found, this is misconfiguration.
-    if not os.path.isfile(filepath):
-        print("Error: template file `{}' not found!".format(filepath))
-        sys.exit(1)
+    os.stat(filepath)
     return filepath
 
 
@@ -89,7 +87,7 @@ class UpdateCLI(object):
         self.arguments = vars(self.parser.parse_args())
         return self.arguments
 
-    def process_options(self, abort_on_missing_template=True):
+    def process_options(self, abort_on_missing_template=False):
         """Process options, parse command line arguments and construct an
         options hash.
         """
@@ -220,7 +218,12 @@ def main():
     sp = Suite(workdir=opts['image_dir'], suites=opts['suites'])
 
     for ctx in sp.process():
-        rendered = render_template(ctx)
+        try:
+            rendered = render_template(ctx)
+        except os.error:
+            msg = "Template for {} {} not found. Skipping..."
+            print(msg.format(ctx['suite'], ctx['variant'] or "(default variant)"))
+            continue
         target_filepath = dockerfile_path(suite=ctx['suite'], variant=ctx['variant'])
         target_abspath = os.path.abspath(target_filepath)
         target_filepath_parent = os.path.dirname(target_abspath)

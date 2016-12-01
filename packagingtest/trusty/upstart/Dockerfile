@@ -27,37 +27,41 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
     apt-get -y install gdebi-core sshpass cron \
       netcat net-tools
 
-#
-# Buildenv is special environment for generating debian packages. It provides:
-#   - All needed pre-installed development packages
-#   - SSH access for build executor.
-#
+COPY init-fake.conf /etc/init/fake-container-events.conf
+
+# undo some leet hax of the base image
+RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
+  rm /sbin/initctl; dpkg-divert --rename --remove /sbin/initctl
+
+# generate a nice UTF-8 locale for our use
+RUN locale-gen en_US.UTF-8 && update-locale LANG=en_US.UTF-8
+
+# remove some pointless services
+RUN /usr/sbin/update-rc.d -f ondemand remove; \
+  for f in \
+    /etc/init/u*.conf \
+    /etc/init/mounted-dev.conf \
+    /etc/init/mounted-proc.conf \
+    /etc/init/mounted-run.conf \
+    /etc/init/mounted-tmp.conf \
+    /etc/init/mounted-var.conf \
+    /etc/init/hostname.conf \
+    /etc/init/networking.conf \
+    /etc/init/tty*.conf \
+    /etc/init/plymouth*.conf \
+    /etc/init/hwclock*.conf \
+    /etc/init/module*.conf\
+  ; do \
+    dpkg-divert --local --rename --add "$f"; \
+  done; \
+  echo '# /lib/init/fstab: cleared out for bare-bones Docker' > /lib/init/fstab
 
 
-# install python development
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    apt-get -y install build-essential python-dev python
+# let Upstart know it's in a container
+ENV container docker
 
-
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
-        devscripts debhelper dh-make && apt-get clean
-
-# We use our version, since it fixes shebangd lines rewrites
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
-        python-setuptools python-sphinx python-mock python-virtualenv && \
-        apt-get clean && \
-        git clone https://github.com/dennybaa/dh-virtualenv.git /tmp/dh-virtualenv && \
-        cd /tmp/dh-virtualenv && \
-        dpkg-buildpackage -b -uc -us && dpkg -i ../dh-virtualenv_*.deb && \
-          rm -rf /tmp/dh-virtualenv*
-
-# Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python - pip==7.1.2 wheel==0.26.0 setuptools==18.7.1; \
-      pip install --upgrade wheel virtualenv \
-      requests[security] && rm -rf /root/.cache
-
-VOLUME ['/home/busybee/build']
+# we can have SSH
 EXPOSE 22
 
-# Run ssh daemon in foreground and wait for bees to connect.
-CMD ["/usr/sbin/sshd", "-D"]
+# pepare for takeoff
+CMD ["/sbin/init"]
