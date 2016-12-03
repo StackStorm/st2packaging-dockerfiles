@@ -79,7 +79,7 @@ actionrunner:
 
 ## External Services
 mongo:
-  image: mongo
+  image: mongo:3.2
 
 rabbitmq:
   image: rabbitmq
