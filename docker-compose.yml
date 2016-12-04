@@ -4,7 +4,7 @@ services:
 
   api:
     image: stackstorm/st2api
-    links:
+    depends_on:
       - mongo
       - rabbitmq
     volumes_from:
@@ -12,7 +12,7 @@ services:
 
   auth:
     image: stackstorm/st2auth
-    links:
+    depends_on:
       - api
       - mongo
     volumes_from:
@@ -20,7 +20,7 @@ services:
 
   stream:
     image: stackstorm/st2stream
-    links:
+    depends_on:
       - mongo
       - rabbitmq
     volumes_from:
@@ -28,7 +28,7 @@ services:
 
   notifier:
     image: stackstorm/st2notifier
-    links:
+    depends_on:
       - api
       - mongo
       - rabbitmq
@@ -37,7 +37,7 @@ services:
 
   resultstracker:
     image: stackstorm/st2resultstracker
-    links:
+    depends_on:
       - api
       - mongo
       - rabbitmq
@@ -46,7 +46,7 @@ services:
 
   rulesengine:
     image: stackstorm/st2rulesengine
-    links:
+    depends_on:
       - api
       - mongo
       - rabbitmq
@@ -55,7 +55,7 @@ services:
 
   sensorcontainer:
     image: stackstorm/st2sensorcontainer
-    links:
+    depends_on:
       - api
       - mongo
       - rabbitmq
@@ -64,7 +64,7 @@ services:
 
   garbagecollector:
     image: stackstorm/st2garbagecollector
-    links:
+    depends_on:
       - api
       - mongo
       - rabbitmq
@@ -73,7 +73,7 @@ services:
 
   actionrunner:
     image: stackstorm/st2actionrunner
-    links:
+    depends_on:
       - api
       - auth
       - mongo
@@ -94,13 +94,13 @@ services:
     volumes:
       - /etc/st2
       - /opt/stackstorm
-    links:
+    depends_on:
       - rabbitmq
       - mongo
 
   ## Client container
   client:
     build: ./client
-    links:
+    depends_on:
       - api
       - auth
