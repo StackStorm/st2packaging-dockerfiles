@@ -79,7 +79,20 @@ actionrunner:
 
 ## External Services
 mongo:
-  image: mongo:${MONGO_VERSION}
+  image: mongo:3.2
+
+rabbitmq:
+  image: rabbitmq
+
+## Data container
+data:
+  build: ./data
+  volumes:
+    - /etc/st2
+    - /opt/stackstorm
+  links:
+    - rabbitmq
+    - mongo
 
 ## Client container
 client:
