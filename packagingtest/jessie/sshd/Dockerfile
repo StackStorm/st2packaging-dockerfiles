@@ -27,6 +27,10 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
     apt-get -y install gdebi-core sshpass cron \
       netcat net-tools
 
+# install locales package and set default locale to 'UTF-8' for the test executiong environment
+RUN apt-get -y update && apt-get -y install locales && \
+    echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen && locale-gen
+
 ENV container docker
 
 # we can have ssh
