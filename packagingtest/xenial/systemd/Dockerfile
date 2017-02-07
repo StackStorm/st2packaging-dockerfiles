@@ -39,7 +39,7 @@ RUN find /etc/systemd/system \
 
 RUN systemctl set-default multi-user.target
 
-COPY setup /sbin/
+COPY setup.sh /sbin/
 
 RUN systemctl preset ssh;
 
