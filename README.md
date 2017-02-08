@@ -1,4 +1,5 @@
 # StackStorm Docker Containers
+[![Circle CI Build Status](https://circleci.com/gh/StackStorm/st2-dockerfiles/tree/master.svg?style=shield)](https://circleci.com/gh/StackStorm/st2-dockerfiles)
 [![Go to Docker Hub](https://img.shields.io/badge/Docker%20Hub-%E2%86%92-blue.svg)](https://hub.docker.com/r/stackstorm/)
 > *Warning:*  Docker is not officially supported by StackStorm.<br>
 > Repository provides basic skeleton, best effort helping you to [Build & Use](#build-and-deploy-stackstorm-components-to-docker-hub) own StackStorm images.<br>
