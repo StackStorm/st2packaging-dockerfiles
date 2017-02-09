@@ -105,3 +105,13 @@ docker push stackstorm/st2sensorcontainer:2.0.1
 docker push stackstorm/st2garbagecollector:2.0.1
 ```
 
+## Also in this repo
+### `packagingbuild`
+`Dockerfiles` with ready to use environment to build `.deb` and `.rpm` StackStorm packages in [StackStorm/st2-packages](https://github.com/StackStorm/st2-packages/blob/master/docker-compose.circle.yml) CI/CD.
+
+See [packagingbuild/](packagingbuild/)
+
+### `packagingtest`
+`Dockerfiles` with pre-installed init system used to test `.deb` and `.rpm` StackStorm packages in [StackStorm/st2-packages](https://github.com/StackStorm/st2-packages/blob/master/docker-compose.circle.yml) CI/CD.
+
+See [packagingtest/](packagingtest/)
