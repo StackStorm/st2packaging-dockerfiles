@@ -1,7 +1,5 @@
 # StackStorm Docker Containers
 [![Circle CI Build Status](https://circleci.com/gh/StackStorm/st2-dockerfiles/tree/master.svg?style=shield)](https://circleci.com/gh/StackStorm/st2-dockerfiles)
-[![Go to Quay.io for packagingenv images](https://img.shields.io/badge/Quay-packagingenv-blue.svg)](https://quay.io/repository/stackstorm/packagingenv)
-[![Go to Quay.io for packagingtest images](https://img.shields.io/badge/Quay-packagingtest-blue.svg)](https://quay.io/repository/stackstorm/packagingtest)
 [![Go to Docker Hub](https://img.shields.io/badge/Docker%20Hub-%E2%86%92-blue.svg)](https://hub.docker.com/r/stackstorm/)
 
 > *Warning:*  Docker is not officially supported by StackStorm.<br>
@@ -107,3 +105,13 @@ docker push stackstorm/st2sensorcontainer:2.0.1
 docker push stackstorm/st2garbagecollector:2.0.1
 ```
 
+## Also in this repo
+### `packagingbuild`
+`Dockerfiles` with ready to use environment to build `.deb` and `.rpm` StackStorm packages in [StackStorm/st2-packages](https://github.com/StackStorm/st2-packages/blob/master/docker-compose.circle.yml) CI/CD.
+
+See [packagingbuild/](packagingbuild/)
+
+### `packagingtest`
+`Dockerfiles` with pre-installed init system used to test `.deb` and `.rpm` StackStorm packages in [StackStorm/st2-packages](https://github.com/StackStorm/st2-packages/blob/master/docker-compose.circle.yml) CI/CD.
+
+See [packagingtest/](packagingtest/)
