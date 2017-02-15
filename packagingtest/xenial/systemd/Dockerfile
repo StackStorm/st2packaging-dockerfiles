@@ -21,6 +21,11 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
         sed -ri 's/requiretty/!requiretty/' /etc/sudoers && \
         echo 'root:docker.io' | chpasswd
 
+# install locales package and set default locale to 'UTF-8' for the
+# test execution environment
+RUN apt-get -y update && apt-get -y install locales && \
+    echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen && locale-gen
+
 # install core software for packaging and ssh communication
 RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
     DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
