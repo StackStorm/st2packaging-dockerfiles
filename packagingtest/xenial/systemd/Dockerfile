@@ -24,7 +24,8 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
 # install locales package and set default locale to 'UTF-8' for the
 # test execution environment
 RUN apt-get -y update && apt-get -y install locales && \
-    echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen && locale-gen
+    echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen && locale-gen && \
+    update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 
 # install core software for packaging and ssh communication
 RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
@@ -33,7 +34,6 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
       netcat net-tools
 
 ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 ENV container docker
 
