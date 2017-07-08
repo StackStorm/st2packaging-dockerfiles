@@ -23,7 +23,7 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
 
 # install locales package and set default locale to 'UTF-8' for the
 # test execution environment
-RUN apt-get -y update && apt-get -y install locales && \
+RUN apt-get -y install locales dbus && touch /etc/default/keyboard \
     echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen && locale-gen && \
     update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 
