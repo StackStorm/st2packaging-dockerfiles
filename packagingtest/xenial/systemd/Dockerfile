@@ -1,4 +1,8 @@
-FROM buildpack-deps:xenial
+FROM ubuntu:xenial
+
+ENV container docker
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
 
 # Enable remote pubkey access
 RUN mkdir /root/.ssh && chmod 700 /root/.ssh && \
@@ -24,18 +28,13 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
 # install locales package and set default locale to 'UTF-8' for the
 # test execution environment
 RUN apt-get -y update && apt-get -y install locales && \
-    echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen && locale-gen && \
-    update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
+    echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen && locale-gen
 
 # install core software for packaging and ssh communication
 RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
     DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
     apt-get -y install gdebi-core sshpass cron \
       netcat net-tools
-
-ENV LANG en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
-ENV container docker
 
 RUN find /etc/systemd/system \
          /lib/systemd/system \
