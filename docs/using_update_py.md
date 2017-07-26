@@ -61,12 +61,9 @@ centos:
 ubuntu-debootstrap:
   - precise
   - trusty
-debian:
-  - wheezy
-  - jessie
 ```
 
-From the above example we can clearly see that debian has two suites: wheezy and jessie. Notable feature of this format is that it supports regex, so fedora distribution maps to suites described by *regular expression*. The first group match here makes particular sense it defines a version group. This is done because we say it generate **fedora21** suite but the upstream image doesn't have such a tag, versioning however helps you to inherit from *fedora:21*.
+From the above example we can clearly see that ubuntu has two suites: precise and trusty. Notable feature of this format is that it supports regex, so fedora distribution maps to suites described by *regular expression*. The first group match here makes particular sense it defines a version group. This is done because we say it generate **fedora21** suite but the upstream image doesn't have such a tag, versioning however helps you to inherit from *fedora:21*.
 
 ### suite.yml
 
