@@ -11,8 +11,7 @@ RUN yum -y install \
     git \
     mercurial \
     openssh \
-    subversion \
-    setup
+    subversion
 
 # Build tools
 RUN yum -y install \
