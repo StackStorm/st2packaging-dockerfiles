@@ -39,8 +39,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get -y install build-essential python-dev python
 
 # install netbase package (includes /etc/protocols and other files we rely on)
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    apt-get -y install netbase
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install netbase
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
         devscripts debhelper dh-make && apt-get clean
