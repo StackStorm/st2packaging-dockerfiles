@@ -46,7 +46,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
         python-setuptools python-sphinx python-mock python-virtualenv && \
         apt-get clean && \
-        git clone https://github.com/dennybaa/dh-virtualenv.git /tmp/dh-virtualenv && \
+        git clone https://github.com/stackstorm/dh-virtualenv.git /tmp/dh-virtualenv && \
         cd /tmp/dh-virtualenv && \
         dpkg-buildpackage -b -uc -us && dpkg -i ../dh-virtualenv_*.deb && \
           rm -rf /tmp/dh-virtualenv*
