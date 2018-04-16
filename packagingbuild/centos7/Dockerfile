@@ -83,9 +83,9 @@ RUN yum -y install nc net-tools
 RUN yum -y install python-devel rpmdevtools
 
 # Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python - pip==10.0.0 wheel==0.31.0 setuptools==39.0.1; \
-      pip install --upgrade virtualenv pip==10.0.0 \
-      requests[security] venvctrl && rm -rf /root/.cache
+# pin virtualenv to '15.1.0' (installs pip 9) due to dh-virtualenv incompatibility with pip 10.0
+RUN curl https://bootstrap.pypa.io/get-pip.py | python - virtualenv==15.1.0 pip==9.0.1 wheel==0.29.0 setuptools==28.0.0; \
+      pip install --upgrade requests[security] venvctrl && rm -rf /root/.cache
 
 VOLUME ['/home/busybee/build']
 EXPOSE 22
