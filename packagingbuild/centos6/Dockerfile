@@ -88,7 +88,7 @@ RUN wget https://bintray.com/stackstorm/el6/rpm -O /etc/yum.repos.d/stackstorm-e
 
 # Install fresh pip and co
 RUN PATH=/usr/share/python/st2python/bin:$PATH bash -c \
-      "curl https://bootstrap.pypa.io/get-pip.py | python - pip==7.1.2 wheel==0.26.0 setuptools==18.7.1; \
+      "curl https://bootstrap.pypa.io/get-pip.py | python - pip==10.0.0 wheel==0.31.0 setuptools==39.0.1; \
         pip install --upgrade virtualenv \
         requests[security] venvctrl" \
     && rm -rf /root/.cache
