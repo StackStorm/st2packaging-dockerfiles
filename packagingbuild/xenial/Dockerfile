@@ -52,10 +52,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
           rm -rf /tmp/dh-virtualenv*
 
 # Install fresh pip and co
-# pin pip to 9.0 due to dh-virtualenv incompatibility with 10.0
-RUN curl https://bootstrap.pypa.io/get-pip.py | python - pip==9.0.3 wheel==0.31.0 setuptools==39.0.1; \
-      pip install --upgrade wheel virtualenv \
-      requests[security] && rm -rf /root/.cache
+# pin virtualenv to '15.1.0' (installs pip 9) due to dh-virtualenv incompatibility with pip 10.0
+RUN curl https://bootstrap.pypa.io/get-pip.py | python - virtualenv==15.1.0 pip==9.0.1 wheel==0.29.0 setuptools==28.0.0; \
+      pip install --upgrade requests[security] && rm -rf /root/.cache
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install dh-systemd && apt-get clean
 
 VOLUME ['/home/busybee/build']
