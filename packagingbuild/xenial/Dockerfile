@@ -52,7 +52,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
           rm -rf /tmp/dh-virtualenv*
 
 # Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python - pip==7.1.2 wheel==0.26.0 setuptools==18.7.1; \
+RUN curl https://bootstrap.pypa.io/get-pip.py | python - pip==10.0.0 wheel==0.31.0 setuptools==39.0.1; \
       pip install --upgrade wheel virtualenv \
       requests[security] && rm -rf /root/.cache
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install dh-systemd && apt-get clean
