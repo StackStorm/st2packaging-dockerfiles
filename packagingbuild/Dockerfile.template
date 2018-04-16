@@ -110,8 +110,9 @@ RUN wget https://bintray.com/stackstorm/el6/rpm -O /etc/yum.repos.d/stackstorm-e
       yum -y install st2python && rm -rf /tmp/*
 
 # Install fresh pip and co
+# pin pip to 9.0 due to dh-virtualenv incompatibility with 10.0
 RUN PATH=/usr/share/python/st2python/bin:$PATH bash -c \
-      "curl https://bootstrap.pypa.io/get-pip.py | python - pip==7.1.2 wheel==0.26.0 setuptools==18.7.1; \
+      "curl https://bootstrap.pypa.io/get-pip.py | python - pip==9.0.3 wheel==0.31.0 setuptools==39.0.1; \
         pip install --upgrade virtualenv \
         requests[security] venvctrl" \
     && rm -rf /root/.cache
@@ -122,8 +123,9 @@ RUN PATH=/usr/share/python/st2python/bin:$PATH bash -c \
 RUN yum -y install python-devel rpmdevtools
 
 # Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python - pip==7.1.2 wheel==0.26.0 setuptools==18.7.1; \
-      pip install --upgrade virtualenv pip==7.1.2 \
+# pin pip to 9.0 due to dh-virtualenv incompatibility with 10.0
+RUN curl https://bootstrap.pypa.io/get-pip.py | python - pip==9.0.3 wheel==0.31.0 setuptools==39.0.1; \
+      pip install --upgrade virtualenv pip==pip==9.0.3 \
       requests[security] venvctrl && rm -rf /root/.cache
 
 {%- else -%}

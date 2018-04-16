@@ -46,13 +46,14 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
         python-setuptools python-sphinx python-mock python-virtualenv && \
         apt-get clean && \
-        git clone https://github.com/stackstorm/dh-virtualenv.git /tmp/dh-virtualenv && \
+        git clone -b fix/py-custom-shebang https://github.com/stackstorm/dh-virtualenv.git /tmp/dh-virtualenv && \
         cd /tmp/dh-virtualenv && \
         dpkg-buildpackage -b -uc -us && dpkg -i ../dh-virtualenv_*.deb && \
           rm -rf /tmp/dh-virtualenv*
 
 # Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python - pip==10.0.0 wheel==0.31.0 setuptools==39.0.1; \
+# pin pip to 9.0 due to dh-virtualenv incompatibility with 10.0
+RUN curl https://bootstrap.pypa.io/get-pip.py | python - pip==9.0.3 wheel==0.31.0 setuptools==39.0.1; \
       pip install --upgrade wheel virtualenv \
       requests[security] && rm -rf /root/.cache
 

@@ -87,8 +87,9 @@ RUN wget https://bintray.com/stackstorm/el6/rpm -O /etc/yum.repos.d/stackstorm-e
       yum -y install st2python && rm -rf /tmp/*
 
 # Install fresh pip and co
+# pin pip to 9.0 due to dh-virtualenv incompatibility with 10.0
 RUN PATH=/usr/share/python/st2python/bin:$PATH bash -c \
-      "curl https://bootstrap.pypa.io/get-pip.py | python - pip==10.0.0 wheel==0.31.0 setuptools==39.0.1; \
+      "curl https://bootstrap.pypa.io/get-pip.py | python - pip==9.0.3 wheel==0.31.0 setuptools==39.0.1; \
         pip install --upgrade virtualenv \
         requests[security] venvctrl" \
     && rm -rf /root/.cache
