@@ -36,7 +36,7 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
 
 # install python development
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    apt-get -y install build-essential python-dev python
+    apt-get -y install build-essential python-dev python python-virtualenv
 
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
