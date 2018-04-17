@@ -42,19 +42,20 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
         devscripts debhelper dh-make && apt-get clean
 
-# We use our version, since it fixes shebangd lines rewrites
+# Install fresh pip and co
+# pin virtualenv to '15.1.0' (installs pip 9) due to dh-virtualenv incompatibility with pip 10.0
+RUN curl https://bootstrap.pypa.io/get-pip.py | python - virtualenv==15.1.0 pip==9.0.1 wheel==0.29.0 setuptools==28.0.0; \
+      pip install --upgrade requests[security] sphinx_rtd_theme && rm -rf /root/.cache
+
+# We use our dh-virtualenv version, since it fixes shebangd lines rewrites
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
-        python-setuptools python-sphinx python-mock python-virtualenv && \
+        python-setuptools python-sphinx python-mock && \
         apt-get clean && \
         git clone -b stackstorm_patched https://github.com/stackstorm/dh-virtualenv.git /tmp/dh-virtualenv && \
         cd /tmp/dh-virtualenv && \
         dpkg-buildpackage -b -uc -us && dpkg -i ../dh-virtualenv_*.deb && \
           rm -rf /tmp/dh-virtualenv*
 
-# Install fresh pip and co
-# pin virtualenv to '15.1.0' (installs pip 9) due to dh-virtualenv incompatibility with pip 10.0
-RUN curl https://bootstrap.pypa.io/get-pip.py | python - virtualenv==15.1.0 pip==9.0.1 wheel==0.29.0 setuptools==28.0.0; \
-      pip install --upgrade requests[security] && rm -rf /root/.cache
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install dh-systemd && apt-get clean
 
 VOLUME ['/home/busybee/build']
