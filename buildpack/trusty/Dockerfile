@@ -4,6 +4,7 @@ RUN apt-get update -y
 # Install python development
 RUN apt-get -y install build-essential python2.7-dev python2.7 && \
     wget -qO - https://bootstrap.pypa.io/get-pip.py | python && \
+    pip install --upgrade "pip>=9.0.0,<10.0.0" && \
     pip install setuptools virtualenv && \
     rm -rf /root/.cache
 
