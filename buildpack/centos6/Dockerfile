@@ -49,6 +49,7 @@ RUN wget https://bintray.com/stackstorm/el6/rpm -O /etc/yum.repos.d/stackstorm-e
 
 ENV PATH=/usr/share/python/st2python/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 RUN wget -qO - https://bootstrap.pypa.io/get-pip.py | python && \
+    pip install --upgrade "pip>=9.0.0,<10.0.0" && \
     pip install setuptools virtualenv && \
     rm -rf /root/.cache
 
