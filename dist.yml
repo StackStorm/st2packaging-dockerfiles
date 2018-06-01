@@ -6,6 +6,3 @@ ubuntu:
   - precise
   - trusty
   - xenial
-debian:
-  - wheezy
-  - jessie

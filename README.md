@@ -2,11 +2,11 @@
 [![Circle CI Build Status](https://circleci.com/gh/StackStorm/st2-dockerfiles/tree/master.svg?style=shield)](https://circleci.com/gh/StackStorm/st2-dockerfiles)
 [![Go to Docker Hub](https://img.shields.io/badge/Docker%20Hub-%E2%86%92-blue.svg)](https://hub.docker.com/r/stackstorm/)
 
-> *Warning:*  Docker is not officially supported by StackStorm.<br>
-> Repository provides basic skeleton, best effort helping you to [Build & Use](#build-and-deploy-stackstorm-components-to-docker-hub) own StackStorm images.<br>
+> *Note:*  For official StackStorm Docker repo, go https://github.com/StackStorm/st2-docker.<br>
+> <br>
 
 
-This repository contains Dockerfiles for StackStorm. For a specific Dockerfile you can browse directly to a container sub directory.
+This repository contains unofficial Dockerfiles for StackStorm, used by StackStorm team for CI and some other specific needs. Repository also provides basic skeleton, best effort helping you to [Build & Use](#build-and-deploy-stackstorm-components-to-docker-hub) own StackStorm images. For a specific Dockerfile you can browse directly to a container sub directory. For official StackStorm docker image for evaluation and light production, get [StackStorm image on DockerHub](https://hub.docker.com/r/stackstorm/stackstorm/)
 
 ## About StackStorm
 

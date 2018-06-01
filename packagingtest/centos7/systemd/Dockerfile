@@ -11,7 +11,8 @@ RUN yum -y install \
     git \
     mercurial \
     openssh \
-    subversion
+    subversion \
+    setup
 
 # Build tools
 RUN yum -y install \
@@ -70,6 +71,11 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
         sed -ri 's/^#?PubkeyAuthentication\s+.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
         sed -ri 's/requiretty/!requiretty/' /etc/sudoers && \
         echo 'root:docker.io' | chpasswd
+
+# Set default locale to 'UTF-8' for the test execution environment
+# Per https://github.com/CentOS/sig-cloud-instance-images/issues/71
+RUN sed -ri 's/langs=en_US.UTF-8/langs=en_US.utf8/' /etc/yum.conf && \
+    yum reinstall -y glibc-common
 
 RUN yum -y install nc net-tools
 

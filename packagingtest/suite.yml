@@ -7,7 +7,4 @@ variants:
   - systemd:
     - centos7
     - xenial
-  - sshd:
-    - wheezy
-    - jessie
     - centos6
