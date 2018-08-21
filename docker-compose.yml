@@ -1,102 +1,106 @@
-api:
-  image: stackstorm/st2api
-  links:
-    - mongo
-    - rabbitmq
-  volumes_from:
-    - data
+version: '2'
 
-auth:
-  image: stackstorm/st2auth
-  links:
-    - api
-    - mongo
-  volumes_from:
-    - data
+services:
 
-stream:
-  image: stackstorm/st2stream
-  links:
-    - mongo
-    - rabbitmq
-  volumes_from:
-    - data
+  api:
+    image: stackstorm/st2api
+    depends_on:
+      - mongo
+      - rabbitmq
+    volumes_from:
+      - data
 
-notifier:
-  image: stackstorm/st2notifier
-  links:
-    - api
-    - mongo
-    - rabbitmq
-  volumes_from:
-    - data
+  auth:
+    image: stackstorm/st2auth
+    depends_on:
+      - api
+      - mongo
+    volumes_from:
+      - data
 
-resultstracker:
-  image: stackstorm/st2resultstracker
-  links:
-    - api
-    - mongo
-    - rabbitmq
-  volumes_from:
-    - data
+  stream:
+    image: stackstorm/st2stream
+    depends_on:
+      - mongo
+      - rabbitmq
+    volumes_from:
+      - data
 
-rulesengine:
-  image: stackstorm/st2rulesengine
-  links:
-    - api
-    - mongo
-    - rabbitmq
-  volumes_from:
-    - data
+  notifier:
+    image: stackstorm/st2notifier
+    depends_on:
+      - api
+      - mongo
+      - rabbitmq
+    volumes_from:
+      - data
 
-sensorcontainer:
-  image: stackstorm/st2sensorcontainer
-  links:
-    - api
-    - mongo
-    - rabbitmq
-  volumes_from:
-    - data
+  resultstracker:
+    image: stackstorm/st2resultstracker
+    depends_on:
+      - api
+      - mongo
+      - rabbitmq
+    volumes_from:
+      - data
 
-garbagecollector:
-  image: stackstorm/st2garbagecollector
-  links:
-    - api
-    - mongo
-    - rabbitmq
-  volumes_from:
-    - data
+  rulesengine:
+    image: stackstorm/st2rulesengine
+    depends_on:
+      - api
+      - mongo
+      - rabbitmq
+    volumes_from:
+      - data
 
-actionrunner:
-  image: stackstorm/st2actionrunner
-  links:
-    - api
-    - auth
-    - mongo
-    - rabbitmq
-  volumes_from:
-    - data
+  sensorcontainer:
+    image: stackstorm/st2sensorcontainer
+    depends_on:
+      - api
+      - mongo
+      - rabbitmq
+    volumes_from:
+      - data
 
-## External Services
-mongo:
-  image: mongo:3.2
+  garbagecollector:
+    image: stackstorm/st2garbagecollector
+    depends_on:
+      - api
+      - mongo
+      - rabbitmq
+    volumes_from:
+      - data
 
-rabbitmq:
-  image: rabbitmq
+  actionrunner:
+    image: stackstorm/st2actionrunner
+    depends_on:
+      - api
+      - auth
+      - mongo
+      - rabbitmq
+    volumes_from:
+      - data
 
-## Data container
-data:
-  build: ./data
-  volumes:
-    - /etc/st2
-    - /opt/stackstorm
-  links:
-    - rabbitmq
-    - mongo
+  ## External Services
+  mongo:
+    image: mongo:3.2
 
-## Client container
-client:
-  build: ./client
-  links:
-    - api
-    - auth
+  rabbitmq:
+    image: rabbitmq
+
+  ## Data container
+  data:
+    build: ./data
+    volumes:
+      - /etc/st2
+      - /opt/stackstorm
+    depends_on:
+      - rabbitmq
+      - mongo
+
+  ## Client container
+  client:
+    build: ./client
+    depends_on:
+      - api
+      - auth
