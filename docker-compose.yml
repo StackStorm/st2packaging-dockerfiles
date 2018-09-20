@@ -1,5 +1,5 @@
 api:
-  image: stackstorm/st2api
+  image: stackstorm/st2api:${ST2_VERSION}
   links:
     - mongo
     - rabbitmq
@@ -7,7 +7,7 @@ api:
     - data
 
 auth:
-  image: stackstorm/st2auth
+  image: stackstorm/st2auth:${ST2_VERSION}
   links:
     - api
     - mongo
@@ -15,7 +15,7 @@ auth:
     - data
 
 stream:
-  image: stackstorm/st2stream
+  image: stackstorm/st2stream:${ST2_VERSION}
   links:
     - mongo
     - rabbitmq
@@ -23,7 +23,7 @@ stream:
     - data
 
 notifier:
-  image: stackstorm/st2notifier
+  image: stackstorm/st2notifier:${ST2_VERSION}
   links:
     - api
     - mongo
@@ -32,7 +32,7 @@ notifier:
     - data
 
 resultstracker:
-  image: stackstorm/st2resultstracker
+  image: stackstorm/st2resultstracker:${ST2_VERSION}
   links:
     - api
     - mongo
@@ -41,7 +41,7 @@ resultstracker:
     - data
 
 rulesengine:
-  image: stackstorm/st2rulesengine
+  image: stackstorm/st2rulesengine:${ST2_VERSION}
   links:
     - api
     - mongo
@@ -50,7 +50,7 @@ rulesengine:
     - data
 
 sensorcontainer:
-  image: stackstorm/st2sensorcontainer
+  image: stackstorm/st2sensorcontainer:${ST2_VERSION}
   links:
     - api
     - mongo
@@ -59,7 +59,7 @@ sensorcontainer:
     - data
 
 garbagecollector:
-  image: stackstorm/st2garbagecollector
+  image: stackstorm/st2garbagecollector:${ST2_VERSION}
   links:
     - api
     - mongo
@@ -68,7 +68,7 @@ garbagecollector:
     - data
 
 actionrunner:
-  image: stackstorm/st2actionrunner
+  image: stackstorm/st2actionrunner:${ST2_VERSION}
   links:
     - api
     - auth
