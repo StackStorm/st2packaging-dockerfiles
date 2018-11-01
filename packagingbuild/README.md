@@ -12,6 +12,7 @@ In these containers build environment specific for each OS distro is pre-install
 - CentOS 7
 - Ubuntu Trusty
 - Ubuntu Xenial
+- Ubuntu Bionic
 
 NB!
 Images are built automatically in Docker Hub on every push to [StackStorm/st2-dockerfiles](https://github.com/StackStorm/st2-dockerfiles/) `master`.
