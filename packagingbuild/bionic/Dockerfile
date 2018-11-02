@@ -36,7 +36,8 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
 
 # install python development
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    apt-get -y install build-essential python-dev python python-virtualenv
+    apt-get -y install build-essential python-dev python python-virtualenv \
+    python3 python3-virtualenv python3-pip
 
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
@@ -44,8 +45,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
 
 # Install fresh pip and co
 # pin virtualenv to '15.1.0' (installs pip 9) due to dh-virtualenv incompatibility with pip 10.0
-RUN curl https://bootstrap.pypa.io/get-pip.py | python - virtualenv==15.1.0 pip==9.0.1 wheel==0.29.0 setuptools==28.0.0; \
-      pip install --upgrade requests[security] && rm -rf /root/.cache
+RUN curl https://bootstrap.pypa.io/get-pip.py | python3 - virtualenv==15.1.0 pip==9.0.1 wheel==0.29.0 setuptools==28.0.0; \
+      pip3 install --upgrade requests[security] && rm -rf /root/.cache
 
 # We use our dh-virtualenv version, since it fixes shebangd lines rewrites
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
