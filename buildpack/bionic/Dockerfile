@@ -2,10 +2,10 @@ FROM buildpack-deps:bionic
 RUN apt-get update -y
 
 # Install python development
-RUN apt-get -y install build-essential python2.7-dev python2.7 && \
+RUN apt-get -y install build-essential python2.7-dev python2.7 python3-dev python3 python3-virtualenv python3-pip && \
     wget -qO - https://bootstrap.pypa.io/get-pip.py | python && \
-    pip install --upgrade "pip>=9.0.0,<10.0.0" && \
-    pip install setuptools virtualenv && \
+    pip3 install --upgrade "pip>=9.0.0,<10.0.0" && \
+    pip3 install setuptools virtualenv && \
     rm -rf /root/.cache
 
 # Install debian build tools
