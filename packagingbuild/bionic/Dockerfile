@@ -57,9 +57,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
         cd /tmp/dh-virtualenv && \
         dpkg-buildpackage -b -uc -us && dpkg -i ../dh-virtualenv_*.deb && \
           rm -rf /tmp/dh-virtualenv*
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata
-RUN ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
-RUN dpkg-reconfigure -f noninteractive tzdata
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install dh-systemd && apt-get clean
 
 VOLUME ['/home/busybee/build']
