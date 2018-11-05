@@ -36,8 +36,7 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
 
 # install python development
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    apt-get -y install build-essential python-dev python python-virtualenv \
-    python3 python3-virtualenv python3-pip
+    apt-get -y install build-essential python3 python3-virtualenv python3-pip
 
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
@@ -56,7 +55,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
         cd /tmp/dh-virtualenv && \
         dpkg-buildpackage -b -uc -us && dpkg -i ../dh-virtualenv_*.deb && \
           rm -rf /tmp/dh-virtualenv*
-
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install dh-systemd && apt-get clean
 
 VOLUME ['/home/busybee/build']
