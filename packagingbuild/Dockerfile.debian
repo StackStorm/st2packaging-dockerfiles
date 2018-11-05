@@ -35,6 +35,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
 
 {%- if version in ('bionic') %}
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install tzdata
+RUN ln -fs /usr/share/zoneinfo/Etc/UTC /etc/localtime
+RUN dpkg-reconfigure -f noninteractive tzdata
 {%- endif -%}
 
 {%- if version in ('xenial', 'bionic') %}
