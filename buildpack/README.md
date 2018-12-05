@@ -4,4 +4,4 @@
 Docker images with pre-installed requirements to build `.deb` and `.rpm` StackStorm enterprise packages.
 
 NB!
-Images are built automatically on every push to [StackStorm/st2-dockerfiles](https://github.com/StackStorm/st2-dockerfiles/) `master`.
+Images are built automatically on every push to [StackStorm/st2packaging-dockerfiles](https://github.com/StackStorm/st2packaging-dockerfiles/) `master`.

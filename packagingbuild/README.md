@@ -5,7 +5,7 @@ Docker images used to build `.deb` and `.rpm` StackStorm packages in [StackStorm
 
 In these containers build environment specific for each OS distro is pre-installed and respective StackStorm packages are built for each platform.
 
-[`Dockerfiles` sources](https://github.com/StackStorm/st2-dockerfiles/blob/master/packagingbuild):
+[`Dockerfiles` sources](https://github.com/StackStorm/st2packaging-dockerfiles/blob/master/packagingbuild):
 - Debian Wheezy
 - Debian Jessie
 - CentOS 6
@@ -15,4 +15,4 @@ In these containers build environment specific for each OS distro is pre-install
 - Ubuntu Bionic
 
 NB!
-Images are built automatically in Docker Hub on every push to [StackStorm/st2-dockerfiles](https://github.com/StackStorm/st2-dockerfiles/) `master`.
+Images are built automatically in Docker Hub on every push to [StackStorm/st2packaging-dockerfiles](https://github.com/StackStorm/st2packaging-dockerfiles/) `master`.

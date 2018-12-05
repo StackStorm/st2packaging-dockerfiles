@@ -5,7 +5,7 @@ Docker images with pre-installed init system used to test `.deb` and `.rpm` Stac
 
 In these containers built artifacts are tested: StackStorm packages are installed, configuration is written, dependent services like MongoDB, RabbitMQ, PostgreSQL are started and end-to-end tests are performed, like on real OS with specific init system.
 
-[`Dockerfiles` sources](https://github.com/StackStorm/st2-dockerfiles/blob/master/packagingtest):
+[`Dockerfiles` sources](https://github.com/StackStorm/st2packaging-dockerfiles/blob/master/packagingtest):
 - Debian Wheezy (ssh)
 - Debian Jessie (sshd)
 - CentOS 6 (sshd)
@@ -14,4 +14,4 @@ In these containers built artifacts are tested: StackStorm packages are installe
 - Ubuntu Xenial (systemd)
 
 NB!
-Images are built automatically on every push to [StackStorm/st2-dockerfiles](https://github.com/StackStorm/st2-dockerfiles/) `master`.
+Images are built automatically on every push to [StackStorm/st2packaging-dockerfiles](https://github.com/StackStorm/st2packaging-dockerfiles/) `master`.
