@@ -2,7 +2,7 @@ FROM buildpack-deps:xenial
 
 # Make noninteractive setting permanent
 ENV DEBIAN_FRONTEND noninteractive
-RUN debconf-set-selections -v <<< 'debconf debconf/frontend select Noninteractive'
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections -v
 
 # Enable remote pubkey access
 RUN mkdir /root/.ssh && chmod 700 /root/.ssh && \

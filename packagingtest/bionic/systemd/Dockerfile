@@ -5,7 +5,7 @@ ENV TERM xterm
 
 # Make noninteractive setting permanent
 ENV DEBIAN_FRONTEND noninteractive
-RUN debconf-set-selections -v <<< 'debconf debconf/frontend select Noninteractive'
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections -v
 
 RUN apt-get -y update
 
