@@ -2,7 +2,10 @@ FROM buildpack-deps:xenial
 
 ENV container docker
 ENV TERM xterm
+
+# Make noninteractive setting permanent
 ENV DEBIAN_FRONTEND noninteractive
+RUN debconf-set-selections -v <<< 'debconf debconf/frontend select Noninteractive'
 
 RUN apt-get -y update
 
@@ -38,7 +41,7 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
     apt-get -y install gdebi-core sshpass cron netcat net-tools iproute
 
 # install netbase package (includes /etc/protocols and other files we rely on)
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install netbase
+RUN apt-get -y install netbase
 
 RUN find /etc/systemd/system \
          /lib/systemd/system \
