@@ -72,11 +72,6 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
         sed -ri 's/requiretty/!requiretty/' /etc/sudoers && \
         echo 'root:docker.io' | chpasswd
 
-# Set default locale to 'UTF-8' for the test execution environment
-# Per https://github.com/CentOS/sig-cloud-instance-images/issues/71
-RUN sed -ri 's/langs=en_US.UTF-8/langs=en_US.utf8/' /etc/yum.conf && \
-    yum reinstall -y glibc-common
-
 RUN yum -y install nc net-tools
 
 ENV container docker
@@ -85,6 +80,7 @@ RUN yum -y update; \
     yum -y install systemd; yum clean all;
 
 RUN cd /lib/systemd/system/sysinit.target.wants/; ls -1 | grep -v systemd-tmpfiles-setup.service | xargs rm; \
+    rm -f /lib/systemd/system/multi-user.target.wants/*;\
     rm -f /etc/systemd/system/*.wants/*;\
     rm -f /lib/systemd/system/local-fs.target.wants/*; \
     rm -f /lib/systemd/system/sockets.target.wants/*udev*; \

@@ -1,10 +1,4 @@
-{%- if dist in ('centos') -%}
-FROM centos:{{ version }}
-{%- else -%}
-FROM buildpack-deps:{{ suite }}
-{%- endif -%}
-
-{%- if dist in ('centos') %}
+FROM centos:8
 
 # Download tools
 RUN yum -y install \
@@ -12,15 +6,13 @@ RUN yum -y install \
     curl \
     wget
 
-RUN yum -y install \
-    {%- if (version == '7' or version == '6') -%}bzr \{%- endif -%}
-    git \
+RUN yum -y install \git \
     mercurial \
     openssh \
     subversion \
     setup
 
-    {% if (version == '8') %}
+    
 RUN yum install -y yum-utils \
     && dnf config-manager --enable PowerTools \
     && yum install -y epel-release \
@@ -30,7 +22,7 @@ RUN yum install -y yum-utils \
     libyaml-devel \
     && dnf config-manager --disable PowerTools \
     && yum remove -y epel-release yum-utils
-    {% endif %}
+    
 
 # Build tools
 RUN yum -y install \
@@ -42,24 +34,14 @@ RUN yum -y install \
     gcc \
     gcc-c++ \
     glib2-devel \
-    glibc-devel \
-    {%- if (version == '7' or version == '6') -%}
-    ImageMagick \
-    ImageMagick-devel \
-    {%- endif -%}
-    libcurl-devel \
+    glibc-devel \libcurl-devel \
     libevent-devel \
     libffi-devel \
     libjpeg-devel \
     libtool \
     libwebp-devel \
     libxml2-devel \
-    libxslt-devel \
-    {%- if (version == '7' or version == '6') -%}
-    libyaml-devel \
-    {%- endif -%}
-
-    make \
+    libxslt-devel \make \
     mysql-devel \
     ncurses-devel \
     openssl-devel \
@@ -74,7 +56,6 @@ RUN yum -y install \
 # St2 package build debs
 RUN yum -y install \
     openldap-devel
-{%- endif %}
 
 # Enable remote pubkey access
 RUN mkdir /root/.ssh && chmod 700 /root/.ssh && \
@@ -84,14 +65,8 @@ RUN mkdir /root/.ssh && chmod 700 /root/.ssh && \
 COPY busybee*  /root/.ssh/
 RUN chmod 600 /root/.ssh/busybee
 
-{% if dist in ('centos', 'fedora') -%}
 RUN yum -y install openssh-server sudo && \
   ssh-keygen -t rsa -N '' -f /etc/ssh/ssh_host_rsa_key
-{%- else -%}
-RUN DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
-    apt-get install -y openssh-server sudo && \
-    mkdir /var/run/sshd
-{%- endif %}
 
 # 1. small fix for SSH in ubuntu 13.10 (that's harmless everywhere else)
 # 2. permit root logins and set simple password password and pubkey
@@ -102,13 +77,6 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
         sed -ri 's/requiretty/!requiretty/' /etc/sudoers && \
         echo 'root:docker.io' | chpasswd
 
-{% if dist in ('centos', 'fedora') -%}
 RUN yum -y install nc net-tools
-{% else -%}
-# install core software for packaging and ssh communication
-RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
-    DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
-    apt-get -y install gdebi-core sshpass cron \
-      netcat net-tools
-{% endif %}
+
 

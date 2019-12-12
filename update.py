@@ -134,7 +134,7 @@ class Suite(object):
         confpath = os.path.join(self.workdir, 'suite.yml')
         if os.path.isfile(confpath):
             fd = open(confpath, 'r')
-            for opt, value in yaml.load(fd).items():
+            for opt, value in yaml.load(fd, Loader=yaml.FullLoader).items():
                 if value:
                     setattr(self, opt, value)
             fd.close()
@@ -158,7 +158,7 @@ class Suite(object):
             sys.exit(1)
 
         fd = open(found, 'r')
-        data = (yaml.load(fd) or {})
+        data = (yaml.load(fd, Loader=yaml.Loader) or {})
         fd.close()
         self.distmap_cache[found] = data
         return (data or {})
@@ -242,10 +242,11 @@ def main():
                                          fromfile=target_abspath + '.~',
                                          tofile=target_abspath,
                                          lineterm='', n=0):
-            print line
+            print(line)
 
         fd.write("{}\n".format(rendered))
         fd.close()
+
 
 if __name__ == '__main__':
     main()
