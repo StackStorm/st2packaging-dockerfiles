@@ -8,3 +8,4 @@ variants:
     - centos7
     - xenial
     - centos6
+    - centos8

@@ -1,6 +1,6 @@
 {% include "Dockerfile.common" -%}
 
-{%- if version in ('centos7') -%}
+{%- if version in ('centos7') or version in ('centos8') -%}
 ENV container docker
 
 RUN yum -y update; \

@@ -8,7 +8,7 @@ scriptdir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(scriptdir)
 
 from update import UpdateCLI, Suite, dockerfile_path
-from string import maketrans
+# from string import maketrans
 
 
 class PublishCLI(UpdateCLI):
@@ -32,7 +32,7 @@ def shell_out(command):
 
 
 def convert_to_dash(s):
-    dashtbl = maketrans('_', '-')
+    dashtbl = str.maketrans('_', '-')
     return s.translate(dashtbl)
 
 
@@ -75,7 +75,7 @@ def main():
         # Run docker build
         shell_out(BUILD.format(**fmt))
 
-        # Tag latestest if suite.yml contains latest option
+        # Tag latest if suite.yml contains latest option
         if fmt['suite'] + fmt['variant'] == suite.latest:
             shell_out(TAG_LATEST.format(**fmt))
             if not args['no_push']:
