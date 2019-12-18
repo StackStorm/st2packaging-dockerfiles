@@ -13,13 +13,12 @@ RUN yum -y install \
     wget
 
 RUN yum -y install \
-    {%- if (version == '7' or version == '6') -%}bzr \{%- endif -%}
+    {% if (version == '7' or version == '6') -%}bzr \{% endif -%}
     git \
     mercurial \
     openssh \
     subversion \
     setup
-
     {% if (version == '8') %}
 RUN yum install -y yum-utils \
     && dnf config-manager --enable PowerTools \
@@ -31,7 +30,6 @@ RUN yum install -y yum-utils \
     && dnf config-manager --disable PowerTools \
     && yum remove -y epel-release yum-utils
     {% endif %}
-
 # Build tools
 RUN yum -y install \
     autoconf \

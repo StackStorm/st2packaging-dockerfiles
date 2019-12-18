@@ -7,13 +7,12 @@ RUN yum -y install \
     wget
 
 RUN yum -y install \
-    bzr \
-    git \
+    bzr \git \
     mercurial \
     openssh \
     subversion \
     setup
-
+    
 # Build tools
 RUN yum -y install \
     autoconf \
@@ -24,19 +23,15 @@ RUN yum -y install \
     gcc \
     gcc-c++ \
     glib2-devel \
-    glibc-devel \
-    ImageMagick \
-    ImageMagick-devel \
-    libcurl-devel \
+    glibc-devel \ImageMagick \
+    ImageMagick-devel \libcurl-devel \
     libevent-devel \
     libffi-devel \
     libjpeg-devel \
     libtool \
     libwebp-devel \
     libxml2-devel \
-    libxslt-devel \
-    libyaml-devel \
-    make \
+    libxslt-devel \libyaml-devel \make \
     mysql-devel \
     ncurses-devel \
     openssl-devel \
@@ -79,8 +74,7 @@ ENV container docker
 RUN yum -y update; \
     yum -y install systemd; yum clean all;
 
-RUN cd /lib/systemd/system/sysinit.target.wants/; ls -1 | grep -v systemd-tmpfiles-setup.service | xargs rm; \
-    rm -f /lib/systemd/system/multi-user.target.wants/*;\
+RUN cd /lib/systemd/system/sysinit.target.wants/; ls -1 | grep -v systemd-tmpfiles-setup.service | xargs rm; \rm -f /lib/systemd/system/multi-user.target.wants/*; \
     rm -f /etc/systemd/system/*.wants/*;\
     rm -f /lib/systemd/system/local-fs.target.wants/*; \
     rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
