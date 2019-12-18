@@ -7,3 +7,5 @@ ubuntu:
   - trusty
   - xenial
   - bionic
+debian:
+  - buster
