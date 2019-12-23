@@ -85,8 +85,8 @@ RUN yum -y install nc net-tools
 #
 
 # Install development tools and python for EL8
-RUN yum -y install python3 python2 python3-devel rpmdevtools
-&& sudo alternatives --set python /usr/bin/python2
+RUN yum -y install python3 python2 python3-devel rpmdevtools && \
+    sudo alternatives --set python /usr/bin/python2
 
 # Install fresh pip and certs
 RUN curl https://bootstrap.pypa.io/get-pip.py | \

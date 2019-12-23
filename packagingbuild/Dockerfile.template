@@ -136,8 +136,8 @@ RUN PATH=/usr/share/python/st2python/bin:$PATH bash -c \
 {%- elif dist in ('centos', 'fedora') -%}
 
 # Install development tools and python for EL8
-RUN yum -y install python{%- if (version == '8') -%}3 python2 python3{%- endif %}-devel rpmdevtools
-&& sudo alternatives --set python /usr/bin/python2
+RUN yum -y install python{%- if (version == '8') -%}3 python2 python3{%- endif %}-devel rpmdevtools && \
+    sudo alternatives --set python /usr/bin/python2
 
 # Install fresh pip and certs
 RUN curl https://bootstrap.pypa.io/get-pip.py | \
