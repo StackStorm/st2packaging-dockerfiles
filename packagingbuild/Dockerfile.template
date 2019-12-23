@@ -136,20 +136,19 @@ RUN PATH=/usr/share/python/st2python/bin:$PATH bash -c \
 {%- elif dist in ('centos', 'fedora') -%}
 
 # Install development tools and python for EL8
-RUN yum -y install python{%- if (version == '8') -%}3 python2 python3{%- endif %}-devel rpmdevtools #\
-# && sudo alternatives --set python /usr/bin/python2
+RUN yum -y install python{%- if (version == '8') -%}3 python2 python3{%- endif %}-devel rpmdevtools
+&& sudo alternatives --set python /usr/bin/python2
 
-# Install fresh pip and co
+# Install fresh pip and certs
 RUN curl https://bootstrap.pypa.io/get-pip.py | \
-    python{%- if (version == '8') -%}3{%- endif %} - \
-    virtualenv==16.6.0 pip==19.1.1 wheel setuptools; \
-      pip{%- if (version == '8') -%}3{%- endif %} install --upgrade requests[security] venvctrl && rm -rf /root/.cache
+    python{%- if (version == '8') -%}3{%- endif %} - virtualenv==16.6.0 pip==19.1.1 wheel setuptools && \
+    pip{%- if (version == '8') -%}3{%- endif %} install --upgrade requests[security] venvctrl && rm -rf /root/.cache
 
 {%- else -%}
 {% include "Dockerfile.debian" -%}
 {%- endif %}
 
-VOLUME ['/home/busybee/build']
+VOLUME ["/home/busybee/build"]
 EXPOSE 22
 
 # Run ssh daemon in foreground and wait for bees to connect.
