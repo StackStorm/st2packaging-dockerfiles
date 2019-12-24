@@ -13,13 +13,23 @@ RUN yum -y install \
     wget
 
 RUN yum -y install \
-    bzr \
+    {% if (version == '7' or version == '6') -%}bzr \{% endif -%}
     git \
     mercurial \
     openssh \
     subversion \
     setup
-
+    {% if (version == '8') %}
+RUN yum install -y yum-utils \
+    && dnf config-manager --enable PowerTools \
+    && yum install -y epel-release \
+    && yum -y install \
+    ImageMagick \
+    ImageMagick-devel \
+    libyaml-devel \
+    && dnf config-manager --disable PowerTools \
+    && yum remove -y epel-release yum-utils
+    {% endif %}
 # Build tools
 RUN yum -y install \
     autoconf \
@@ -31,8 +41,10 @@ RUN yum -y install \
     gcc-c++ \
     glib2-devel \
     glibc-devel \
+    {%- if (version == '7' or version == '6') -%}
     ImageMagick \
     ImageMagick-devel \
+    {%- endif -%}
     libcurl-devel \
     libevent-devel \
     libffi-devel \
@@ -41,7 +53,10 @@ RUN yum -y install \
     libwebp-devel \
     libxml2-devel \
     libxslt-devel \
+    {%- if (version == '7' or version == '6') -%}
     libyaml-devel \
+    {%- endif -%}
+
     make \
     mysql-devel \
     ncurses-devel \

@@ -1,4 +1,4 @@
-FROM centos:7
+FROM centos:8
 
 # Download tools
 RUN yum -y install \
@@ -7,11 +7,21 @@ RUN yum -y install \
     wget
 
 RUN yum -y install \
-    bzr \git \
+    git \
     mercurial \
     openssh \
     subversion \
     setup
+    
+RUN yum install -y yum-utils \
+    && dnf config-manager --enable PowerTools \
+    && yum install -y epel-release \
+    && yum -y install \
+    ImageMagick \
+    ImageMagick-devel \
+    libyaml-devel \
+    && dnf config-manager --disable PowerTools \
+    && yum remove -y epel-release yum-utils
     
 # Build tools
 RUN yum -y install \
@@ -23,15 +33,14 @@ RUN yum -y install \
     gcc \
     gcc-c++ \
     glib2-devel \
-    glibc-devel \ImageMagick \
-    ImageMagick-devel \libcurl-devel \
+    glibc-devel \libcurl-devel \
     libevent-devel \
     libffi-devel \
     libjpeg-devel \
     libtool \
     libwebp-devel \
     libxml2-devel \
-    libxslt-devel \libyaml-devel \make \
+    libxslt-devel \make \
     mysql-devel \
     ncurses-devel \
     openssl-devel \

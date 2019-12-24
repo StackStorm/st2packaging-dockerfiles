@@ -1,10 +1,4 @@
-{%- if dist in ('centos') -%}
-FROM centos:{{ version }}
-{%- else -%}
-FROM buildpack-deps:{{ suite }}
-{%- endif -%}
-
-{%- if dist in ('centos') %}
+FROM centos:8
 
 # Download tools
 RUN yum -y install \
@@ -12,14 +6,12 @@ RUN yum -y install \
     curl \
     wget
 
-RUN yum -y install \
-    {%- if (version == '7' or version == '6') -%}bzr \{%- endif -%}
-    git \
+RUN yum -y install \git \
     mercurial \
     openssh \
     subversion
 
-    {% if (version == '8') %}
+    
 RUN yum install -y yum-utils \
     && dnf config-manager --enable PowerTools \
     && yum install -y epel-release \
@@ -29,7 +21,7 @@ RUN yum install -y yum-utils \
     libyaml-devel \
     && dnf config-manager --disable PowerTools \
     && yum remove -y epel-release yum-utils
-    {% endif %}
+    
 
 # Build tools
 RUN yum -y install \
@@ -41,25 +33,14 @@ RUN yum -y install \
     gcc \
     gcc-c++ \
     glib2-devel \
-    glibc-devel \
-    {%- if (version == '7' or version == '6') -%}
-    ImageMagick \
-    ImageMagick-devel \
-    {%- endif -%}
-
-    libcurl-devel \
+    glibc-devel \libcurl-devel \
     libevent-devel \
     libffi-devel \
     libjpeg-devel \
     libtool \
     libwebp-devel \
     libxml2-devel \
-    libxslt-devel \
-    {%- if (version == '7' or version == '6') -%}
-    libyaml-devel \
-    {%- endif -%}
-
-    make \
+    libxslt-devel \make \
     mysql-devel \
     ncurses-devel \
     openssl-devel \
@@ -74,7 +55,6 @@ RUN yum -y install \
 # St2 package build debs
 RUN yum -y install \
     openldap-devel
-{%- endif %}
 
 # Enable remote pubkey access
 RUN mkdir /root/.ssh && chmod 700 /root/.ssh && \
@@ -84,14 +64,8 @@ RUN mkdir /root/.ssh && chmod 700 /root/.ssh && \
 COPY busybee*  /root/.ssh/
 RUN chmod 600 /root/.ssh/busybee
 
-{% if dist in ('centos', 'fedora') -%}
 RUN yum -y install openssh-server sudo && \
   ssh-keygen -t rsa -N '' -f /etc/ssh/ssh_host_rsa_key
-{%- else -%}
-RUN DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
-    apt-get install -y openssh-server sudo && \
-    mkdir /var/run/sshd
-{%- endif %}
 
 # 1. small fix for SSH in ubuntu 13.10 (that's harmless everywhere else)
 # 2. permit root logins and set simple password password and pubkey
@@ -102,15 +76,7 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
         sed -ri 's/requiretty/!requiretty/' /etc/sudoers && \
         echo 'root:docker.io' | chpasswd
 
-{% if dist in ('centos', 'fedora') -%}
 RUN yum -y install nc net-tools
-{%- else -%}
-# install core software for packaging and ssh communication
-RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
-    DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
-    apt-get -y install gdebi-core sshpass cron \
-      netcat net-tools
-{%- endif %}
 
 #
 # Buildenv is special environment for generating debian packages. It provides:
@@ -118,35 +84,14 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
 #   - SSH access for build executor.
 #
 
-{% if version in ('centos6') -%}
-
-RUN yum -y install tar xz rpmdevtools
-
-# Install st2python from our repository
-RUN wget https://bintray.com/stackstorm/el6/rpm -O /etc/yum.repos.d/stackstorm-el6.repo && \
-      sed -ir 's~stackstorm/el6~stackstorm/el6/stable~' /etc/yum.repos.d/stackstorm-el6.repo && \
-      yum -y install st2python && rm -rf /tmp/*
-
-# Install fresh pip and co
-RUN PATH=/usr/share/python/st2python/bin:$PATH bash -c \
-      "curl https://bootstrap.pypa.io/get-pip.py | python - virtualenv==16.6.0 pip==19.1.1 wheel setuptools; \
-        pip install --upgrade requests[security] venvctrl" \
-    && rm -rf /root/.cache
-
-{%- elif dist in ('centos', 'fedora') -%}
-
 # Install development tools and python for EL8
-RUN yum -y install python{%- if (version == '8') -%}3 python2 python3{%- endif %}-devel rpmdevtools && \
+RUN yum -y install python3 python2 python3-devel rpmdevtools && \
     sudo alternatives --set python /usr/bin/python2
 
 # Install fresh pip and certs
 RUN curl https://bootstrap.pypa.io/get-pip.py | \
-    python{%- if (version == '8') -%}3{%- endif %} - virtualenv==16.6.0 pip==19.1.1 wheel setuptools && \
-    pip{%- if (version == '8') -%}3{%- endif %} install --upgrade requests[security] venvctrl && rm -rf /root/.cache
-
-{%- else -%}
-{% include "Dockerfile.debian" -%}
-{%- endif %}
+    python3 - virtualenv==16.6.0 pip==19.1.1 wheel setuptools && \
+    pip3 install --upgrade requests[security] venvctrl && rm -rf /root/.cache
 
 VOLUME ["/home/busybee/build"]
 EXPOSE 22
