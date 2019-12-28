@@ -83,10 +83,10 @@ RUN yum -y install nc net-tools
 RUN yum -y install python-devel rpmdevtools
 
 # Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python - virtualenv==16.6.0 pip==19.1.1 wheel setuptools; \
+RUN curl https://bootstrap.pypa.io/get-pip.py | python - virtualenv==16.6.0 pip==19.1.1 wheel setuptools && \
       pip install --upgrade requests[security] venvctrl && rm -rf /root/.cache
 
-VOLUME ['/home/busybee/build']
+VOLUME ["/home/busybee/build"]
 EXPOSE 22
 
 # Run ssh daemon in foreground and wait for bees to connect.
