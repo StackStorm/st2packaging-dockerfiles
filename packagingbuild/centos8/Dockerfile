@@ -33,14 +33,17 @@ RUN yum -y install \
     gcc \
     gcc-c++ \
     glib2-devel \
-    glibc-devel \libcurl-devel \
+    glibc-devel \
+    libcurl-devel \
     libevent-devel \
     libffi-devel \
     libjpeg-devel \
     libtool \
     libwebp-devel \
     libxml2-devel \
-    libxslt-devel \make \
+    libxslt-devel \
+    
+    make \
     mysql-devel \
     ncurses-devel \
     openssl-devel \

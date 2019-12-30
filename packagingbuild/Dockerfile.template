@@ -45,8 +45,7 @@ RUN yum -y install \
     {%- if (version == '7' or version == '6') -%}
     ImageMagick \
     ImageMagick-devel \
-    {%- endif -%}
-
+    {%- endif %}
     libcurl-devel \
     libevent-devel \
     libffi-devel \
@@ -55,10 +54,9 @@ RUN yum -y install \
     libwebp-devel \
     libxml2-devel \
     libxslt-devel \
-    {%- if (version == '7' or version == '6') -%}
+    {% if (version == '7' or version == '6') -%}
     libyaml-devel \
-    {%- endif -%}
-
+    {%- endif %}
     make \
     mysql-devel \
     ncurses-devel \
@@ -136,7 +134,7 @@ RUN PATH=/usr/share/python/st2python/bin:$PATH bash -c \
 {%- elif dist in ('centos', 'fedora') -%}
 
 # Install development tools and python for EL8
-RUN yum -y install python{%- if (version == '8') -%}3 python2 python2-devel gcc python3 {%- endif%}-devel rpmdevtools && \
+RUN yum -y install python{%- if (version == '8') -%}3 python2 python2-devel gcc python3{%- endif%}-devel rpmdevtools && \
     sudo alternatives --set python /usr/bin/python2
 
 # Install fresh pip and certs

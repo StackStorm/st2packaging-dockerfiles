@@ -62,10 +62,6 @@ RUN yum -y install \
     openssl-devel \
     patch \
     postgresql-devel \
-    {% if (version == '8') -%}
-    python2-devel \
-    python3-devel \
-    {%- endif %}
     readline-devel \
     sqlite-devel \
     xz \
