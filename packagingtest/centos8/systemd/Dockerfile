@@ -33,14 +33,16 @@ RUN yum -y install \
     gcc \
     gcc-c++ \
     glib2-devel \
-    glibc-devel \libcurl-devel \
+    glibc-devel \
+    libcurl-devel \
     libevent-devel \
     libffi-devel \
     libjpeg-devel \
     libtool \
     libwebp-devel \
     libxml2-devel \
-    libxslt-devel \make \
+    libxslt-devel \
+    make \
     mysql-devel \
     ncurses-devel \
     openssl-devel \
@@ -81,7 +83,7 @@ RUN yum -y install nc net-tools
 ENV container docker
 
 RUN yum -y update; \
-    yum -y install systemd; yum clean all;
+    yum -y install systemd; yum clean all
 
 RUN cd /lib/systemd/system/sysinit.target.wants/; ls -1 | grep -v systemd-tmpfiles-setup.service | xargs rm; \
     rm -f /etc/systemd/system/*.wants/*;\

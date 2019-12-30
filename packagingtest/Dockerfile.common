@@ -44,7 +44,7 @@ RUN yum -y install \
     {%- if (version == '7' or version == '6') -%}
     ImageMagick \
     ImageMagick-devel \
-    {%- endif -%}
+    {%- endif %}
     libcurl-devel \
     libevent-devel \
     libffi-devel \
@@ -55,8 +55,7 @@ RUN yum -y install \
     libxslt-devel \
     {%- if (version == '7' or version == '6') -%}
     libyaml-devel \
-    {%- endif -%}
-
+    {%- endif %}
     make \
     mysql-devel \
     ncurses-devel \
@@ -85,7 +84,8 @@ RUN chmod 600 /root/.ssh/busybee
 {% if dist in ('centos', 'fedora') -%}
 RUN yum -y install openssh-server sudo && \
   ssh-keygen -t rsa -N '' -f /etc/ssh/ssh_host_rsa_key
-{%- else -%}
+{%- else %}
+
 RUN DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
     apt-get install -y openssh-server sudo && \
     mkdir /var/run/sshd

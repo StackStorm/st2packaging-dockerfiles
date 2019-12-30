@@ -6,12 +6,12 @@ RUN yum -y install \
     curl \
     wget
 
-RUN yum -y install \
-    bzr \
-    git \
+RUN yum -y install \bzr \git \
     mercurial \
     openssh \
     subversion
+
+    
 
 # Build tools
 RUN yum -y install \
@@ -23,8 +23,7 @@ RUN yum -y install \
     gcc \
     gcc-c++ \
     glib2-devel \
-    glibc-devel \
-    ImageMagick \
+    glibc-devel \ImageMagick \
     ImageMagick-devel \
     libcurl-devel \
     libevent-devel \
@@ -34,8 +33,7 @@ RUN yum -y install \
     libwebp-devel \
     libxml2-devel \
     libxslt-devel \
-    libyaml-devel \
-    make \
+    libyaml-devel \make \
     mysql-devel \
     ncurses-devel \
     openssl-devel \
@@ -79,14 +77,16 @@ RUN yum -y install nc net-tools
 #   - SSH access for build executor.
 #
 
-# Install development tools
-RUN yum -y install python-devel rpmdevtools
+# Install development tools and python for EL8
+RUN yum -y install python2 \
+    python2-devel rpmdevtools
 
-# Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python - virtualenv==16.6.0 pip==19.1.1 wheel setuptools; \
-      pip install --upgrade requests[security] venvctrl && rm -rf /root/.cache
+# Install fresh pip and certs
+RUN curl https://bootstrap.pypa.io/get-pip.py | \
+    python - virtualenv==16.6.0 pip==19.1.1 wheel setuptools && \
+    pip install --upgrade requests[security] venvctrl && rm -rf /root/.cache
 
-VOLUME ['/home/busybee/build']
+VOLUME ["/home/busybee/build"]
 EXPOSE 22
 
 # Run ssh daemon in foreground and wait for bees to connect.

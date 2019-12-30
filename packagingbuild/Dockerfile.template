@@ -45,8 +45,7 @@ RUN yum -y install \
     {%- if (version == '7' or version == '6') -%}
     ImageMagick \
     ImageMagick-devel \
-    {%- endif -%}
-
+    {%- endif %}
     libcurl-devel \
     libevent-devel \
     libffi-devel \
@@ -55,10 +54,9 @@ RUN yum -y install \
     libwebp-devel \
     libxml2-devel \
     libxslt-devel \
-    {%- if (version == '7' or version == '6') -%}
+    {% if (version == '7' or version == '6') -%}
     libyaml-devel \
     {%- endif -%}
-
     make \
     mysql-devel \
     ncurses-devel \
@@ -136,13 +134,14 @@ RUN PATH=/usr/share/python/st2python/bin:$PATH bash -c \
 {%- elif dist in ('centos', 'fedora') -%}
 
 # Install development tools and python for EL8
-RUN yum -y install python{%- if (version == '8') -%}3 python2 python3{%- endif %}-devel rpmdevtools && \
-    sudo alternatives --set python /usr/bin/python2
+RUN yum -y install python{%- if (version == '8') -%}3 python2 python2-devel python3{%- else %}2 \
+    python2{%- endif%}-devel rpmdevtools {%- if (version == '8') %} && \
+    sudo alternatives --set python /usr/bin/python2{%- endif%}
 
 # Install fresh pip and certs
 RUN curl https://bootstrap.pypa.io/get-pip.py | \
-    python{%- if (version == '8') -%}3{%- endif %} - virtualenv==16.6.0 pip==19.1.1 wheel setuptools && \
-    pip{%- if (version == '8') -%}3{%- endif %} install --upgrade requests[security] venvctrl && rm -rf /root/.cache
+    python{%- if (version == '8') -%}2{%- endif%} - virtualenv==16.6.0 pip==19.1.1 wheel setuptools && \
+    pip install --upgrade requests[security] venvctrl && rm -rf /root/.cache
 
 {%- else -%}
 {% include "Dockerfile.debian" -%}
