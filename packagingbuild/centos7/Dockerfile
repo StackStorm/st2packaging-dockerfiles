@@ -33,8 +33,7 @@ RUN yum -y install \
     libwebp-devel \
     libxml2-devel \
     libxslt-devel \
-    libyaml-devel \
-    make \
+    libyaml-devel \make \
     mysql-devel \
     ncurses-devel \
     openssl-devel \
@@ -79,7 +78,8 @@ RUN yum -y install nc net-tools
 #
 
 # Install development tools and python for EL8
-RUN yum -y install python2 gcc python2-devel rpmdevtools
+RUN yum -y install python2 \
+    python2-devel rpmdevtools
 
 # Install fresh pip and certs
 RUN curl https://bootstrap.pypa.io/get-pip.py | \
