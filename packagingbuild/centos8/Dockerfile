@@ -42,7 +42,6 @@ RUN yum -y install \
     libwebp-devel \
     libxml2-devel \
     libxslt-devel \
-    
     make \
     mysql-devel \
     ncurses-devel \

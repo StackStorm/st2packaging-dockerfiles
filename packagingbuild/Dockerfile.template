@@ -56,7 +56,7 @@ RUN yum -y install \
     libxslt-devel \
     {% if (version == '7' or version == '6') -%}
     libyaml-devel \
-    {%- endif %}
+    {%- endif -%}
     make \
     mysql-devel \
     ncurses-devel \
