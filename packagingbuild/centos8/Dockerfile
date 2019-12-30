@@ -93,7 +93,7 @@ RUN yum -y install python3 python2 python2-devel gcc python3-devel rpmdevtools &
 
 # Install fresh pip and certs
 RUN curl https://bootstrap.pypa.io/get-pip.py | \
-    python - virtualenv==16.6.0 pip==19.1.1 wheel setuptools && \
+    python2 - virtualenv==16.6.0 pip==19.1.1 wheel setuptools && \
     pip install --upgrade requests[security] venvctrl && rm -rf /root/.cache
 
 VOLUME ["/home/busybee/build"]
