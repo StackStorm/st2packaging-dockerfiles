@@ -20,6 +20,7 @@ RUN yum install -y yum-utils \
     ImageMagick \
     ImageMagick-devel \
     libyaml-devel \
+    glibc-langpack-en \
     && dnf config-manager --disable PowerTools \
     && yum remove -y epel-release yum-utils
     
@@ -78,8 +79,16 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
         sed -ri 's/requiretty/!requiretty/' /etc/sudoers && \
         echo 'root:docker.io' | chpasswd
 
-RUN yum -y install nc net-tools
+RUN yum -y install nc net-tools glibc-locale-source && \
+    sudo alternatives --set python /usr/bin/python2 && \
+    # -i: specify the locale definition file
+    # -f: specify the character set
+    localedef -i en_US -f UTF-8 en_US.UTF-8
 
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
+    
 ENV container docker
 
 RUN yum -y update; \
