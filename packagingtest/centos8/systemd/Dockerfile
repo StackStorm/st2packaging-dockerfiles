@@ -80,7 +80,7 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
         echo 'root:docker.io' | chpasswd
 
 RUN yum -y install nc net-tools glibc-locale-source && \
-    sudo alternatives --set python /usr/bin/python2 && \
+
     # -i: specify the locale definition file
     # -f: specify the character set
     localedef -i en_US -f UTF-8 en_US.UTF-8
