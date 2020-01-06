@@ -134,15 +134,22 @@ RUN PATH=/usr/share/python/st2python/bin:$PATH bash -c \
 
 {%- elif dist in ('centos', 'fedora') -%}
 
-# Install development tools and python for EL8
-RUN yum -y install python{%- if (version == '8') -%}3 python2 python2-devel python3{%- else %}2 \
-    python2{%- endif%}-devel rpmdevtools {%- if (version == '8') %} && \
-    sudo alternatives --set python /usr/bin/python2{%- endif%}
+{% if (version == '8') -%}
+# Install development tools and python3 for EL8
+RUN yum -y install python3 python3-devel rpmdevtools python3-virtualenv && \
+    pip3 install virtualenv==16.6.0 pip==19.1.1 wheel setuptools
+
+RUN pip3 install --upgrade requests[security] venvctrl && rm -rf /root/.cache
+
+{%- elif version in ('7', '6') -%}
+# Install development tools and python2 for EL <=7
+RUN yum -y install python2 python2-devel rpmdevtools
 
 # Install fresh pip and certs
 RUN curl https://bootstrap.pypa.io/get-pip.py | \
-    python{%- if (version == '8') -%}2{%- endif%} - virtualenv==16.6.0 pip==19.1.1 wheel setuptools && \
+    python - virtualenv==16.6.0 pip==19.1.1 wheel setuptools && \
     pip install --upgrade requests[security] venvctrl && rm -rf /root/.cache
+{%- endif %}
 
 {%- else -%}
 {% include "Dockerfile.debian" -%}

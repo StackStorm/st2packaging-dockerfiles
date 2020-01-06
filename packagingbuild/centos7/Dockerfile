@@ -77,9 +77,8 @@ RUN yum -y install nc net-tools
 #   - SSH access for build executor.
 #
 
-# Install development tools and python for EL8
-RUN yum -y install python2 \
-    python2-devel rpmdevtools
+# Install development tools and python2 for EL <=7
+RUN yum -y install python2 python2-devel rpmdevtools
 
 # Install fresh pip and certs
 RUN curl https://bootstrap.pypa.io/get-pip.py | \

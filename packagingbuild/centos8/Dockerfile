@@ -87,14 +87,11 @@ RUN yum -y install nc net-tools
 #   - SSH access for build executor.
 #
 
-# Install development tools and python for EL8
-RUN yum -y install python3 python2 python2-devel python3-devel rpmdevtools && \
-    sudo alternatives --set python /usr/bin/python2
+# Install development tools and python3 for EL8
+RUN yum -y install python3 python3-devel rpmdevtools python3-virtualenv && \
+    pip3 install virtualenv==16.6.0 pip==19.1.1 wheel setuptools
 
-# Install fresh pip and certs
-RUN curl https://bootstrap.pypa.io/get-pip.py | \
-    python2 - virtualenv==16.6.0 pip==19.1.1 wheel setuptools && \
-    pip install --upgrade requests[security] venvctrl && rm -rf /root/.cache
+RUN pip3 install requests[security] venvctrl --upgrade && rm -rf /root/.cache
 
 VOLUME ["/home/busybee/build"]
 EXPOSE 22
