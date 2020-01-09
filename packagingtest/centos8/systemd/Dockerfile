@@ -20,6 +20,7 @@ RUN yum install -y yum-utils \
     ImageMagick \
     ImageMagick-devel \
     libyaml-devel \
+    libffi-devel \
     glibc-langpack-en \
     && dnf config-manager --disable PowerTools \
     && yum remove -y epel-release yum-utils
@@ -37,7 +38,6 @@ RUN yum -y install \
     glibc-devel \
     libcurl-devel \
     libevent-devel \
-    libffi-devel \
     libjpeg-devel \
     libtool \
     libwebp-devel \
@@ -53,7 +53,19 @@ RUN yum -y install \
     sqlite-devel \
     xz \
     xz-devel \
-    zlib-devel
+    zlib-devel \
+    python3 \
+    python3-virtualenv \
+    python3-devel \
+    openssl-devel \
+    pam \
+    openssh-server \
+    openssh-clients \
+    setup \
+    zip \
+    unzip
+
+
 
 # St2 package build debs
 RUN yum -y install \
@@ -80,7 +92,6 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
         echo 'root:docker.io' | chpasswd
 
 RUN yum -y install nc net-tools glibc-locale-source && \
-
     # -i: specify the locale definition file
     # -f: specify the character set
     localedef -i en_US -f UTF-8 en_US.UTF-8
