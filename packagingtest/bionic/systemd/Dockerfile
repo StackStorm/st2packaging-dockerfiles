@@ -53,6 +53,14 @@ RUN find /etc/systemd/system \
 
 RUN systemctl set-default multi-user.target
 
+# The base Ubuntu 18.04 image contains a file that excludes all documentation
+# from being installed by packages. Specifically /usr/share/doc/*
+# This exclusion prevents our nginx config from being installed in the 'st2' package:
+# /usr/share/doc/st2/conf/nginx/st2.conf
+# This step removes the exclusion configuration so documentation of all future packages
+# will be installed.
+RUN rm -rf /etc/dpkg/dpkg.cfg.d/excludes
+
 COPY setup.sh /sbin/
 
 RUN systemctl preset ssh;
