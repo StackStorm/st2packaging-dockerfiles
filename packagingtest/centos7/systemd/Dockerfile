@@ -83,6 +83,11 @@ RUN cd /lib/systemd/system/sysinit.target.wants/; ls -1 | grep -v systemd-tmpfil
     rm -f /lib/systemd/system/anaconda.target.wants/*;\
     systemctl preset sshd;
 
+# install doc files (/usr/share/docs) when installing yum packages
+# otherwise /usr/share/docs/st2/conf/nginx/st2.conf won't be present
+# https://github.com/docker-library/docs/tree/master/centos#package-documentation
+RUN sed -i '/nodocs/d' /etc/yum.conf
+
 # we can have ssh
 EXPOSE 22
 

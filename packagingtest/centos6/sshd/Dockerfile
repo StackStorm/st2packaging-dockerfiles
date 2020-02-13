@@ -73,6 +73,11 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
 
 RUN yum -y install nc net-tools
 
+# install doc files (/usr/share/docs) when installing yum packages
+# otherwise /usr/share/docs/st2/conf/nginx/st2.conf won't be present
+# https://github.com/docker-library/docs/tree/master/centos#package-documentation
+RUN sed -i '/nodocs/d' /etc/yum.conf
+
 ENV container docker
 
 # we can have ssh
