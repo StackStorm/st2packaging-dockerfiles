@@ -40,6 +40,9 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
 RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
     apt-get -y install gdebi-core sshpass cron netcat net-tools iproute2
 
+# install apt https transport so apt sources can be added that refernece https:// URLs
+RUN apt-get -y install apt-transport-https ca-certificates
+
 # install netbase package (includes /etc/protocols and other files we rely on)
 RUN apt-get -y install netbase
 
