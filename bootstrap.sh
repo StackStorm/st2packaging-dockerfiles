@@ -1,14 +1,13 @@
 #!/bin/sh
 
-wget -q -O - https://get.docker.io/gpg | apt-key add -
-echo deb https://apt.dockerproject.org/repo ubuntu-trusty main > /etc/apt/sources.list.d/docker.list
-apt-get update -qq; apt-get purge lxc-docker
-apt-get install linux-image-extra-$(uname -r)
-apt-get install -q -y --force-yes docker-engine
+apt-get update --quiet --quiet
+apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+apt-key fingerprint 0EBFCD88
+add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+apt-get update --quiet --quiet
+apt-get install --quiet --yes docker-ce docker-ce-cli docker-compose jq
 usermod -a -G docker vagrant
-
-curl -sL https://github.com/docker/compose/releases/download/1.6.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
-chmod +x /usr/local/bin/docker-compose
-
-curl -sL https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64 > /usr/local/bin/jq
-chmod +x /usr/local/bin/jq;
