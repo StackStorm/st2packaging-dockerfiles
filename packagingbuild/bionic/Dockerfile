@@ -52,15 +52,12 @@ RUN apt-get update && \
 RUN curl https://bootstrap.pypa.io/get-pip.py | python3 - virtualenv==16.6.0 pip==19.1.1 wheel setuptools cryptography; \
       pip3 install --upgrade requests[security] && rm -rf /root/.cache
 
-# We use our dh-virtualenv version, since it fixes shebangd lines rewrites
 RUN apt-get -y install \
-        python-setuptools python-mock && \
-        apt-get clean && \
-        git clone -b stackstorm_patched https://github.com/stackstorm/dh-virtualenv.git /tmp/dh-virtualenv && \
-        cd /tmp/dh-virtualenv && \
-        dpkg-buildpackage -b -uc -us && dpkg -i ../dh-virtualenv_*.deb && \
-          rm -rf /tmp/dh-virtualenv*
-RUN apt-get -y install dh-systemd && apt-get clean
+        dh-systemd \
+        dh-virtualenv \
+        python-setuptools \
+        python-mock \
+        && apt-get clean
 
 VOLUME ['/home/busybee/build']
 EXPOSE 22
