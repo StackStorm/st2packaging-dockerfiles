@@ -1,11 +1,8 @@
 registry: stackstorm/
 variants:
   - null
-  - upstart:
-    - trusty
-    - precise
   - systemd:
-    - centos7
     - xenial
     - centos6
+    - centos7
     - centos8

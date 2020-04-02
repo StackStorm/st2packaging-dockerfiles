@@ -59,11 +59,11 @@ fedora:
 centos:
   - !regexp centos([0-9.]+)
 ubuntu-debootstrap:
-  - precise
-  - trusty
+  - xenial
+  - bionic
 ```
 
-From the above example we can clearly see that ubuntu has two suites: precise and trusty. Notable feature of this format is that it supports regex, so fedora distribution maps to suites described by *regular expression*. The first group match here makes particular sense it defines a version group. This is done because we say it generate **fedora21** suite but the upstream image doesn't have such a tag, versioning however helps you to inherit from *fedora:21*.
+From the above example we can clearly see that ubuntu has two suites: xenial and bionic. Notable feature of this format is that it supports regex, so fedora distribution maps to suites described by *regular expression*. The first group match here makes particular sense it defines a version group. This is done because we say it generate **fedora21** suite but the upstream image doesn't have such a tag, versioning however helps you to inherit from *fedora:21*.
 
 ### suite.yml
 
@@ -72,14 +72,13 @@ Let's look at **suite.yml** of droneunit image project:
 ```yaml
 registry: quay.io/dennybaa/
 variants:
-  - upstart:
-    - trusty
-    - precise 
   - null
-latest: trusty
+  - systemd:
+    - xenial
+latest: xenial
 ```
 
-The **registry** prefix sets registry prefix which means that when image is build (ex. droneunit) it will get name for example such as `quay.io/dennybaa/droneunit:trusty`.
+The **registry** prefix sets registry prefix which means that when image is build (ex. droneunit) it will get name for example such as `quay.io/dennybaa/droneunit:xenial`.
 
 **Variants** define what variants are available for particular suites, so for the *upstart* variant there are only two suites, but for the **default** variant Dockerfiles are generated for all of the suites. In other words when you don't expand variant as a list and all suites will be generated for this variant.
 
