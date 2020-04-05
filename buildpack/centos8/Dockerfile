@@ -51,10 +51,9 @@ RUN yum -y install \
 
 
 # Python and tools
-RUN yum -y install python3 python3-devel python3-wheel && \
-    wget -qO - https://bootstrap.pypa.io/get-pip.py | python3 && \
-    pip install --upgrade "pip==19.1.1" && \
-    pip install setuptools virtualenv && \
+RUN yum -y install python3 python3-devel python3-wheel python3-virtualenv && \
+    pip3 install --user --upgrade pip==19.1.1 && \
+    pip3 install --user virtualenv==16.6.0 wheel setuptools  && \
     rm -rf /root/.cache
 
 # St2 package build debs
