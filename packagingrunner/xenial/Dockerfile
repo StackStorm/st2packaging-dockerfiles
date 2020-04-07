@@ -1,4 +1,4 @@
-FROM quay.io/dennybaa/droneruby:xenial-rbenv
+FROM quay.io/dennybaa/droneruby:trusty-rbenv
 
 # Additional software (needed for RSpec, serverspec)
 RUN DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
