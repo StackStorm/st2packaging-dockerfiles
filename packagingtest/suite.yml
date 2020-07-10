@@ -7,5 +7,4 @@ variants:
   - systemd:
     - centos7
     - xenial
-    - centos6
     - centos8

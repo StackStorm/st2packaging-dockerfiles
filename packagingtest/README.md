@@ -8,7 +8,6 @@ In these containers built artifacts are tested: StackStorm packages are installe
 [`Dockerfiles` sources](https://github.com/StackStorm/st2packaging-dockerfiles/blob/master/packagingtest):
 - Debian Wheezy (ssh)
 - Debian Jessie (sshd)
-- CentOS 6 (sshd)
 - CentOS 7 (systemd)
 - CentOS 8 (systemd)
 - Ubuntu Trusty (upstart)
