@@ -8,7 +8,6 @@ In these containers build environment specific for each OS distro is pre-install
 [`Dockerfiles` sources](https://github.com/StackStorm/st2packaging-dockerfiles/blob/master/packagingbuild):
 - Debian Wheezy
 - Debian Jessie
-- CentOS 6
 - CentOS 7
 - CentOS 8
 - Ubuntu Trusty
