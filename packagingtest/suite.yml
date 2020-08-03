@@ -3,6 +3,5 @@ variants:
   - null
   - systemd:
     - xenial
-    - centos6
     - centos7
     - centos8
