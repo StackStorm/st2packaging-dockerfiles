@@ -10,7 +10,6 @@ In these containers build environment specific for each OS distro is pre-install
 - Debian Jessie
 - CentOS 7
 - CentOS 8
-- Ubuntu Trusty
 - Ubuntu Xenial
 - Ubuntu Bionic
 

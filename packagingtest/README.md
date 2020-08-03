@@ -10,7 +10,6 @@ In these containers built artifacts are tested: StackStorm packages are installe
 - Debian Jessie (sshd)
 - CentOS 7 (systemd)
 - CentOS 8 (systemd)
-- Ubuntu Trusty (upstart)
 - Ubuntu Xenial (systemd)
 
 NB!

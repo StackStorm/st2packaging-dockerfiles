@@ -3,7 +3,5 @@ fedora:
 centos:
   - !regexp centos([0-9.]+)
 ubuntu:
-  - precise
-  - trusty
   - xenial
   - bionic
