@@ -119,22 +119,12 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
 
 {%- if dist in ('centos', 'fedora') -%}
 
-{% if (version == '8') -%}
-# Install development tools and python3 for EL8
+# Install development tools and python3 for EL7 and EL8
 RUN yum -y install python3 python3-devel rpmdevtools python3-virtualenv && \
     pip3 install virtualenv==16.6.0 pip==19.1.1 wheel setuptools
 
 RUN pip3 install --upgrade requests[security] venvctrl && rm -rf /root/.cache
 
-{%- elif version in ('7') -%}
-# Install development tools and python2 for EL <=7
-RUN yum -y install python2 python2-devel rpmdevtools
-
-# Install fresh pip and certs
-RUN curl https://bootstrap.pypa.io/get-pip.py | \
-    python - virtualenv==16.6.0 pip==19.1.1 wheel setuptools && \
-    pip install --upgrade requests[security] venvctrl && rm -rf /root/.cache
-{%- endif %}
 
 {%- else -%}
 {% include "Dockerfile.debian" -%}
