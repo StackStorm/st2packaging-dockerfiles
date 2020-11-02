@@ -86,21 +86,12 @@ RUN yum -y install nc net-tools
 # With this way failed on fixate-requirements...
 RUN curl https://bootstrap.pypa.io/get-pip.py | \
     python - virtualenv==16.6.0 pip==19.1.1 wheel setuptools 
-# Witht his way seemed to get passed fixate-requirements and then fail on the virtualenv
-# Witht his way seemed to get passed fixate-requirements and then fail on the virtualenv
-#RUN yum -y install python3 python3-devel rpmdevtools python3-virtualenv && \
-#    pip3 install virtualenv==16.6.0 pip==19.1.1 wheel setuptools
-#   NOW TRYING ADDING IN virtualenv on python2
 RUN yum -y install python-devel rpmdevtools && \
     pip install virtualenv==16.6.0 pip==19.1.1 wheel setuptools
-#RUN yum -y install python3 python3-devel rpmdevtools && \
-#    pip3 install virtualenv==16.6.0 pip==19.1.1 wheel setuptools
 RUN yum -y install python3 python3-devel  && \
     pip3 install pip==19.1.1 wheel setuptools
-#RUN curl https://bootstrap.pypa.io/get-pip.py | \
-#    python3 - pip==19.1.1
-
-RUN pip3 install requests[security] venvctrl --upgrade && rm -rf /root/.cache
+RUN pip3 install requests[security] --upgrade && rm -rf /root/.cache
+RUN pip2 install requests[security] venvctrl --upgrade && rm -rf /root/.cache
  
 
 
