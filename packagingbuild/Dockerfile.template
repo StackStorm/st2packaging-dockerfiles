@@ -119,12 +119,22 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
 
 {%- if dist in ('centos', 'fedora') -%}
 
-# Install development tools and python3 for EL7 and EL8
-RUN yum -y install python3 python3-devel rpmdevtools python3-virtualenv && \
-    pip3 install virtualenv==16.6.0 pip==19.1.1 wheel setuptools
+{% if (version == '8') -%}
+# Install development tools and python3 for EL8
+ RUN yum -y install python3 python3-devel rpmdevtools python3-virtualenv && \
+     pip3 install virtualenv==16.6.0 pip==19.1.1 wheel setuptools
+ 
+ RUN pip3 install --upgrade requests[security] venvctrl && rm -rf /root/.cache
+ 
+{%- elif version in ('7') -%}
 
-RUN pip3 install --upgrade requests[security] venvctrl && rm -rf /root/.cache
+# Install development tools and python3 for EL7
+RUN yum -y install python python-devel python3 python3-devel rpmdevtools python-virtualenv  && \
+    pip install virtualenv==16.6.0 pip==19.1.1 wheel setuptools && \
+    pip3 install pip==19.1.1 wheel setuptools
+ RUN pip3 install --upgrade requests[security] venvctrl && rm -rf /root/.cache
 
+{%- endif %}
 
 {%- else -%}
 {% include "Dockerfile.debian" -%}
