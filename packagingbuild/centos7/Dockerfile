@@ -77,23 +77,18 @@ RUN yum -y install nc net-tools
 #   - SSH access for build executor.
 #
 
-# Install development tools and python3 for EL7
-#RUN yum -y install python2 python2-devel rpmdevtools
-#RUN yum -y install rpmdevtools
-#RUN yum -y install python3 python3-devel python3-virtualenv 
+# Install development tools and python2 for EL7
+RUN yum -y install python2 python2-devel rpmdevtools
 
 # Install fresh pip and certs
-# With this way failed on fixate-requirements...
 RUN curl https://bootstrap.pypa.io/get-pip.py | \
-    python - virtualenv==16.6.0 pip==19.1.1 wheel setuptools 
-RUN yum -y install python-devel rpmdevtools && \
-    pip install virtualenv==16.6.0 pip==19.1.1 wheel setuptools
+    python - virtualenv==16.6.0 pip==19.1.1 wheel setuptools  && \
+    pip install --upgrade requests[security] venvctrl && rm -rf /root/.cache
+
+# Install python3
 RUN yum -y install python3 python3-devel  && \
     pip3 install pip==19.1.1 wheel setuptools
 RUN pip3 install requests[security] --upgrade && rm -rf /root/.cache
-RUN pip2 install requests[security] venvctrl --upgrade && rm -rf /root/.cache
- 
-
 
 VOLUME ["/home/busybee/build"]
 EXPOSE 22
