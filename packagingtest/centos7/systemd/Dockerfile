@@ -37,6 +37,7 @@ RUN yum -y install \
     openssl-devel \
     patch \
     postgresql-devel \
+    python3 \
     readline-devel \
     sqlite-devel \
     xz \

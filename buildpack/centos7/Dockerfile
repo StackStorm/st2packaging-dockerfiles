@@ -42,12 +42,12 @@ RUN yum -y install \
     rpmdevtools
 
 
-# Python and tools
-RUN yum -y install python-devel && \
-    wget -qO - https://bootstrap.pypa.io/get-pip.py | python && \
-    pip install --upgrade "pip>=19.0.0,<20.0.0" && \
-    pip install setuptools virtualenv && \
-    rm -rf /root/.cache
+# Install rpmdevtools and epel-release
+RUN yum -y install rpmdevtools epel-release
+# Install python3
+RUN yum -y install python3 python3-devel python3-virtualenv  && \
+    pip3 install virtualenv==16.6.0 pip==19.1.1 wheel setuptools
+RUN pip3 install --upgrade requests[security] venvctrl && rm -rf /root/.cache
 
 # St2 package build debs
 RUN yum -y install \
