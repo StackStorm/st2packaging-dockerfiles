@@ -44,8 +44,8 @@ RUN apt-get update && \
         python python-virtualenv \
         python3 python3-virtualenv python3-pip
 
-
-RUN apt-get -y install \
+RUN apt-get update && \
+    apt-get -y install \
         devscripts debhelper dh-make libldap2-dev libsasl2-dev && apt-get clean
 
 # Install fresh pip and co

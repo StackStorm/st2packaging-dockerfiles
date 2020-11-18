@@ -43,7 +43,8 @@ RUN apt-get update && \
     apt-get -y install build-essential python-dev python python-virtualenv
 
 
-RUN apt-get -y install \
+RUN apt-get update && \
+    apt-get -y install \
         devscripts debhelper dh-make libldap2-dev libsasl2-dev && apt-get clean
 
 # Install fresh pip and co
