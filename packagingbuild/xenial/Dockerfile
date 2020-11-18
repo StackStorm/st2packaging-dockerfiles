@@ -44,7 +44,7 @@ RUN apt-get update && \
 
 
 RUN apt-get -y install \
-        devscripts debhelper dh-make && apt-get clean
+        devscripts debhelper dh-make libldap2-dev libsasl2-dev && apt-get clean
 
 # Install fresh pip and co
 RUN curl https://bootstrap.pypa.io/get-pip.py | python - virtualenv==16.6.0 pip==19.1.1 wheel setuptools; \
