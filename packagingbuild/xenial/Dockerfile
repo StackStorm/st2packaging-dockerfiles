@@ -38,9 +38,11 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
 #
 
 
-# install python development
-RUN apt-get update && \
-    apt-get -y install build-essential python-dev python python-virtualenv
+# Install python 3.6 & development
+# from the PPA as it's not available in base distro
+RUN sudo add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get -y install build-essential python3.6-dev python3.6
 
 
 RUN apt-get update && \
@@ -48,8 +50,8 @@ RUN apt-get update && \
         devscripts debhelper dh-make libldap2-dev libsasl2-dev && apt-get clean
 
 # Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python - virtualenv==16.6.0 pip==19.1.1 wheel setuptools; \
-      pip install --upgrade requests[security] && rm -rf /root/.cache
+RUN curl https://bootstrap.pypa.io/get-pip.py | python3.6 - virtualenv==16.6.0 pip==19.1.1 wheel setuptools; \
+      pip3.6 install --upgrade requests[security] && rm -rf /root/.cache
 
 # We use our dh-virtualenv version, since it fixes shebangd lines rewrites
 RUN apt-get -y install \
