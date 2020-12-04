@@ -29,7 +29,7 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
 RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
     apt-get -y update && \
     apt-get -y install gdebi-core sshpass cron \
-      netcat net-tools
+      netcat net-tools software-properties-common
 
 #
 # Buildenv is special environment for generating debian packages. It provides:
