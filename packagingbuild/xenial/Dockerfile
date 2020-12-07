@@ -29,7 +29,7 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
 RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
     apt-get -y update && \
     apt-get -y install gdebi-core sshpass cron \
-      netcat net-tools
+      netcat net-tools software-properties-common
 
 #
 # Buildenv is special environment for generating debian packages. It provides:
@@ -38,9 +38,11 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
 #
 
 
-# install python development
-RUN apt-get update && \
-    apt-get -y install build-essential python-dev python python-virtualenv
+# Install python 3.6 & development
+# from the PPA as it's not available in base distro
+RUN add-apt-repository -y ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get -y install build-essential python3.6-dev python3.6
 
 
 RUN apt-get update && \
@@ -48,12 +50,12 @@ RUN apt-get update && \
         devscripts debhelper dh-make libldap2-dev libsasl2-dev && apt-get clean
 
 # Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python - virtualenv==16.6.0 pip==19.1.1 wheel setuptools; \
-      pip install --upgrade requests[security] && rm -rf /root/.cache
+RUN curl https://bootstrap.pypa.io/get-pip.py | python3.6 - virtualenv==16.6.0 pip==19.1.1 wheel setuptools; \
+      pip3.6 install --upgrade requests[security] && rm -rf /root/.cache
 
 # We use our dh-virtualenv version, since it fixes shebangd lines rewrites
 RUN apt-get -y install \
-        python-setuptools python-mock && \
+        python-virtualenv python-setuptools python-mock && \
         apt-get clean && \
         git clone -b stackstorm_patched https://github.com/stackstorm/dh-virtualenv.git /tmp/dh-virtualenv && \
         cd /tmp/dh-virtualenv && \
