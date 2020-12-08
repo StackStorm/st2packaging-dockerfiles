@@ -14,7 +14,7 @@ RUN yum -y install \
     setup
     
 RUN yum install -y yum-utils \
-    && dnf config-manager --enable PowerTools \
+    && dnf config-manager --enable powertools \
     && yum install -y epel-release \
     && yum -y install \
     ImageMagick \
@@ -22,7 +22,7 @@ RUN yum install -y yum-utils \
     libyaml-devel \
     libffi-devel \
     glibc-langpack-en \
-    && dnf config-manager --disable PowerTools \
+    && dnf config-manager --disable powertools \
     && yum remove -y epel-release yum-utils
     
 # Build tools

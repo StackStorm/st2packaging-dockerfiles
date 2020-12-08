@@ -7,13 +7,13 @@ RUN yum -y install \
     wget
 
 RUN yum install -y yum-utils \
-    && dnf config-manager --enable PowerTools \
+    && dnf config-manager --enable powertools \
     && yum install -y epel-release \
     && yum -y install \
     ImageMagick \
     ImageMagick-devel \
     libyaml-devel \
-    && dnf config-manager --disable PowerTools \
+    && dnf config-manager --disable powertools \
     && yum remove -y epel-release yum-utils
 
 # Build tools
