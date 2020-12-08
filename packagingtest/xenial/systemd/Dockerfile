@@ -41,7 +41,11 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
     apt-get -y install gdebi-core sshpass cron netcat net-tools iproute
 
 # install apt https transport so apt sources can be added that refernece https:// URLs
-RUN apt-get -y install apt-transport-https ca-certificates
+RUN apt-get -y install apt-transport-https software-properties-common ca-certificates
+
+# Add python 3.6 repository from the 3rd party PPA as it's not available in base distro
+RUN add-apt-repository -y ppa:deadsnakes/ppa && \
+    apt-get update
 
 # install netbase package (includes /etc/protocols and other files we rely on)
 RUN apt-get -y install netbase
