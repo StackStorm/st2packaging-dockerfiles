@@ -129,9 +129,6 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
 # Install development tools and python3 for EL8
 RUN yum -y install python3 python3-devel rpmdevtools python3-virtualenv && \
     pip3 install virtualenv==16.6.0 pip==19.1.1 wheel setuptools
-
-RUN pip3 install requests[security] venvctrl --upgrade && rm -rf /root/.cache
-
 {%- elif version in ('7') -%}
 
 # Install rpmdevtools and epel-release
@@ -139,19 +136,14 @@ RUN yum -y install rpmdevtools epel-release
 # Install python3
 RUN yum -y install python3 python3-devel python3-virtualenv  && \
     pip3 install virtualenv==16.6.0 pip==19.1.1 wheel setuptools
+{%- endif %}
 RUN pip3 install --upgrade requests[security] venvctrl && rm -rf /root/.cache
-
-{%- endif -%}
 
 {%- else -%}
 {%- include "Dockerfile.debian" -%}
 {%- endif %}
 
-{% if dist in ('centos', 'fedora') -%}
 VOLUME ["/home/busybee/build"]
-{%- else -%}
-VOLUME ['/home/busybee/build']
-{%- endif %}
 EXPOSE 22
 
 # Run ssh daemon in foreground and wait for bees to connect.

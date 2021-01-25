@@ -64,7 +64,7 @@ RUN apt-get -y install \
           rm -rf /tmp/dh-virtualenv*
 RUN apt-get -y install dh-systemd && apt-get clean
 
-VOLUME ['/home/busybee/build']
+VOLUME ["/home/busybee/build"]
 EXPOSE 22
 
 # Run ssh daemon in foreground and wait for bees to connect.
