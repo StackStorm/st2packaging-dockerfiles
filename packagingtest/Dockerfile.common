@@ -13,13 +13,13 @@ RUN yum -y install \
     wget
 
 RUN yum -y install \
-    {% if (version == '7') -%}bzr \{% endif -%}
-    git \
+{% if (version == '7') %}    bzr \
+{% endif %}    git \
     mercurial \
     openssh \
     subversion \
     setup
-    {% if (version == '8') %}
+{% if (version == '8') %}
 RUN yum install -y yum-utils \
     && dnf config-manager --enable powertools \
     && yum install -y epel-release \
@@ -27,11 +27,10 @@ RUN yum install -y yum-utils \
     ImageMagick \
     ImageMagick-devel \
     libyaml-devel \
-    libffi-devel \
     glibc-langpack-en \
     && dnf config-manager --disable powertools \
     && yum remove -y epel-release yum-utils
-    {% endif %}
+{% endif %}
 # Build tools
 RUN yum -y install \
     autoconf \
@@ -43,18 +42,19 @@ RUN yum -y install \
     gcc-c++ \
     glib2-devel \
     glibc-devel \
-    {%- if (version == '7') -%}
+    {%- if (version == '7') %}
     ImageMagick \
     ImageMagick-devel \
     {%- endif %}
     libcurl-devel \
     libevent-devel \
+    libffi-devel \
     libjpeg-devel \
     libtool \
     libwebp-devel \
     libxml2-devel \
     libxslt-devel \
-    {%- if (version == '7') -%}
+    {%- if (version == '7') %}
     libyaml-devel \
     {%- endif %}
     make \
@@ -68,7 +68,7 @@ RUN yum -y install \
     sqlite-devel \
     xz \
     xz-devel \
-    zlib-devel {% if (version == '8') %}\
+    zlib-devel{% if (version == '8') %} \
     python3-virtualenv \
     python3-devel \
     openssl-devel \
@@ -79,11 +79,20 @@ RUN yum -y install \
     zip \
     unzip{%- endif %}
 
-
-
 # St2 package build debs
 RUN yum -y install \
     openldap-devel
+{% else %}
+
+ENV container docker
+ENV TERM xterm
+
+# Make noninteractive setting permanent
+ENV DEBIAN_FRONTEND noninteractive
+RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections -v
+
+RUN apt-get -y update
+
 {%- endif %}
 
 # Enable remote pubkey access
@@ -97,11 +106,16 @@ RUN chmod 600 /root/.ssh/busybee
 {% if dist in ('centos', 'fedora') -%}
 RUN yum -y install openssh-server sudo && \
   ssh-keygen -t rsa -N '' -f /etc/ssh/ssh_host_rsa_key
-{%- else %}
-
-RUN DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
-    apt-get install -y openssh-server sudo && \
+{%- else -%}
+RUN apt-get install -y openssh-server sudo && \
     mkdir /var/run/sshd
+
+# install locales package and set default locale to 'UTF-8' for the test execution environment
+RUN apt-get -y install locales && \
+    locale-gen en_US.UTF-8 && \
+    dpkg-reconfigure locales && \
+    update-locale LANG=en_US.UTF-8
+ENV LANG en_US.UTF-8
 {%- endif %}
 
 # 1. small fix for SSH in ubuntu 13.10 (that's harmless everywhere else)
@@ -122,11 +136,19 @@ RUN yum -y install nc net-tools {%- if (version == '8') %} glibc-locale-source &
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
-    {% endif%}
+{% endif%}
 {% else -%}
 # install core software for packaging and ssh communication
 RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
-    DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
-    apt-get -y install gdebi-core sshpass cron \
-      netcat net-tools
+    apt-get -y install gdebi-core sshpass cron netcat net-tools iproute
+
+# install apt https transport so apt sources can be added that refernece https:// URLs
+RUN apt-get -y install apt-transport-https software-properties-common ca-certificates
+
+# Add python 3.6 repository from the 3rd party PPA as it's not available in base distro
+RUN add-apt-repository -y ppa:deadsnakes/ppa && \
+    apt-get update
+
+# install netbase package (includes /etc/protocols and other files we rely on)
+RUN apt-get -y install netbase
 {% endif %}

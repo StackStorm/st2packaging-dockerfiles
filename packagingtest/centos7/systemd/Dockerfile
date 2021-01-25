@@ -7,12 +7,13 @@ RUN yum -y install \
     wget
 
 RUN yum -y install \
-    bzr \git \
+    bzr \
+    git \
     mercurial \
     openssh \
     subversion \
     setup
-    
+
 # Build tools
 RUN yum -y install \
     autoconf \
@@ -23,15 +24,19 @@ RUN yum -y install \
     gcc \
     gcc-c++ \
     glib2-devel \
-    glibc-devel \ImageMagick \
-    ImageMagick-devel \libcurl-devel \
+    glibc-devel \
+    ImageMagick \
+    ImageMagick-devel \
+    libcurl-devel \
     libevent-devel \
     libffi-devel \
     libjpeg-devel \
     libtool \
     libwebp-devel \
     libxml2-devel \
-    libxslt-devel \libyaml-devel \make \
+    libxslt-devel \
+    libyaml-devel \
+    make \
     mysql-devel \
     ncurses-devel \
     openssl-devel \
@@ -47,6 +52,7 @@ RUN yum -y install \
 # St2 package build debs
 RUN yum -y install \
     openldap-devel
+
 
 # Enable remote pubkey access
 RUN mkdir /root/.ssh && chmod 700 /root/.ssh && \
@@ -69,7 +75,6 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
         echo 'root:docker.io' | chpasswd
 
 RUN yum -y install nc net-tools
-
 ENV container docker
 
 RUN yum -y update; \

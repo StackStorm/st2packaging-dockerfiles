@@ -12,7 +12,7 @@ RUN yum -y install \
     openssh \
     subversion \
     setup
-    
+
 RUN yum install -y yum-utils \
     && dnf config-manager --enable powertools \
     && yum install -y epel-release \
@@ -20,11 +20,10 @@ RUN yum install -y yum-utils \
     ImageMagick \
     ImageMagick-devel \
     libyaml-devel \
-    libffi-devel \
     glibc-langpack-en \
     && dnf config-manager --disable powertools \
     && yum remove -y epel-release yum-utils
-    
+
 # Build tools
 RUN yum -y install \
     autoconf \
@@ -38,6 +37,7 @@ RUN yum -y install \
     glibc-devel \
     libcurl-devel \
     libevent-devel \
+    libffi-devel \
     libjpeg-devel \
     libtool \
     libwebp-devel \
@@ -49,12 +49,12 @@ RUN yum -y install \
     openssl-devel \
     patch \
     postgresql-devel \
+    python3 \
     readline-devel \
     sqlite-devel \
     xz \
     xz-devel \
     zlib-devel \
-    python3 \
     python3-virtualenv \
     python3-devel \
     openssl-devel \
@@ -65,11 +65,10 @@ RUN yum -y install \
     zip \
     unzip
 
-
-
 # St2 package build debs
 RUN yum -y install \
     openldap-devel
+
 
 # Enable remote pubkey access
 RUN mkdir /root/.ssh && chmod 700 /root/.ssh && \
@@ -99,11 +98,11 @@ RUN yum -y install nc net-tools glibc-locale-source && \
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
-    
+
 ENV container docker
 
 RUN yum -y update; \
-    yum -y install systemd; yum clean all
+    yum -y install systemd; yum clean all;
 
 RUN cd /lib/systemd/system/sysinit.target.wants/; ls -1 | grep -v systemd-tmpfiles-setup.service | xargs rm; \
     rm -f /etc/systemd/system/*.wants/*;\
