@@ -51,7 +51,11 @@ RUN apt-get update && \
         devscripts debhelper dh-make libldap2-dev libsasl2-dev && apt-get clean
 
 # Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python3.6 - virtualenv==16.6.0 pip==19.1.1 wheel setuptools; \
+RUN curl https://bootstrap.pypa.io/get-pip.py | python3.6 - \
+        pip==19.1.1 \
+        setuptools \
+        virtualenv==16.6.0 \
+        wheel ; \
       pip3.6 install --upgrade requests[security] && rm -rf /root/.cache
 
 # We use our dh-virtualenv version, since it fixes shebangd lines rewrites

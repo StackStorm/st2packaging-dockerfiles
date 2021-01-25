@@ -91,7 +91,11 @@ RUN yum -y install nc net-tools
 
 # Install development tools and python3 for EL8
 RUN yum -y install python3 python3-devel rpmdevtools python3-virtualenv && \
-    pip3 install virtualenv==16.6.0 pip==19.1.1 wheel setuptools
+    pip3 install \
+        pip==19.1.1 \
+        setuptools \
+        virtualenv==16.6.0 \
+        wheel
 RUN pip3 install --upgrade requests[security] venvctrl && rm -rf /root/.cache
 
 VOLUME ["/home/busybee/build"]

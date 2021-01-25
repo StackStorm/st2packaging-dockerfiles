@@ -53,7 +53,9 @@ RUN yum -y install \
 # Python and tools
 RUN yum -y install python3 python3-devel python3-wheel python3-virtualenv && \
     pip3 install --user --upgrade pip==20.0.2 && \
-    pip3 install --user virtualenv==16.6.0 wheel setuptools  && \
+    pip3 install --user setuptools && \
+    pip3 install --user --upgrade virtualenv==16.6.0 \
+    pip3 install --user wheel && \
     rm -rf /root/.cache
 
 # St2 package build debs
