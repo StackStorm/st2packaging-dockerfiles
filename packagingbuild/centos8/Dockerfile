@@ -92,7 +92,7 @@ RUN yum -y install nc net-tools
 # Install development tools and python3 for EL8
 RUN yum -y install python3 python3-devel rpmdevtools python3-virtualenv && \
     pip3 install \
-        pip==19.1.1 \
+        pip==20.3.4 \
         setuptools \
         virtualenv==16.6.0 \
         wheel

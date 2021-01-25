@@ -52,7 +52,7 @@ RUN apt-get update && \
 
 # Install fresh pip and co
 RUN curl https://bootstrap.pypa.io/get-pip.py | python3.6 - \
-        pip==19.1.1 \
+        pip==20.3.4 \
         setuptools \
         virtualenv==16.6.0 \
         wheel ; \
