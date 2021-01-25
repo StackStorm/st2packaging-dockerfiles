@@ -52,7 +52,7 @@ def match_and_fetch(value, item_or_hash):
 
     item = item_or_hash
     if isinstance(item, dict):
-        item, match_list = item.items()[0]
+        item, match_list = list(item.items())[0]
     else:
         match_list = [value]
 
