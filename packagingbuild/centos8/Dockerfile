@@ -11,7 +11,7 @@ RUN yum -y install \git \
     openssh \
     subversion
 
-    
+
 RUN yum install -y yum-utils \
     && dnf config-manager --enable powertools \
     && yum install -y epel-release \
@@ -22,7 +22,7 @@ RUN yum install -y yum-utils \
     glibc-langpack-en \
     && dnf config-manager --disable powertools \
     && yum remove -y epel-release yum-utils
-    
+
 
 # Build tools
 RUN yum -y install \
@@ -58,6 +58,8 @@ RUN yum -y install \
 # St2 package build debs
 RUN yum -y install \
     openldap-devel
+
+
 
 # Enable remote pubkey access
 RUN mkdir /root/.ssh && chmod 700 /root/.ssh && \

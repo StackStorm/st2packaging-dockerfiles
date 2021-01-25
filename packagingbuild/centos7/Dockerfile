@@ -11,7 +11,7 @@ RUN yum -y install \bzr \git \
     openssh \
     subversion
 
-    
+
 
 # Build tools
 RUN yum -y install \
@@ -48,6 +48,8 @@ RUN yum -y install \
 # St2 package build debs
 RUN yum -y install \
     openldap-devel
+
+
 
 # Enable remote pubkey access
 RUN mkdir /root/.ssh && chmod 700 /root/.ssh && \
