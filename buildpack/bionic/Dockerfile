@@ -9,7 +9,7 @@ RUN apt-get -y install build-essential python2.7-dev python2.7 python3-dev pytho
 RUN curl https://bootstrap.pypa.io/get-pip.py | python3 - \
         pip==20.3.4 \
         setuptools \
-        virtualenv==16.6.0 \
+        virtualenv==20.2.2 \
         wheel; \
       pip3 install --upgrade requests[security] && rm -rf /root/.cache
 

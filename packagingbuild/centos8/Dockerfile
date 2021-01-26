@@ -94,7 +94,7 @@ RUN yum -y install python3 python3-devel rpmdevtools python3-virtualenv && \
     pip3 install \
         pip==20.3.4 \
         setuptools \
-        virtualenv==16.6.0 \
+        virtualenv==20.2.2 \
         wheel
 RUN pip3 install --upgrade requests[security] venvctrl && rm -rf /root/.cache
 

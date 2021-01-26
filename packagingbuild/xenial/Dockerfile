@@ -54,7 +54,7 @@ RUN apt-get update && \
 RUN curl https://bootstrap.pypa.io/get-pip.py | python3.6 - \
         pip==20.3.4 \
         setuptools \
-        virtualenv==16.6.0 \
+        virtualenv==20.2.2 \
         wheel ; \
       pip3.6 install --upgrade requests[security] && rm -rf /root/.cache
 

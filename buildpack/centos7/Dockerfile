@@ -47,7 +47,7 @@ RUN yum -y install python-devel && \
     wget -qO - https://bootstrap.pypa.io/get-pip.py | python && \
     pip install --upgrade pip==20.3.4 && \
     pip install setuptools && \
-    pip install virtualenv && \
+    pip install --upgrade virtualenv==20.2.2 && \
     rm -rf /root/.cache
 
 # St2 package build debs
