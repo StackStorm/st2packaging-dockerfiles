@@ -6,7 +6,7 @@ RUN apt-get -y install build-essential python2.7-dev python2.7 python3-dev pytho
     rm -rf /root/.cache
 
 # Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python3 - virtualenv==20.2.2 pip==20.3.4 wheel setuptools; \
+RUN curl https://bootstrap.pypa.io/get-pip.py | python3 - virtualenv==20.2.2 pip==20.3.3 wheel setuptools; \
       pip3 install --upgrade requests[security] && rm -rf /root/.cache
 
 # Install debian build tools

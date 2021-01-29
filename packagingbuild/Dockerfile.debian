@@ -16,10 +16,10 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install \
 
 # Install fresh pip and co
 {% if version in ('bionic') -%}
-RUN curl https://bootstrap.pypa.io/get-pip.py | python3 - virtualenv==20.2.2 pip==20.3.4 wheel setuptools cryptography; \
+RUN curl https://bootstrap.pypa.io/get-pip.py | python3 - virtualenv==20.2.2 pip==20.3.3 wheel setuptools cryptography; \
       pip3 install --upgrade requests[security] && rm -rf /root/.cache
 {%- else -%}
-RUN curl https://bootstrap.pypa.io/get-pip.py | python - virtualenv==20.2.2 pip==20.3.4 wheel setuptools; \
+RUN curl https://bootstrap.pypa.io/get-pip.py | python - virtualenv==20.2.2 pip==20.3.3 wheel setuptools; \
       pip install --upgrade requests[security] && rm -rf /root/.cache
 {%- endif %}
 

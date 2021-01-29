@@ -45,7 +45,7 @@ RUN yum -y install \
 # Python and tools
 RUN yum -y install python-devel && \
     wget -qO - https://bootstrap.pypa.io/get-pip.py | python && \
-    pip install --upgrade "pip==20.3.4" && \
+    pip install --upgrade "pip==20.3.3" && \
     pip install setuptools virtualenv && \
     rm -rf /root/.cache
 
