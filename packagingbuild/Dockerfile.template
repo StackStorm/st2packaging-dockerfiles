@@ -122,7 +122,7 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
 {% if (version == '8') -%}
 # Install development tools and python3 for EL8
  RUN yum -y install python3 python3-devel rpmdevtools python3-virtualenv && \
-     pip3 install virtualenv==20.2.2 pip==20.3.3 wheel setuptools
+     pip3 install virtualenv==20.4.0 pip==20.3.3 wheel setuptools
  
  RUN pip3 install --upgrade requests[security] venvctrl && rm -rf /root/.cache
  
@@ -132,7 +132,7 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
 RUN yum -y install rpmdevtools epel-release
 # Install python3
 RUN yum -y install python3 python3-devel python3-virtualenv  && \
-    pip3 install virtualenv==20.2.2 pip==20.3.3 wheel setuptools
+    pip3 install virtualenv==20.4.0 pip==20.3.3 wheel setuptools
 
 {%- endif %}
 
