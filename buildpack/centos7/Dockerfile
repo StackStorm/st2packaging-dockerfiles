@@ -43,12 +43,12 @@ RUN yum -y install \
 
 
 # Python and tools
-RUN yum -y install python-devel && \
-    yum install -y python3 python3-devel && \
-    wget -qO - https://bootstrap.pypa.io/get-pip.py | python3 && \
-    pip install --upgrade "pip==20.3.4" && \
-    pip install setuptools virtualenv && \
-    rm -rf /root/.cache
+RUN yum -y install python-devel
+RUN yum install -y python3 python3-devel
+RUN wget -qO - https://bootstrap.pypa.io/get-pip.py | python3
+RUN pip install --upgrade "pip==20.3.4"
+RUN pip install setuptools virtualenv
+RUN rm -rf /root/.cache
 
 # St2 package build debs
 RUN yum -y install \
