@@ -49,7 +49,6 @@ RUN yum -y install \
     xz-devel \
     zlib-devel
 
-
 # Python and tools
 RUN yum -y install python3 python3-devel python3-wheel python3-virtualenv && \
     pip3 install --user --upgrade pip==20.0.2 && \

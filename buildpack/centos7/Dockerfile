@@ -41,7 +41,6 @@ RUN yum -y install \
     zlib-devel \
     rpmdevtools
 
-
 # Python and tools
 RUN yum -y install python-devel && \
     wget -qO - https://bootstrap.pypa.io/get-pip.py | python && \

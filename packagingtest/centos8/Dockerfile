@@ -12,7 +12,7 @@ RUN yum -y install \
     openssh \
     subversion \
     setup
-    
+
 RUN yum install -y yum-utils \
     && dnf config-manager --enable powertools \
     && yum install -y epel-release \
@@ -24,7 +24,7 @@ RUN yum install -y yum-utils \
     glibc-langpack-en \
     && dnf config-manager --disable powertools \
     && yum remove -y epel-release yum-utils
-    
+
 # Build tools
 RUN yum -y install \
     autoconf \
@@ -99,7 +99,7 @@ RUN yum -y install nc net-tools glibc-locale-source && \
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
-    
+
 ENV container docker
 
 RUN yum -y update; \

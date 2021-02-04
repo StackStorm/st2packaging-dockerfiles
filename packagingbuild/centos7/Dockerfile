@@ -11,8 +11,6 @@ RUN yum -y install \bzr \git \
     openssh \
     subversion
 
-    
-
 # Build tools
 RUN yum -y install \
     autoconf \
