@@ -54,7 +54,8 @@ RUN curl https://bootstrap.pypa.io/get-pip.py | python3 - virtualenv==20.4.0 pip
 
 # We use our dh-virtualenv version, since it fixes shebangd lines rewrites
 RUN apt-get -y install \
-        python-setuptools python-mock && \
+        python-setuptools \
+        python-mock && \
         apt-get clean && \
         git clone -b stackstorm_patched https://github.com/stackstorm/dh-virtualenv.git /tmp/dh-virtualenv && \
         cd /tmp/dh-virtualenv && \
