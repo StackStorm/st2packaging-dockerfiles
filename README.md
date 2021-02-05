@@ -26,6 +26,6 @@ the container's directory and do the following:
 cd st2packaging-dockerfiles/packagingbuild/bionic
 docker build -t stackstorm/packagingbuild:bionic .
 
-cd st2packaging-dockerfiles/packagingtest/bionic/systemd
+cd st2packaging-dockerfiles/packagingtest/bionic
 docker build -t stackstorm/packagingtest:bionic .
 ```
