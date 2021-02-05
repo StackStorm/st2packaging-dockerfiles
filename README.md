@@ -6,6 +6,13 @@ For official StackStorm Docker repo, go https://github.com/StackStorm/st2-docker
 Interested in StackStorm HA in Kubernetes? Check https://github.com/stackstorm/stackstorm-ha
 
 This repository contains Dockerfiles, used by StackStorm team for CI and some other specific needs.
+
+## `buildpack`
+
+`Dockerfiles` with pre-installed requirements to build `.deb` and `.rpm` StackStorm packages.
+
+See [buildpack/](buildpack/)
+
 ## `packagingbuild`
 `Dockerfiles` with ready to use environment to build `.deb` and `.rpm` StackStorm packages in [StackStorm/st2-packages](https://github.com/StackStorm/st2-packages/blob/master/docker-compose.circle.yml) CI/CD.
 
