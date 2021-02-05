@@ -1,7 +1,0 @@
-registry: stackstorm/
-variants:
-  - null
-  - systemd:
-    - xenial
-    - centos7
-    - centos8

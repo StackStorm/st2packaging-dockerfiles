@@ -1,10 +1,4 @@
-{%- if dist in ('centos') -%}
-FROM centos:{{ version }}
-{%- else -%}
-FROM buildpack-deps:{{ suite }}
-{%- endif -%}
-
-{%- if dist in ('centos') %}
+FROM centos:8
 
 # Download tools
 RUN yum -y install \
@@ -13,13 +7,12 @@ RUN yum -y install \
     wget
 
 RUN yum -y install \
-    {% if (version == '7') -%}bzr \{% endif -%}
     git \
     mercurial \
     openssh \
     subversion \
     setup
-    {% if (version == '8') %}
+
 RUN yum install -y yum-utils \
     && dnf config-manager --enable powertools \
     && yum install -y epel-release \
@@ -31,7 +24,7 @@ RUN yum install -y yum-utils \
     glibc-langpack-en \
     && dnf config-manager --disable powertools \
     && yum remove -y epel-release yum-utils
-    {% endif %}
+
 # Build tools
 RUN yum -y install \
     autoconf \
@@ -43,10 +36,6 @@ RUN yum -y install \
     gcc-c++ \
     glib2-devel \
     glibc-devel \
-    {%- if (version == '7') -%}
-    ImageMagick \
-    ImageMagick-devel \
-    {%- endif %}
     libcurl-devel \
     libevent-devel \
     libjpeg-devel \
@@ -54,21 +43,18 @@ RUN yum -y install \
     libwebp-devel \
     libxml2-devel \
     libxslt-devel \
-    {%- if (version == '7') -%}
-    libyaml-devel \
-    {%- endif %}
     make \
     mysql-devel \
     ncurses-devel \
     openssl-devel \
     patch \
     postgresql-devel \
-    python3 \
     readline-devel \
     sqlite-devel \
     xz \
     xz-devel \
-    zlib-devel {% if (version == '8') %}\
+    zlib-devel \
+    python3 \
     python3-virtualenv \
     python3-devel \
     openssl-devel \
@@ -77,14 +63,13 @@ RUN yum -y install \
     openssh-clients \
     setup \
     zip \
-    unzip{%- endif %}
+    unzip
 
 
 
 # St2 package build debs
 RUN yum -y install \
     openldap-devel
-{%- endif %}
 
 # Enable remote pubkey access
 RUN mkdir /root/.ssh && chmod 700 /root/.ssh && \
@@ -94,15 +79,8 @@ RUN mkdir /root/.ssh && chmod 700 /root/.ssh && \
 COPY busybee*  /root/.ssh/
 RUN chmod 600 /root/.ssh/busybee
 
-{% if dist in ('centos', 'fedora') -%}
 RUN yum -y install openssh-server sudo && \
   ssh-keygen -t rsa -N '' -f /etc/ssh/ssh_host_rsa_key
-{%- else %}
-
-RUN DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
-    apt-get install -y openssh-server sudo && \
-    mkdir /var/run/sshd
-{%- endif %}
 
 # 1. small fix for SSH in ubuntu 13.10 (that's harmless everywhere else)
 # 2. permit root logins and set simple password password and pubkey
@@ -113,8 +91,7 @@ RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_login
         sed -ri 's/requiretty/!requiretty/' /etc/sudoers && \
         echo 'root:docker.io' | chpasswd
 
-{% if dist in ('centos', 'fedora') -%}
-RUN yum -y install nc net-tools {%- if (version == '8') %} glibc-locale-source && \
+RUN yum -y install nc net-tools glibc-locale-source && \
     # -i: specify the locale definition file
     # -f: specify the character set
     localedef -i en_US -f UTF-8 en_US.UTF-8
@@ -122,11 +99,28 @@ RUN yum -y install nc net-tools {%- if (version == '8') %} glibc-locale-source &
 ENV LANG=en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
-    {% endif%}
-{% else -%}
-# install core software for packaging and ssh communication
-RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
-    DEBIAN_FRONTEND=noninteractive && apt-get -y update && \
-    apt-get -y install gdebi-core sshpass cron \
-      netcat net-tools
-{% endif %}
+
+ENV container docker
+
+RUN yum -y update; \
+    yum -y install systemd; yum clean all
+
+RUN cd /lib/systemd/system/sysinit.target.wants/; ls -1 | grep -v systemd-tmpfiles-setup.service | xargs rm; \
+    rm -f /etc/systemd/system/*.wants/*;\
+    rm -f /lib/systemd/system/local-fs.target.wants/*; \
+    rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+    rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+    rm -f /lib/systemd/system/basic.target.wants/*;\
+    rm -f /lib/systemd/system/anaconda.target.wants/*;\
+    systemctl preset sshd;
+
+# install doc files (/usr/share/docs) when installing yum packages
+# otherwise /usr/share/docs/st2/conf/nginx/st2.conf won't be present
+# https://github.com/docker-library/docs/tree/master/centos#package-documentation
+RUN sed -i '/nodocs/d' /etc/yum.conf
+
+# we can have ssh
+EXPOSE 22
+
+VOLUME [ "/sys/fs/cgroup" ]
+CMD [ "/usr/sbin/init" ]
