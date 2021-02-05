@@ -12,7 +12,7 @@ RUN yum -y install \
     openssh \
     subversion \
     setup
-    
+
 # Build tools
 RUN yum -y install \
     autoconf \
