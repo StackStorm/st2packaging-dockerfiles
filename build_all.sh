@@ -11,5 +11,5 @@ done
 for pt in $(find packagingtest -name Dockerfile); do
 	path=$(dirname $pt)
 	flavor=$(basename $path)
-	(cd $path; docker build -t stackstorm/packagingtest:${flavor}-systemd -t stackstorm/packagingtest:${flavor} .) || exit -1
+	(cd $path; docker build -t stackstorm/packagingtest:${flavor}-systemd .) || exit -1
 done
