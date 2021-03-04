@@ -79,7 +79,7 @@ RUN yum -y install nc net-tools
 RUN yum -y install rpmdevtools epel-release
 # Install python3
 RUN yum -y install python3 python3-devel python3-virtualenv  && \
-    pip3 install virtualenv==16.6.0 pip==19.1.1 wheel setuptools
+    pip3 install virtualenv==16.6.0 pip==20.0.2 wheel setuptools
 RUN pip3 install --upgrade requests[security] venvctrl && rm -rf /root/.cache
 
 VOLUME ["/home/busybee/build"]
