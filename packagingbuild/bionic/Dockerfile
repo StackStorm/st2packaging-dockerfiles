@@ -41,8 +41,7 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
 # install python development
 RUN apt-get update && \
     apt-get -y install build-essential \
-        python python-virtualenv \
-        python3 python3-virtualenv python3-pip
+        python3
 
 RUN apt-get update && \
     apt-get -y install \
@@ -54,7 +53,7 @@ RUN curl https://bootstrap.pypa.io/get-pip.py | python3 - virtualenv==16.6.0 pip
 
 # We use our dh-virtualenv version, since it fixes shebangd lines rewrites
 RUN apt-get -y install \
-        python-setuptools python-mock && \
+        python-virtualenv python-setuptools python-mock && \
         apt-get clean && \
         git clone -b stackstorm_patched https://github.com/stackstorm/dh-virtualenv.git /tmp/dh-virtualenv && \
         cd /tmp/dh-virtualenv && \
