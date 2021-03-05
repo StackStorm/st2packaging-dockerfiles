@@ -41,7 +41,7 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
 # install python development
 RUN apt-get update && \
     apt-get -y install build-essential \
-        python3
+        python3-dev python3
 
 RUN apt-get update && \
     apt-get -y install \
