@@ -57,7 +57,7 @@ RUN curl https://bootstrap.pypa.io/get-pip.py | python3.6 - virtualenv==16.6.0 p
 RUN apt-get -y install \
         python-virtualenv python-setuptools python-mock && \
         apt-get clean && \
-        git clone -b stackstorm_patched https://github.com/stackstorm/dh-virtualenv.git /tmp/dh-virtualenv && \
+        git clone --branch stackstorm_patched_use_custom_pip https://github.com/StackStorm/dh-virtualenv.git /tmp/dh-virtualenv && \
         cd /tmp/dh-virtualenv && \
         dpkg-buildpackage -b -uc -us && dpkg -i ../dh-virtualenv_*.deb && \
           rm -rf /tmp/dh-virtualenv*
