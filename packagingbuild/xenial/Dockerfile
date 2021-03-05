@@ -12,6 +12,9 @@ RUN mkdir /root/.ssh && chmod 700 /root/.ssh && \
 COPY busybee*  /root/.ssh/
 RUN chmod 600 /root/.ssh/busybee
 
+# Temporary workaround to work around failing apt mirror for half a day already
+RUN sed -i "s#deb.debian.org#ftp.si.debian.org#g" /etc/apt/sources.list
+
 RUN apt-get -y update && \
     apt-get install -y openssh-server sudo && \
     mkdir /var/run/sshd
