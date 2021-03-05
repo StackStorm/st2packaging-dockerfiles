@@ -37,7 +37,6 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
 #   - SSH access for build executor.
 #
 
-
 # install python development
 RUN apt-get update && \
     apt-get -y install build-essential \
