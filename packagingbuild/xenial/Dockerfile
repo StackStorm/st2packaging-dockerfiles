@@ -12,6 +12,9 @@ RUN mkdir /root/.ssh && chmod 700 /root/.ssh && \
 COPY busybee*  /root/.ssh/
 RUN chmod 600 /root/.ssh/busybee
 
+# Temporary workaround to work around failing apt mirror for half a day already
+RUN sed -i "s#deb.debian.org#ftp.si.debian.org#g" /etc/apt/sources.list
+
 RUN apt-get -y update && \
     apt-get install -y openssh-server sudo && \
     mkdir /var/run/sshd
@@ -50,7 +53,8 @@ RUN apt-get update && \
         devscripts debhelper dh-make libldap2-dev libsasl2-dev && apt-get clean
 
 # Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python3.6 - virtualenv==20.4.0 pip==20.3.4 wheel setuptools; \
+RUN curl https://bootstrap.pypa.io/get-pip.py | python3.6 - virtualenv==20.4.0 pip==20.3.3 wheel setuptools; \
+
       pip3.6 install --upgrade requests[security] && rm -rf /root/.cache
 
 # This line just busts Docker's cache so it re-runs the next line

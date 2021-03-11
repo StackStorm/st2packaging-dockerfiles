@@ -37,20 +37,18 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
 #   - SSH access for build executor.
 #
 
-
 # install python development
 RUN apt-get update && \
     apt-get -y install build-essential \
-        python python-virtualenv \
-        python3 python3-virtualenv python3-pip
+        python3-dev python3
 
 RUN apt-get update && \
     apt-get -y install \
         devscripts debhelper dh-make libldap2-dev libsasl2-dev && apt-get clean
 
 # Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python3 - virtualenv==20.4.0 pip==20.3.4 wheel setuptools cryptography; \
-      pip3 install --upgrade requests[security] && rm -rf /root/.cache
+RUN curl https://bootstrap.pypa.io/get-pip.py | python3.6 - virtualenv==20.4.0 pip==20.3.3 wheel setuptools cryptography; \
+      pip3.6 install --upgrade requests[security] && rm -rf /root/.cache
 
 # This line just busts Docker's cache so it re-runs the next line
 # The GitHub API will return different results when the branch HEAD changes
@@ -60,13 +58,12 @@ RUN curl https://bootstrap.pypa.io/get-pip.py | python3 - virtualenv==20.4.0 pip
 
 # We use our dh-virtualenv version, since it fixes shebangd lines rewrites
 RUN apt-get -y install \
-        python-setuptools \
-        python-mock && \
+        python-virtualenv python-setuptools python-mock && \
         apt-get clean && \
         git clone --branch rm_site_packages_flag https://github.com/StackStorm/dh-virtualenv.git /tmp/dh-virtualenv && \
         cd /tmp/dh-virtualenv && \
         dpkg-buildpackage -b -uc -us && dpkg -i ../dh-virtualenv_*.deb && \
-          rm -rf /tmp/dh-virtualenv*
+        rm -rf /tmp/dh-virtualenv*
 RUN apt-get -y install dh-systemd && apt-get clean
 
 VOLUME ['/home/busybee/build']
