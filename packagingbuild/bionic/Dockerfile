@@ -53,7 +53,7 @@ RUN curl https://bootstrap.pypa.io/get-pip.py | python3.6 - virtualenv==20.4.0 p
 # This line just busts Docker's cache so it re-runs the next line
 # The GitHub API will return different results when the branch HEAD changes
 # See https://stackoverflow.com/a/39278224
-# ADD https://api.github.com/repos/StackStorm/dh-virtualenv/git/refs/heads/rm_site_packages_upgrade_pip version.json
+# ADD https://api.github.com/repos/StackStorm/dh-virtualenv/git/refs/heads/stackstorm_patched version.json
 # RUN rm version.json
 #
 # We use our dh-virtualenv version, since it fixes shebangd lines rewrites.
@@ -63,7 +63,7 @@ RUN curl https://bootstrap.pypa.io/get-pip.py | python3.6 - virtualenv==20.4.0 p
 RUN apt-get -y install \
         python-virtualenv python-setuptools python-mock && \
         apt-get clean && \
-        git clone --branch rm_site_packages_upgrade_pip https://github.com/StackStorm/dh-virtualenv.git /tmp/dh-virtualenv && \
+        git clone --branch stackstorm_patched https://github.com/StackStorm/dh-virtualenv.git /tmp/dh-virtualenv && \
         cd /tmp/dh-virtualenv && \
         dpkg-buildpackage -b -uc -us && dpkg -i ../dh-virtualenv_*.deb && \
         rm -rf /tmp/dh-virtualenv*
