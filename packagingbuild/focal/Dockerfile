@@ -56,12 +56,14 @@ RUN curl https://bootstrap.pypa.io/get-pip.py | python3.8 - virtualenv==20.4.0 p
 # ADD https://api.github.com/repos/StackStorm/dh-virtualenv/git/refs/heads/stackstorm_patched version.json
 # RUN rm version.json
 
-# Use upstream dh-virtualenv master branch that includes StackStorm's 'python' shebang fix since 8 Dec 2020
+# Use upstream dh-virtualenv master branch that includes StackStorm's 'python' shebang fix since 8 Dec 2020.
+# We reset the repository to use the known good commit sha id 2dc93574865d6dd9e1fc470541e3232dcbad3337
 RUN apt-get -y install \
         python3-virtualenv python3-setuptools python3-mock python3-sphinx dh-exec dh-python libjs-jquery libjs-underscore python3-sphinx-rtd-theme && \
         apt-get clean && \
         git clone --branch master https://github.com/spotify/dh-virtualenv.git /tmp/dh-virtualenv && \
         cd /tmp/dh-virtualenv && \
+        git reset --hard 2dc93574865d6dd9e1fc470541e3232dcbad3337 && \
         dpkg-buildpackage -b -uc -us && dpkg -i ../dh-virtualenv_*.deb && \
         rm -rf /tmp/dh-virtualenv*
 RUN apt-get -y install dh-systemd && apt-get clean
