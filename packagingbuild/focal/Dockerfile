@@ -16,20 +16,17 @@ RUN apt-get -y update && \
     apt-get install -y openssh-server sudo && \
     mkdir /var/run/sshd
 
-# 1. small fix for SSH in ubuntu 13.10 (that's harmless everywhere else)
-# 2. permit root logins and set simple password password and pubkey
-# 3. change requiretty to !requiretty in /etc/sudoers
-RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_loginuid.so/' /etc/pam.d/sshd && \
-        sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
-        sed -ri 's/^#?PubkeyAuthentication\s+.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
-        sed -ri 's/requiretty/!requiretty/' /etc/sudoers && \
-        echo 'root:docker.io' | chpasswd
+# 1. permit root logins and set simple password password and pubkey
+# 2. change requiretty to !requiretty in /etc/sudoers
+RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    sed -ri 's/^#?PubkeyAuthentication\s+.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
+    sed -ri 's/requiretty/!requiretty/' /etc/sudoers && \
+    echo 'root:docker.io' | chpasswd
 
 # install core software for packaging and ssh communication
 RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
     apt-get -y update && \
-    apt-get -y install gdebi-core sshpass cron \
-      netcat net-tools
+    apt-get -y install gdebi-core sshpass cron netcat net-tools
 
 #
 # Buildenv is special environment for generating debian packages. It provides:
@@ -39,8 +36,7 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
 
 # install python development
 RUN apt-get update && \
-    apt-get -y install build-essential \
-        python3-dev python3
+    apt-get -y install build-essential python3-dev python3
 
 RUN apt-get update && \
     apt-get -y install \
@@ -59,7 +55,7 @@ RUN curl https://bootstrap.pypa.io/get-pip.py | python3.8 - virtualenv==20.4.0 p
 # Use upstream dh-virtualenv master branch that includes StackStorm's 'python' shebang fix since 8 Dec 2020.
 # We reset the repository to use the known good commit sha id 2dc93574865d6dd9e1fc470541e3232dcbad3337
 RUN apt-get -y install \
-        python3-virtualenv python3-setuptools python3-mock python3-sphinx dh-exec dh-python libjs-jquery libjs-underscore python3-sphinx-rtd-theme && \
+        python3.8-venv python3-setuptools python3-mock python3-sphinx dh-exec dh-python libjs-jquery libjs-underscore python3-sphinx-rtd-theme && \
         apt-get clean && \
         git clone --branch master https://github.com/spotify/dh-virtualenv.git /tmp/dh-virtualenv && \
         cd /tmp/dh-virtualenv && \
