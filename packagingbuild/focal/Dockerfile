@@ -26,8 +26,7 @@ RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_confi
 # install core software for packaging and ssh communication
 RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
     apt-get -y update && \
-    apt-get -y install gdebi-core sshpass cron \
-      netcat net-tools
+    apt-get -y install gdebi-core sshpass cron netcat net-tools
 
 #
 # Buildenv is special environment for generating debian packages. It provides:
@@ -37,8 +36,7 @@ RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
 
 # install python development
 RUN apt-get update && \
-    apt-get -y install build-essential \
-        python3-dev python3
+    apt-get -y install build-essential python3-dev python3
 
 RUN apt-get update && \
     apt-get -y install \
