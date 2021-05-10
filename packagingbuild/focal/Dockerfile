@@ -16,14 +16,12 @@ RUN apt-get -y update && \
     apt-get install -y openssh-server sudo && \
     mkdir /var/run/sshd
 
-# 1. small fix for SSH in ubuntu 13.10 (that's harmless everywhere else)
-# 2. permit root logins and set simple password password and pubkey
-# 3. change requiretty to !requiretty in /etc/sudoers
-RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_loginuid.so/' /etc/pam.d/sshd && \
-        sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
-        sed -ri 's/^#?PubkeyAuthentication\s+.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
-        sed -ri 's/requiretty/!requiretty/' /etc/sudoers && \
-        echo 'root:docker.io' | chpasswd
+# 1. permit root logins and set simple password password and pubkey
+# 2. change requiretty to !requiretty in /etc/sudoers
+RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    sed -ri 's/^#?PubkeyAuthentication\s+.*/PubkeyAuthentication yes/' /etc/ssh/sshd_config && \
+    sed -ri 's/requiretty/!requiretty/' /etc/sudoers && \
+    echo 'root:docker.io' | chpasswd
 
 # install core software for packaging and ssh communication
 RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
