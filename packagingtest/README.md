@@ -8,8 +8,8 @@ In these containers built artifacts are tested: StackStorm packages are installe
 [`Dockerfiles` sources](https://github.com/StackStorm/st2packaging-dockerfiles/blob/master/packagingtest):
 - CentOS 7
 - CentOS 8
-- Ubuntu Xenial
 - Ubuntu Bionic
+- Ubuntu Focal
 
 NB!
 Images are built automatically on every push to [StackStorm/st2packaging-dockerfiles](https://github.com/StackStorm/st2packaging-dockerfiles/) `master`.
