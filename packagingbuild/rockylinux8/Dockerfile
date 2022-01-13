@@ -6,10 +6,9 @@ RUN yum -y install \
     curl \
     wget
 
-RUN yum -y install \git \
-    mercurial \
-    openssh \
-    subversion
+RUN yum -y install \
+    git \
+    openssh
 
 RUN yum install -y yum-utils \
     && dnf config-manager --enable powertools \
