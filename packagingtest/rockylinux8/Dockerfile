@@ -56,8 +56,8 @@ RUN yum -y install \
     xz \
     xz-devel \
     zlib-devel \
-    python38 \
-    python38-devel \
+    python39 \
+    python39-devel \
     openssl-devel \
     pam \
     openssh-server \
