@@ -8,9 +8,11 @@ In these containers build environment specific for each OS distro is pre-install
 [`Dockerfiles` sources](https://github.com/StackStorm/st2packaging-dockerfiles/blob/master/packagingbuild):
 - CentOS 7
 - CentOS 8
+- CentOS Stream 9
 - Ubuntu Bionic
 - Ubuntu Focal
+- Ubuntu Jammy
 
 > Note!
-> 
+>
 > Images are built automatically in Docker Hub on every push to [StackStorm/st2packaging-dockerfiles](https://github.com/StackStorm/st2packaging-dockerfiles/) `master`.
