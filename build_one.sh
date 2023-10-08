@@ -9,4 +9,4 @@ if [[ -z "$flavor" ]]; then
 fi
 
 (cd "packagingbuild/${flavor}"; docker build -t "stackstorm/packagingbuild:${flavor}" .) || exit 1
-(cd "packagingbuild/${flavor}"; docker build -t "stackstorm/packagingtest:${flavor}" .) || exit 1
+(cd "packagingtest/${flavor}"; docker build -t "stackstorm/packagingtest:${flavor}" .) || exit 1
