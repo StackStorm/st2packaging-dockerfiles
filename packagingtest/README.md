@@ -9,7 +9,6 @@ In these containers built artifacts are tested: StackStorm packages are installe
 - CentOS 7
 - CentOS 8
 - CentOS Stream 9
-- Ubuntu Bionic
 - Ubuntu Focal
 - Ubuntu Jammy
 

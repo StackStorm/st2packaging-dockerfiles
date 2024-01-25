@@ -9,7 +9,6 @@ In these containers build environment specific for each OS distro is pre-install
 - CentOS 7
 - CentOS 8
 - CentOS Stream 9
-- Ubuntu Bionic
 - Ubuntu Focal
 - Ubuntu Jammy
 
