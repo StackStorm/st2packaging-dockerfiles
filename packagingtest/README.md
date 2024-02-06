@@ -6,9 +6,8 @@ Docker images with pre-installed init system used to test `.deb` and `.rpm` Stac
 In these containers built artifacts are tested: StackStorm packages are installed, configuration is written, dependent services like MongoDB, RabbitMQ, PostgreSQL are started and end-to-end tests are performed, like on real OS with specific init system.
 
 [`Dockerfiles` sources](https://github.com/StackStorm/st2packaging-dockerfiles/blob/master/packagingtest):
-- CentOS 7
-- CentOS 8
-- CentOS Stream 9
+- Rocky Linux 8
+- Rocky Linux 9
 - Ubuntu Focal
 - Ubuntu Jammy
 
