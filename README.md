@@ -23,9 +23,9 @@ If you're a developer looking to modify / test / build these containers simply, 
 the container's directory and do the following:
 
 ``` shell
-cd st2packaging-dockerfiles/packagingbuild/bionic
-docker build -t stackstorm/packagingbuild:bionic .
+cd st2packaging-dockerfiles/packagingbuild/focal
+docker build -t stackstorm/packagingbuild:focal .
 
-cd st2packaging-dockerfiles/packagingtest/bionic
-docker build -t stackstorm/packagingtest:bionic .
+cd st2packaging-dockerfiles/packagingtest/focal
+docker build -t stackstorm/packagingtest:focal .
 ```

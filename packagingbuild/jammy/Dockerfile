@@ -42,8 +42,8 @@ RUN apt-get update && \
     apt-get -y install \
         devscripts debhelper dh-make libldap2-dev libsasl2-dev && apt-get clean
 
-# Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python3.10 - virtualenv==20.24.5 pip==23.2.1 wheel setuptools cryptography; \
+# Install fresh pip and co (pinning wheel and setuptools is require for dh-virtualenv build)
+RUN curl https://bootstrap.pypa.io/get-pip.py | python3.8 - virtualenv==20.4.0 pip==20.3.3 wheel==0.36.2 setuptools==51.3.3 cryptography; \
       pip3.10 install --upgrade requests[security] && rm -rf /root/.cache
 
 # This line just busts Docker's cache so it re-runs the next line
