@@ -3,7 +3,7 @@
 
 Docker images used to build `.deb` and `.rpm` StackStorm packages in [StackStorm/st2-packages](https://github.com/StackStorm/st2-packages/blob/master/docker-compose.circle.yml) CI/CD.
 
-In these containers build environment specific for each OS distro is pre-installed and respective StackStorm packages are built for each platform.
+In these containers build environment specific for each OS distribution is pre-installed and respective StackStorm packages are built for each platform.
 
 [`Dockerfiles` sources](https://github.com/StackStorm/st2packaging-dockerfiles/blob/master/packagingbuild):
 - Rocky Linux 9
