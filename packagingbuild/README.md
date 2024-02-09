@@ -6,8 +6,8 @@ Docker images used to build `.deb` and `.rpm` StackStorm packages in [StackStorm
 In these containers build environment specific for each OS distribution is pre-installed and respective StackStorm packages are built for each platform.
 
 [`Dockerfiles` sources](https://github.com/StackStorm/st2packaging-dockerfiles/blob/master/packagingbuild):
-- CentOS 8
-- CentOS Stream 9
+- Rocky Linux 9
+- Rocky Linux 8
 - Ubuntu Focal
 - Ubuntu Jammy
 
