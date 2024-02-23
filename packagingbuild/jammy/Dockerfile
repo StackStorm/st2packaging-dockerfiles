@@ -23,6 +23,10 @@ RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_confi
     sed -ri 's/requiretty/!requiretty/' /etc/sudoers && \
     echo 'root:docker.io' | chpasswd
 
+# Enable (deprecated) RSA
+RUN echo 'HostKeyAlgorithms +ssh-rsa' | tee -a /etc/ssh/sshd_config && \
+    echo 'PubkeyAcceptedKeyTypes +ssh-rsa' | tee -a /etc/ssh/sshd_config
+
 # install core software for packaging and ssh communication
 RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
     apt-get -y update && \
