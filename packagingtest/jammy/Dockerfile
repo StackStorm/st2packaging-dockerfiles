@@ -34,6 +34,14 @@ RUN sed -ri 's/^#?PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_confi
     sed -ri 's/requiretty/!requiretty/' /etc/sudoers && \
     echo 'root:docker.io' | chpasswd
 
+# Enable (deprecated) RSA
+RUN echo 'HostKeyAlgorithms +ssh-rsa' | tee -a /etc/ssh/sshd_config && \
+    echo 'PubkeyAcceptedKeyTypes +ssh-rsa' | tee -a /etc/ssh/sshd_config
+
+# install core software for packaging and ssh communication
+RUN echo -e "#!/bin/sh\nexit 101\n" > /usr/sbin/policy-rc.d && \
+    apt-get -y install gdebi-core sshpass cron netcat net-tools iproute2
+
 # install apt https transport so apt sources can be added that refernece https:// URLs
 RUN apt-get -y install apt-transport-https ca-certificates
 
