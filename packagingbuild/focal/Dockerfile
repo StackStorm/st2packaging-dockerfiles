@@ -43,7 +43,7 @@ RUN apt-get update && \
         devscripts debhelper dh-make libldap2-dev libsasl2-dev && apt-get clean
 
 # Install fresh pip and co
-RUN curl https://bootstrap.pypa.io/get-pip.py | python3.8 - virtualenv==20.30.0 pip==25.0.1 wheel==0.45.1 setuptools==75.3.2 cryptography; \
+RUN curl https://bootstrap.pypa.io/pip/3.8/get-pip.py | python3.8 - virtualenv==20.30.0 pip==25.0.1 wheel==0.45.1 setuptools==75.3.2 cryptography; \
       pip3.8 install --upgrade requests[security] && rm -rf /root/.cache
 
 # This line just busts Docker's cache so it re-runs the next line
