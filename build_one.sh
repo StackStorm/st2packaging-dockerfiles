@@ -8,5 +8,7 @@ if [[ -z "$flavor" ]]; then
   exit 1
 fi
 
-(cd "packagingbuild/${flavor}"; docker build -t "stackstorm/packagingbuild:${flavor}" .) || exit 1
-(cd "packagingtest/${flavor}"; docker build -t "stackstorm/packagingtest:${flavor}-systemd" .) || exit 1
+date_suffix=$(date +%Y-%m-%d)
+
+(cd "packagingbuild/${flavor}"; docker build -t "stackstorm/packagingbuild:${flavor}" -t "stackstorm/packagingbuild:${flavor}-${date_suffix}" .) || exit -1
+(cd "packagingtest/${flavor}"; docker build -t "stackstorm/packagingtest:${flavor}-systemd" -t "stackstorm/packagingtest:${flavor}-systemd-${date_suffix}" .) || exit -1
