@@ -100,10 +100,10 @@ RUN yum -y install nc net-tools glibc-locale-source && \
 RUN update-crypto-policies --set DEFAULT:SHA1
 
 ENV LANG=en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
 
-ENV container docker
+ENV container=docker
 
 RUN yum -y update; \
     yum -y install systemd; yum clean all

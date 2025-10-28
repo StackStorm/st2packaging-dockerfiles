@@ -98,10 +98,10 @@ RUN yum -y install nc net-tools glibc-locale-source && \
     localedef -i en_US -f UTF-8 en_US.UTF-8
 
 ENV LANG=en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
 
-ENV container docker
+ENV container=docker
 
 RUN yum -y update; \
     yum -y install systemd; yum clean all

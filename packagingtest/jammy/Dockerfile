@@ -1,10 +1,10 @@
 FROM buildpack-deps:jammy
 
-ENV container docker
-ENV TERM xterm
+ENV container=docker
+ENV TERM=xterm
 
 # Make noninteractive setting permanent
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections -v
 
 RUN apt-get -y update
@@ -25,7 +25,7 @@ RUN apt-get -y install locales && \
     locale-gen en_US.UTF-8 && \
     dpkg-reconfigure locales && \
     update-locale LANG=en_US.UTF-8
-ENV LANG en_US.UTF-8
+ENV LANG=en_US.UTF-8
 
 # 1. permit root logins and set simple password password and pubkey
 # 2. change requiretty to !requiretty in /etc/sudoers

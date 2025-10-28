@@ -1,7 +1,7 @@
 FROM buildpack-deps:jammy
 
 # Make noninteractive setting permanent
-ENV DEBIAN_FRONTEND noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections -v
 
 # Enable remote pubkey access
