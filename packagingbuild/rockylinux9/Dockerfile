@@ -87,7 +87,7 @@ RUN update-crypto-policies --set DEFAULT:SHA1
 
 # Install development tools and python3 for EL9
 RUN yum -y install python3 python3-devel rpmdevtools && \
-    pip3 install virtualenv==20.4.0 pip==25.0.1 wheel setuptools
+    pip3 install virtualenv==20.30.0 pip==25.0.1 wheel setuptools
 
 RUN rm -rf /root/.cache
 
